@@ -3,3 +3,6 @@ makeproject: main.cpp
 
 run: main
 	./main
+
+clean:
+	$(RM) main
