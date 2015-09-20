@@ -4,6 +4,10 @@
 #include <string>
 #include <sys/stat.h>
 
+#define NS3_PATH "NS-3_PATH"
+#define SCRIPT_DEST "SCRIPT_DEST"
+#define OUTPUT_DEST "OUTPUT_DEST"
+
 using namespace std;
 
 int main(int argc, char *argv[]){
@@ -13,11 +17,11 @@ int main(int argc, char *argv[]){
 	
 	if(fileStream.is_open()){
 		while(getline(fileStream,line)){
-			if(line.find("NS-3_PATH") != std::string::npos){
+			if(line.find(NS3_PATH) != std::string::npos){
 				ns3_path = line;	
-			}else if(line.find("SCRIPT_DEST") != std::string::npos){
+			}else if(line.find(SCRIPT_DEST) != std::string::npos){
 				script_dest = line;
-			}else if(line.find("OUTPUT_DEST") != std::string::npos){
+			}else if(line.find(OUTPUT_DEST) != std::string::npos){
 				output_dest = line;
 			}
 			
@@ -32,13 +36,14 @@ int main(int argc, char *argv[]){
 		return 1;
 	}
 
-	ns3_path = ns3_path.substr(ns3_path.find_first_of("=") + 1, ns3_path.length());
-	script_dest = script_dest.substr(script_dest.find_first_of("=") + 1, script_dest.length());
-	output_dest = output_dest.substr(output_dest.find_first_of("=") + 1, output_dest.length());	
+	ns3_path = ns3_path.substr(ns3_path.find_first_of("=") + 1, ns3_path.find_first_of("#"));
+	script_dest = script_dest.substr(script_dest.find_first_of("=") + 1, script_dest.find_first_of("#"));
+	output_dest = output_dest.substr(output_dest.find_first_of("=") + 1, output_dest.find_first_of("#"));
 
 	if(stat(ns3_path.c_str(), &buffer) != 0 || !S_ISDIR(buffer.st_mode)){
 		cerr << "The NS-3 path specified does not exist or is not accesible" << endl;
 		return 2;
 	}
+
 	return 0;
 }
