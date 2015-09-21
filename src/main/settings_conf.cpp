@@ -12,11 +12,17 @@
 #define SCRIPT_DEFAULT_DEST "../../output/scripts"
 #define OUTPUT_DEFAULT_DEST "../../output"
 
+#define MKDIR_MODE S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH
+
 using namespace std;
 
 void create_template_settings_file(string settings_file){
-	std::ofstream file_stream(settings_file.c_str(), std::ofstream::out);
+	std::ofstream file_stream(settings_file.c_str(), std::ios::binary);
+	std::ifstream template_file("../../resources/settings_template.conf", std::ios::binary);
 	
+	file_stream << template_file.rdbuf();
+	
+	template_file.close();
 	file_stream.close();
 }
 
@@ -78,6 +84,38 @@ int Settings::parse_settings_file(string settings_file){
 	if(stat(ns3_path.c_str(), &buffer) != 0 || !S_ISDIR(buffer.st_mode)){
 		cerr << "The NS-3 path specified does not exist or is not accesible" << endl;
 		return 3;
+	}
+
+	if(!found_script){
+		script_dest = SCRIPT_DEFAULT_DEST;
+		int stat_result = stat(script_dest.c_str(), &buffer);
+		if(stat_result != 0 || !S_ISDIR(buffer.st_mode)){
+			if(mkdir(script_dest.c_str(), MKDIR_MODE) != 0){
+				cerr << "Cannot make default script destination, aborting" << endl;
+				return 4;
+			}
+		}
+	}else{
+		if(stat(script_dest.c_str(), &buffer) != 0 || !S_ISDIR(buffer.st_mode)){
+			cerr << "Script destination in settings file not an accesible directory" << endl;
+			return 5;
+		}
+	}
+	
+	if(!found_output){
+		output_dest = OUTPUT_DEFAULT_DEST;
+		int stat_result = stat(output_dest.c_str(), &buffer);
+		if(stat_result != 0 || !S_ISDIR(buffer.st_mode)){
+			if(mkdir(output_dest.c_str(), MKDIR_MODE) != 0){
+				cerr << "Cannot make default output destination, aborting" << endl;
+				return 6;
+			}
+		}
+	}else{
+		if(stat(output_dest.c_str(), &buffer) != 0 || !S_ISDIR(buffer.st_mode)){
+			cerr << "Output destination in settings file not an accesible directory" << endl;
+			return 7;
+		}
 	}
 
 	return 0;
