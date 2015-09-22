@@ -1,0 +1,27 @@
+<container>
+	<name>Container_1</name>
+	<interface>
+		<name>container1-1</name>
+		<ip>10.0.0.1</ip>
+	</interface>
+	<position>
+		<time>0</time>
+		<xyz>1, 1, 1</xyz>
+	</position>
+</container>
+
+<container>
+	<name>Container_2</name>
+	<interface>
+		<ip>10.0.0.2</ip>
+	</interface>
+</container>
+
+<network>
+	<name>Network 1</name>
+	<type>csma</type>
+	<connected>
+		container1-1
+		10.0.0.2
+	</connected>
+</network>

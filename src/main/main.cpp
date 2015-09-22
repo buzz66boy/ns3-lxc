@@ -14,6 +14,6 @@ int main(int argc, char *argv[]){
 	if(result != 0){
 		return result;
 	}
-	cout << Settings::ns3_path <<endl;	
 	return 0;
+	
 }
