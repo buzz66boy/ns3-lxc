@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "settings_conf.h"
+#include "topology.h"
 
 #define SETTINGS_CONF_LOC "../../settings.conf"
 

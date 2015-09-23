@@ -3,6 +3,12 @@
 
 // forward declared dependencies
 
+class Interface;
+class Position;
+class Network;
+class Container;
+class Topology;
+
 // include dependencies
 #include <string>
 #include <vector>
@@ -26,7 +32,7 @@ class Container {
 
 class Interface {
 	std::string name;
-	int[] ip;
+	int *ip;
 };
 
 class Position {
