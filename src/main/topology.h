@@ -16,7 +16,7 @@ class Topology;
 
 // declarations
 
-static Topology parse_topology_file(std::string topology_path);
+Topology parse_topology_file(std::string topology_path);
 
 class Topology {
 	std::vector<Container> containers;
