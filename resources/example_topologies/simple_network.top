@@ -1,4 +1,7 @@
-<container>
+<!-- test of comment delete -->
+< topology >
+
+< container >
 	<name>Container_1</name>
 	<interface>
 		<name>container1-1</name>
@@ -17,7 +20,9 @@
 	</interface>
 </container>
 
-<network>
+<!-- test of second comment -->
+
+<network >
 	<name>Network 1</name>
 	<type>csma</type>
 	<connected>
@@ -25,3 +30,5 @@
 		10.0.0.2
 	</connected>
 </network>
+
+</topology>

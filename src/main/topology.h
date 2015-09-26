@@ -16,6 +16,26 @@ class Topology;
 
 // declarations
 
+#define FLAG_START "<"
+#define FLAG_END ">"
+#define FLAG_TERMINATE_START "</"
+
+#define TAG_START_COMMENT "<!--"
+#define TAG_END_COMMENT "-->"
+
+#define TAG_TOPOLOGY "topology" 
+#define TAG_CONTAINER "container" 
+#define TAG_NETWORK "network"
+
+#define TAG_COMMON_NAME "name"
+
+#define TAG_CONTAINER_INTERFACE "interface"
+#define TAG_CONTAINER_POSITION "position"
+#define TAG_CONTAINER_OS "os"
+
+#define TAG_NETWORK_TYPE "type"
+#define TAG_NETWORK_CONNECTED "connected"
+
 Topology parse_topology_file(std::string topology_path);
 
 class Topology {
