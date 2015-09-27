@@ -38,32 +38,45 @@ class Topology;
 
 Topology parse_topology_file(std::string topology_path);
 
-class Topology {
-	std::vector<Container> containers;
-	std::vector<Network> networks;
-	std::map<Interface, Container> if_to_cont;
+//interfaces
+class Nameable {
+public:
+	std::string name;
 };
 
-class Container {
-	std::string name;
+class Interfaceable {
+public:
 	std::vector<Interface> interfaces;
+};
+
+class Positionable {
+public:
 	std::vector<Position> positions;
 };
 
-class Interface {
-	std::string name;
+//classes
+class Topology {
+	std::vector<Container> containers;
+	std::vector<Network> networks;
+	std::vector<Position> time_sorted_positions;
+	std::map<Interface, Container> if_to_cont;
+};
+
+class Container: public Nameable, public Interfaceable, public Positionable {};
+
+class Interface: public Nameable {
 	int *ip;
 };
 
 class Position {
+	Container *container;
 	int time;
 	int x;
 	int y;
 	int z;
 };
 
-class Network {
-	std::string name;
+class Network: public Nameable, public Interfaceable {
 	int type;
 	std::vector<std::string> connected;
 };
