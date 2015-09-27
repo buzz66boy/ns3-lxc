@@ -11,11 +11,6 @@ static void erase_char_from_string(string *str, char ch);
 
 static void strip_comments(string *str);
 
-<<<<<<< HEAD
-=======
-static string strip_whitespace_from_tags(string str);
-
->>>>>>> 45af88de45c5b4714f81379de640dab556d3e9af
 Topology parse_topology_file(string topology_path){
 	std::ifstream top_file(topology_path.c_str(), std::ifstream::in);
 	std::stringstream buffer;
@@ -26,11 +21,7 @@ Topology parse_topology_file(string topology_path){
 		throw 8;
 	}
 	
-<<<<<<< HEAD
 	string full_topology(buffer.str());
-=======
-	std::string full_topology(buffer.str());
->>>>>>> 45af88de45c5b4714f81379de640dab556d3e9af
 
 	Topology topology;
 
@@ -39,7 +30,6 @@ Topology parse_topology_file(string topology_path){
 	erase_char_from_string(&full_topology, '\t');
 	
 	strip_comments(&full_topology);
-<<<<<<< HEAD
 		
 	size_t start_tag_loc = full_topology.find(FLAG_START);
 	size_t end_tag_loc = full_topology.find(FLAG_END) + sizeof(FLAG_END) - 1;
@@ -64,13 +54,6 @@ Topology parse_topology_file(string topology_path){
 		cout << flag_field << endl;
 	} while (start_tag_loc != std::string::npos);
 
-=======
-	
-	strip_whitespace_from_tags(full_topology);
-
-	cout << full_topology << endl;	
-	
->>>>>>> 45af88de45c5b4714f81379de640dab556d3e9af
 	return topology;
 }
 
@@ -83,36 +66,9 @@ static void strip_comments(string *str){
 	size_t end_comment_loc = str->find(TAG_END_COMMENT) + sizeof(TAG_END_COMMENT) - 1;
 	
 	while(comment_loc != std::string::npos){
-<<<<<<< HEAD
 		str->erase(comment_loc, end_comment_loc - comment_loc);
 		comment_loc = str->find(TAG_START_COMMENT);
 		end_comment_loc = str->find(TAG_END_COMMENT) + sizeof(TAG_END_COMMENT) - 1;
 		
 	}
-=======
-		str->erase(comment_loc, end_comment_loc);
-		comment_loc = str->find(TAG_START_COMMENT);
-		end_comment_loc = str->find(TAG_END_COMMENT);
-	}
-}
-
-static string strip_whitespace_from_tags(string str){
-
-	size_t start_tag_loc = str.find(FLAG_START);
-	size_t end_tag_loc = str.find(FLAG_END) + sizeof(FLAG_END) - 1;
-	
-	string sub_string;
-	
-	while(start_tag_loc != std::string::npos){
-		sub_string = str.substr(start_tag_loc, end_tag_loc - start_tag_loc);
-		erase_char_from_string(&sub_string, ' ');
-		
-		start_tag_loc = str.find(FLAG_START);		
-		end_tag_loc = str.find(FLAG_END) + sizeof(FLAG_END) - 1;
-		//temp
-		break;
-	}
-	return str;
-
->>>>>>> 45af88de45c5b4714f81379de640dab556d3e9af
 }
