@@ -26,7 +26,11 @@
 	<name>Network 1</name>
 	<type>csma</type>
 	<connected>
+<<<<<<< HEAD
+		container1-1,
+=======
 		container1-1
+>>>>>>> 45af88de45c5b4714f81379de640dab556d3e9af
 		10.0.0.2
 	</connected>
 </network>
