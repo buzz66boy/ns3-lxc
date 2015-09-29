@@ -26,7 +26,7 @@ Topology parse_topology_file(string topology_path){
 	}else{
 		throw 8;
 	}
-	
+
 	string full_topology(buffer.str());
 
 	Topology topology;
@@ -40,42 +40,32 @@ Topology parse_topology_file(string topology_path){
 	size_t start_tag_loc = full_topology.find(FLAG_START);
 	size_t end_tag_loc = full_topology.find(FLAG_END) + sizeof(FLAG_END) - 1;
 	string flag_str = full_topology.substr(start_tag_loc, end_tag_loc - start_tag_loc);
-	string rest_of_top = full_topology.substr(end_tag_loc + 1, full_topology.length() - end_tag_loc - 1 );
+	string rest_of_top = full_topology.substr(end_tag_loc, full_topology.length() - end_tag_loc );
 	string flag_field = rest_of_top.substr(0, rest_of_top.find(FLAG_START));
 	
 	do {
-		
-		flag_str = rest_of_top.substr(start_tag_loc, end_tag_loc - start_tag_loc);
-		rest_of_top = rest_of_top.substr(end_tag_loc, rest_of_top.length());
-		flag_field = rest_of_top.substr(0, rest_of_top.find(FLAG_START));
-
-
-		start_tag_loc = rest_of_top.find(FLAG_START);
-		end_tag_loc = rest_of_top.find(FLAG_END) + sizeof(FLAG_END) - 1;
-
-		cout << flag_str << endl;
-		continue;
-		
 		if(flag_str.find(FLAG_TERMINATE_START) != string::npos){
-			continue;
-		}
-		
-		if(flag_field.find(TAG_CONTAINER) != string::npos){
+			// do nothing
+		} else if(flag_str.find(TAG_CONTAINER) != string::npos){
 			rest_of_top = parse_to_container(topology, &rest_of_top);
-			
+
 			cout << "container parsing" << endl;
 		
-		}else if(flag_field.find(TAG_NETWORK) != string::npos){
+		}else if(flag_str.find(TAG_NETWORK) != string::npos){
 			rest_of_top = parse_to_network(topology, &rest_of_top);
 			
 			cout << "network parsing" << endl;
 		}
 		
-		
-		//cout << flag_str << endl;
-		//cout << flag_field << endl;
+		start_tag_loc = rest_of_top.find(FLAG_START);
+		end_tag_loc = rest_of_top.find(FLAG_END) + sizeof(FLAG_END) - 1;
+		flag_str = rest_of_top.substr(start_tag_loc, end_tag_loc - start_tag_loc);
+		rest_of_top = rest_of_top.substr(end_tag_loc, rest_of_top.length() - end_tag_loc);
+		flag_field = rest_of_top.substr(0, rest_of_top.find(FLAG_START));
+
 	} while (start_tag_loc != std::string::npos && end_tag_loc != std::string::npos);
 
+	
 	return topology;
 }
 
@@ -97,6 +87,40 @@ static void strip_comments(string *str){
 
 static string parse_to_container(Topology top, string *str){
 	Container cont();
+
+	size_t start_tag_loc = str->find(FLAG_START);
+	size_t end_tag_loc = str->find(FLAG_END) + sizeof(FLAG_END) - 1;
+	string flag_str = str->substr(start_tag_loc, end_tag_loc - start_tag_loc);
+	string rest_of_top = str->substr(end_tag_loc, str->length() - end_tag_loc );
+	string flag_field = str->substr(0, rest_of_top.find(FLAG_START));
+	
+	do {
+
+		if(flag_str.find(FLAG_TERMINATE_START) != string::npos && flag_str.find(TAG_CONTAINER) != string::npos){
+			return rest_of_top;
+		}
+
+		if(flag_str.find(FLAG_TERMINATE_START) != string::npos){
+
+		} else if(flag_str.find(TAG_COMMON_NAME) != string::npos){
+			cout << "Container name" << endl;
+		}else if(flag_str.find(TAG_CONTAINER_INTERFACE) != string::npos){
+			cout << "Container Interface" << endl;
+		}else if(flag_str.find(TAG_CONTAINER_POSITION) != string::npos){
+			cout << "Container Position" << endl;
+		}else if(flag_str.find(TAG_CONTAINER_OS) != string::npos){
+			cout << "Container OS" << endl;
+		}
+		cout << flag_str << endl;
+		start_tag_loc = rest_of_top.find(FLAG_START);
+		end_tag_loc = rest_of_top.find(FLAG_END) + sizeof(FLAG_END) - 1;
+		flag_str = rest_of_top.substr(start_tag_loc, end_tag_loc - start_tag_loc);
+		rest_of_top = rest_of_top.substr(end_tag_loc, rest_of_top.length() - end_tag_loc);
+		flag_field = rest_of_top.substr(0, rest_of_top.find(FLAG_START));
+		
+	} while (start_tag_loc != std::string::npos && end_tag_loc != std::string::npos);
+
+
 	return *str;
 }
 
