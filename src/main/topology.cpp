@@ -12,10 +12,10 @@ static void erase_char_from_string(string *str, char ch);
 static void strip_comments(string *str);
 
 // for parsing a structure, string returned is remainder of string passed in
-static string parse_to_container(Topology top, string *str);
-static string parse_to_interface(Topology top, Interfaceable interf, string *str);
-static string parse_to_position(Topology top, Positionable positionable, string *str);
-static string parse_to_network(Topology top, string *str);
+static string parse_to_container(Topology *top, string *str);
+static string parse_to_interface(Topology *top, Interfaceable interf, string *str);
+static string parse_to_position(Topology *top, Positionable positionable, string *str);
+static string parse_to_network(Topology *top, string *str);
 
 Topology parse_topology_file(string topology_path){
 	std::ifstream top_file(topology_path.c_str(), std::ifstream::in);
@@ -46,13 +46,17 @@ Topology parse_topology_file(string topology_path){
 	do {
 		if(flag_str.find(FLAG_TERMINATE_START) != string::npos){
 			// do nothing
+			if(flag_str.find(TAG_TOPOLOGY)) {
+				break;
+			}
+
 		} else if(flag_str.find(TAG_CONTAINER) != string::npos){
-			rest_of_top = parse_to_container(topology, &rest_of_top);
+			rest_of_top = parse_to_container(&topology, &rest_of_top);
 
 			cout << "container parsing" << endl;
-		
+
 		}else if(flag_str.find(TAG_NETWORK) != string::npos){
-			rest_of_top = parse_to_network(topology, &rest_of_top);
+			rest_of_top = parse_to_network(&topology, &rest_of_top);
 			
 			cout << "network parsing" << endl;
 		}
@@ -64,7 +68,8 @@ Topology parse_topology_file(string topology_path){
 		flag_field = rest_of_top.substr(0, rest_of_top.find(FLAG_START));
 
 	} while (start_tag_loc != std::string::npos && end_tag_loc != std::string::npos);
-
+	
+//	cout << topology.containers[0].name << endl;
 	
 	return topology;
 }
@@ -85,8 +90,8 @@ static void strip_comments(string *str){
 	}
 }
 
-static string parse_to_container(Topology top, string *str){
-	Container cont();
+static string parse_to_container(Topology *top, string *str){
+	Container cont;
 
 	size_t start_tag_loc = str->find(FLAG_START);
 	size_t end_tag_loc = str->find(FLAG_END) + sizeof(FLAG_END) - 1;
@@ -103,7 +108,8 @@ static string parse_to_container(Topology top, string *str){
 		if(flag_str.find(FLAG_TERMINATE_START) != string::npos){
 
 		} else if(flag_str.find(TAG_COMMON_NAME) != string::npos){
-			cout << "Container name" << endl;
+			cont.name = flag_field;
+			cout << flag_field << endl;
 		}else if(flag_str.find(TAG_CONTAINER_INTERFACE) != string::npos){
 			cout << "Container Interface" << endl;
 		}else if(flag_str.find(TAG_CONTAINER_POSITION) != string::npos){
@@ -111,7 +117,7 @@ static string parse_to_container(Topology top, string *str){
 		}else if(flag_str.find(TAG_CONTAINER_OS) != string::npos){
 			cout << "Container OS" << endl;
 		}
-		cout << flag_str << endl;
+
 		start_tag_loc = rest_of_top.find(FLAG_START);
 		end_tag_loc = rest_of_top.find(FLAG_END) + sizeof(FLAG_END) - 1;
 		flag_str = rest_of_top.substr(start_tag_loc, end_tag_loc - start_tag_loc);
@@ -120,21 +126,22 @@ static string parse_to_container(Topology top, string *str){
 		
 	} while (start_tag_loc != std::string::npos && end_tag_loc != std::string::npos);
 
-
+	top->containers.push_back(cont);
+	cout << cont.name << endl;
 	return *str;
 }
 
-static string parse_to_interface(Topology top, Interfaceable interf, string *str){
+static string parse_to_interface(Topology *top, Interfaceable interf, string *str){
 	Interface inf();
 	return *str;
 }
 
-static string parse_to_position(Topology top, Positionable positionable, string *str){
+static string parse_to_position(Topology *top, Positionable positionable, string *str){
 	Position pos();
 	return *str;
 }
 
-static string parse_to_network(Topology top, string *str){
+static string parse_to_network(Topology *top, string *str){
 	Network net();
 	return *str;
 }

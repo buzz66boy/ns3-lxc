@@ -56,6 +56,7 @@ public:
 
 //classes
 class Topology {
+public:
 	std::vector<Container> containers;
 	std::vector<Network> networks;
 	std::vector<Position> time_sorted_positions;
@@ -65,10 +66,12 @@ class Topology {
 class Container: public Nameable, public Interfaceable, public Positionable {};
 
 class Interface: public Nameable {
+public:
 	int *ip;
 };
 
 class Position {
+public:
 	Container *container;
 	int time;
 	int x;
@@ -77,6 +80,7 @@ class Position {
 };
 
 class Network: public Nameable, public Interfaceable {
+public:
 	int type;
 	std::vector<std::string> connected;
 };
