@@ -14,6 +14,8 @@ class Topology;
 #include <vector>
 #include <map>
 
+#include <arpa/inet.h>
+
 // declarations
 
 #define FLAG_START "<"
@@ -32,6 +34,8 @@ class Topology;
 #define TAG_CONTAINER_INTERFACE "interface"
 #define TAG_CONTAINER_POSITION "position"
 #define TAG_CONTAINER_OS "os"
+
+#define TAG_INTERFACE_IP "ip"
 
 #define TAG_NETWORK_TYPE "type"
 #define TAG_NETWORK_CONNECTED "connected"
@@ -60,14 +64,14 @@ public:
 	std::vector<Container> containers;
 	std::vector<Network> networks;
 	std::vector<Position> time_sorted_positions;
-	std::map<Interface, Container> if_to_cont;
+	std::map<std::string, Interfaceable> if_to_inf;
 };
 
 class Container: public Nameable, public Interfaceable, public Positionable {};
 
 class Interface: public Nameable {
 public:
-	int *ip;
+	struct in_addr ip;
 };
 
 class Position {

@@ -3,6 +3,9 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+
+#include <arpa/inet.h>
+
 #include "topology.h"
 
 using namespace std;
@@ -95,21 +98,20 @@ static string parse_to_container(Topology *top, string *str){
 
 	size_t start_tag_loc = str->find(FLAG_START);
 	size_t end_tag_loc = str->find(FLAG_END) + sizeof(FLAG_END) - 1;
-	string flag_str = str->substr(start_tag_loc, end_tag_loc - start_tag_loc);
+	string flag_str = str->substr(start_tag_loc, end_tag_loc - start_tag_loc );
 	string rest_of_top = str->substr(end_tag_loc, str->length() - end_tag_loc );
-	string flag_field = str->substr(0, rest_of_top.find(FLAG_START));
+	string flag_field = rest_of_top.substr(0, rest_of_top.find(FLAG_START));
 	
 	do {
 
 		if(flag_str.find(FLAG_TERMINATE_START) != string::npos && flag_str.find(TAG_CONTAINER) != string::npos){
-			return rest_of_top;
+			break;
 		}
 
 		if(flag_str.find(FLAG_TERMINATE_START) != string::npos){
 
 		} else if(flag_str.find(TAG_COMMON_NAME) != string::npos){
 			cont.name = flag_field;
-			cout << flag_field << endl;
 		}else if(flag_str.find(TAG_CONTAINER_INTERFACE) != string::npos){
 			cout << "Container Interface" << endl;
 		}else if(flag_str.find(TAG_CONTAINER_POSITION) != string::npos){
@@ -120,20 +122,59 @@ static string parse_to_container(Topology *top, string *str){
 
 		start_tag_loc = rest_of_top.find(FLAG_START);
 		end_tag_loc = rest_of_top.find(FLAG_END) + sizeof(FLAG_END) - 1;
-		flag_str = rest_of_top.substr(start_tag_loc, end_tag_loc - start_tag_loc);
+		flag_str = rest_of_top.substr(start_tag_loc, end_tag_loc - start_tag_loc );
 		rest_of_top = rest_of_top.substr(end_tag_loc, rest_of_top.length() - end_tag_loc);
+		
 		flag_field = rest_of_top.substr(0, rest_of_top.find(FLAG_START));
 		
 	} while (start_tag_loc != std::string::npos && end_tag_loc != std::string::npos);
 
 	top->containers.push_back(cont);
 	cout << cont.name << endl;
-	return *str;
+	return rest_of_top;
 }
 
 static string parse_to_interface(Topology *top, Interfaceable interf, string *str){
-	Interface inf();
-	return *str;
+	Interface inf;
+
+	size_t start_tag_loc = str->find(FLAG_START);
+	size_t end_tag_loc = str->find(FLAG_END) + sizeof(FLAG_END) - 1;
+	string flag_str = str->substr(start_tag_loc, end_tag_loc - start_tag_loc );
+	string rest_of_top = str->substr(end_tag_loc, str->length() - end_tag_loc );
+	string flag_field = rest_of_top.substr(0, rest_of_top.find(FLAG_START));
+	
+	do {
+
+		if(flag_str.find(FLAG_TERMINATE_START) != string::npos && flag_str.find(TAG_CONTAINER_INTERFACE) != string::npos){
+			break;
+		}
+
+		if(flag_str.find(FLAG_TERMINATE_START) != string::npos){
+
+		} else if(flag_str.find(TAG_COMMON_NAME) != string::npos){
+			inf.name = flag_field;
+		}else if(flag_str.find(TAG_INTERFACE_IP) != string::npos){
+			cout << "Interface Ip" << endl;
+			inet_pton(AF_INET, flag_field.c_str(), &inf.ip);
+		}
+
+		start_tag_loc = rest_of_top.find(FLAG_START);
+		end_tag_loc = rest_of_top.find(FLAG_END) + sizeof(FLAG_END) - 1;
+		flag_str = rest_of_top.substr(start_tag_loc, end_tag_loc - start_tag_loc );
+		rest_of_top = rest_of_top.substr(end_tag_loc, rest_of_top.length() - end_tag_loc);
+		
+		flag_field = rest_of_top.substr(0, rest_of_top.find(FLAG_START));
+		
+	} while (start_tag_loc != std::string::npos && end_tag_loc != std::string::npos);
+
+	interf.interfaces.push_back(inf);
+	
+	if(inf.name == ""){
+		inf.name = "temp_name";
+	}
+	
+	top->if_to_inf.insert({inf.name, interf});
+	return rest_of_top;
 }
 
 static string parse_to_position(Topology *top, Positionable positionable, string *str){
