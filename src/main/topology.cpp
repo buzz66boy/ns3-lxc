@@ -114,6 +114,7 @@ static string parse_to_container(Topology *top, string *str){
 			cont.name = flag_field;
 		}else if(flag_str.find(TAG_CONTAINER_INTERFACE) != string::npos){
 			cout << "Container Interface" << endl;
+			rest_of_top = parse_to_interface(top, cont, &rest_of_top);
 		}else if(flag_str.find(TAG_CONTAINER_POSITION) != string::npos){
 			cout << "Container Position" << endl;
 		}else if(flag_str.find(TAG_CONTAINER_OS) != string::npos){
@@ -174,6 +175,8 @@ static string parse_to_interface(Topology *top, Interfaceable interf, string *st
 	}
 	
 	top->if_to_inf.insert({inf.name, interf});
+	cout << inf.name  << endl;
+
 	return rest_of_top;
 }
 
