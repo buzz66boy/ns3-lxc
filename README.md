@@ -6,3 +6,7 @@ The program will use config/topology files to automate creation of linux contain
 Settings may be set in the settings.conf file.
 
 Resources including example topology files can be found in the resources folder.
+
+Setup
+	export YAML_PATH=~/yaml-cpp
+	move the compiled libyaml-cpp.a to the 'src' folder

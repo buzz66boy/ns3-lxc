@@ -1,0 +1,20 @@
+# Simple topology
+nodes :
+  - node : &node1
+    	name : node1
+      - iface : eth0
+          ip : 10.0.0.1
+      pos :
+        - pos1
+            time : 0
+            coords: {10,0,0}
+  - node : &node2
+      name : node2
+      - iface : eth0
+          ip : 10.0.0.2
+
+networks :
+  - connection : &con1
+    type : csma
+    - *node1
+    - *node2

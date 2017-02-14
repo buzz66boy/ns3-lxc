@@ -3,6 +3,7 @@
 
 #include "settings_conf.h"
 #include "topology.h"
+#include "yaml-cpp/yaml.h"
 
 #define SETTINGS_CONF_LOC "../../settings.conf"
 #define NO_FILE_PROVIDED "Exiting, no file provided"
