@@ -3,7 +3,9 @@
 #include <cstdio>
 #include <string>
 #include <sys/stat.h>
-#include "settings_conf.h"
+
+#include "yaml-cpp/yaml.h"
+#include "settings.h"
 
 #define NS3_PATH_STR "NS-3_PATH"
 #define SCRIPT_DEST_STR "SCRIPT_DEST"
@@ -30,12 +32,14 @@ string Settings::ns3_path;
 string Settings::script_dest;
 string Settings::output_dest;
 
-int Settings::parse_settings_file(string settings_file){
+int Settings::parse_settings_file(std::string settings_file){
 	// open settings file and obtain directory locations
 	std::ifstream file_stream(settings_file.c_str(), std::ifstream::in);
 	string line;
 	bool found_path = false, found_script = false, found_output = false;
 	int pos, comment_pos;
+
+	YAML::Node config = YAML::LoadFile(settings_file);
 
 	if(file_stream.is_open()){
 		while(getline(file_stream,line) && (!found_path || !found_script || !found_output)){
@@ -43,7 +47,7 @@ int Settings::parse_settings_file(string settings_file){
 				pos = line.find(NS3_PATH_STR);
 				comment_pos = line.find_first_of("#");
 				if(pos != std::string::npos && (comment_pos == std::string::npos || pos < comment_pos)){
-					ns3_path = line.substr(line.find_first_of("=") + 1, comment_pos);
+					ns3_path = line.substr(line.find_first_of(":") + 1, comment_pos);
 					found_path = true;
 					continue;
 				}
@@ -52,7 +56,7 @@ int Settings::parse_settings_file(string settings_file){
 				pos = line.find(SCRIPT_DEST_STR);
 				comment_pos = line.find_first_of("#");
 				if(pos != std::string::npos && (comment_pos == std::string::npos || pos < comment_pos)){
-					script_dest = line.substr(line.find_first_of("=") + 1, comment_pos);
+					script_dest = line.substr(line.find_first_of(":") + 1, comment_pos);
 					found_script = true;
 					continue;
 				}				
@@ -61,7 +65,7 @@ int Settings::parse_settings_file(string settings_file){
 				pos = line.find(OUTPUT_DEST_STR);
 				comment_pos = line.find_first_of("#");
 				if(pos != std::string::npos && (comment_pos == std::string::npos || pos < comment_pos)){
-					output_dest = line.substr(line.find_first_of("=") + 1, comment_pos);
+					output_dest = line.substr(line.find_first_of(":") + 1, comment_pos);
 					found_output = true;
 					continue;
 				}				

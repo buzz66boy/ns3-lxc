@@ -1,0 +1,7 @@
+temp/*
+*.o
+bin/*
+*.cmake
+CMakeCache.txt
+CMakeFiles/*
+Makefile
