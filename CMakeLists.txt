@@ -11,6 +11,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
 include_directories(
         /usr/src/linux-headers-4.4.0-63/
         src/main/include
+        src/lib/include
+)
+
+set(Local_Libs
+		src/lib/include/ipaddr.h
+		src/lib/include/container.h
+		src/lib/ipaddr.cpp
 )
 
 set(NS-3_LXC
@@ -20,7 +27,7 @@ set(NS-3_LXC
         src/main/settings.cpp
         src/main/main.cpp)
 
-add_executable(ns3lxc ${NS-3_LXC})
+add_executable(ns3lxc ${NS-3_LXC} ${Local_Libs})
 
 find_library(YAML_LIB yaml-cpp)
 
