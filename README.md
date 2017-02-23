@@ -18,3 +18,8 @@ Setup
 		cd into the built director (usually "ns-3.26" or appropriate version)
 		run `CXXFLAGS="-std=c++11" ./waf -d debug --enable-examples --enable-tests configure`
 			this configures NS-3 for C++11
+	LXC:
+		Install LXC via package manager
+			`sudo apt install lxc`
+		Install LXC Dev for the headers
+			`sudo apt install lxc-dev`

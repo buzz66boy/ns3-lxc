@@ -6,6 +6,10 @@
 
 #include <arpa/inet.h>
 
+extern "C" {
+#include <lxc/lxccontainer.h>
+}
+
 #include "topology.h"
 
 using namespace std;
