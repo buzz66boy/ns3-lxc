@@ -1,0 +1,10 @@
+ContainerTemplates:
+    - ContainerTemp1:
+        ifaces:
+            - eth0
+        apps:
+            - bird
+    - ContainerTemp2:
+        ifaces:
+            - eth0
+            - wlan0
