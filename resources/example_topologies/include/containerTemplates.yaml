@@ -8,3 +8,7 @@ ContainerTemplates:
         ifaces:
             - eth0
             - wlan0
+    - ContainerTemp3:
+        ifaces:
+            - eth0
+            - eth1

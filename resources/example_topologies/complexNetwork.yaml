@@ -1,0 +1,28 @@
+include:
+  - ComplexNetworkHalf
+  - NetworkTemplates
+
+ComplexNetwork:
+  networks:
+    - firstHalf: 
+        template: ComplexNetworkHalf
+    - secondHalf: 
+        template: ComplexNetworkHalf
+    - topConnect:
+        template: WifiNetworkTemplate
+        containers:
+          - firstHalf: node1_3
+          - secondHalf: node1_3
+    - botConnect:
+        template: WifiNetworkTemplate
+        containers:
+          - firstHalf: node1_4
+          - secondHalf: node1_4
+
+  applications:
+    - bird: all
+    - udp:
+      - firstHalf: node1_1
+          args: -c ${secondHalf.node1_1.eth0.ip}
+      - secondHalf: node1_1
+          args: -s

@@ -14,8 +14,8 @@ Setup
 		You may have to download and install Boost as well
 	NS-3:
 		Download the latest NS-3 release to a directory
-		run `./build.py'
-		cd into the built director (usually "ns-3.26" or appropriate version)
+		run `./build.py`
+		cd into the built directory (usually "ns-3.26" or appropriate version)
 		run `CXXFLAGS="-std=c++11" ./waf -d debug --enable-examples --enable-tests configure`
 			this configures NS-3 for C++11
 	LXC:

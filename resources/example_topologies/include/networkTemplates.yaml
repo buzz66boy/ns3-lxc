@@ -1,0 +1,14 @@
+include: connection_templates
+
+NetworkTemplates:
+    - TunnelNetworkTemplate:
+        connections:
+            - CsmaTemplate                
+        ifaces: 2
+        cidr: 24
+        
+    - WifiNetworkTemplate:
+        connections:
+            - WifiTemplate
+        ifaces: 2
+        cidr: 24

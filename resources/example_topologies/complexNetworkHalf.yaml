@@ -1,0 +1,29 @@
+include:
+  - container_templates
+  - network_templates
+
+ComplexNetworkHalf:
+  containers:
+    - node1:
+        template: ContainerTemp3
+        num: 3
+    - node2:
+        template: ContainerTemp1
+        num: 1
+
+  networks:
+    - network1:
+        template: TunnelNetworkTemplate
+        containers:
+          - node2_1
+          - node1_1
+    - network2:
+        template: TunnelNetworkTemplate
+        containers:
+          - node1_1
+          - node1_2
+    - network3:
+        template: TunnelNetworkTemplate
+        containers:
+          - node1_1
+          - node1_3
