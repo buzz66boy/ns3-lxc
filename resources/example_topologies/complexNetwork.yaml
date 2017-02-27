@@ -3,21 +3,27 @@ include:
   - NetworkTemplates
 
 ComplexNetwork:
+  cidr: 20
+  ip: 10.0.0.0
   networks:
     - firstHalf: 
         template: ComplexNetworkHalf
+        ip: 10.0.0.0
     - secondHalf: 
         template: ComplexNetworkHalf
+        ip: 10.0.8.0
     - topConnect:
         template: WifiNetworkTemplate
+        ip: 10.0.4.0
         containers:
-          - firstHalf: node1_3
-          - secondHalf: node1_3
+          - firstHalf: top
+          - secondHalf: top
     - botConnect:
         template: WifiNetworkTemplate
+        ip: 10.0.5.0
         containers:
-          - firstHalf: node1_4
-          - secondHalf: node1_4
+          - firstHalf: bottom
+          - secondHalf: bottom
 
   applications:
     - bird: all
@@ -26,3 +32,9 @@ ComplexNetwork:
           args: -c ${secondHalf.node1_1.eth0.ip}
       - secondHalf: node1_1
           args: -s
+          
+  public_ifaces:
+    - left:
+        - firstHalf: left
+    - right:
+        - secondHalf: left

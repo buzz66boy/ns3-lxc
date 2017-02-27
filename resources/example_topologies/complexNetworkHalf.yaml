@@ -3,27 +3,43 @@ include:
   - network_templates
 
 ComplexNetworkHalf:
+  ip: 10.0.0.0
+  cidr: 22
+
   containers:
-    - node1:
-        template: ContainerTemp3
-        num: 3
-    - node2:
-        template: ContainerTemp1
+    - wifi:
+        template: 1eth_1wlan
+        num: 2
+    - end:
+        template: 2eth
         num: 1
+    - middle:
+        template: 3eth
 
   networks:
     - network1:
         template: TunnelNetworkTemplate
+        ip: 10.0.0.0
         containers:
-          - node2_1
-          - node1_1
+          - end: eth1
+          - middle: eth0
     - network2:
         template: TunnelNetworkTemplate
+        ip: 10.0.1.0
         containers:
-          - node1_1
-          - node1_2
+          - middle: eth1
+          - wifi_1: eth0
     - network3:
         template: TunnelNetworkTemplate
-        containers:
-          - node1_1
-          - node1_3
+        ip: 10.0.2.0
+        ifaces:
+          - middle: eth2
+          - wifi_2: eth0
+          
+      public_ifaces:
+        - top:
+            wifi_1: wlan0
+        - bottom:
+            wifi_2: wlan0
+        - left:
+            end: eth0

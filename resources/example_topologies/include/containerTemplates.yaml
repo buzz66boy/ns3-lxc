@@ -1,14 +1,19 @@
 ContainerTemplates:
-    - ContainerTemp1:
+    - 1eth:
         ifaces:
             - eth0
         apps:
             - bird
-    - ContainerTemp2:
+    - 1eth_1wlan:
         ifaces:
             - eth0
             - wlan0
-    - ContainerTemp3:
+    - 2eth:
         ifaces:
             - eth0
             - eth1
+    - 3eth:
+        ifaces:
+            - eth0
+            - eth1
+            - eth2
