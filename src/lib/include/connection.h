@@ -2,11 +2,13 @@
 #define __CONNECTION_H_INCLUDED__
 
 // forward declared dependencies
-class Iface;
+
 
 // include dependencies
 #include <string>
 #include <vector>
+
+#include "ifaceHelper.h"
 
 namespace ns3lxc {
 
@@ -20,13 +22,14 @@ private:
 	std::vector<Iface *> ifaces;
 	
 public:
-	Connection(std::string name, std::string type, int numIfaces);
+	Connection(std::string name, std::string type, int numIfaces): name(name), type(type), numIfaces(numIfaces) {};
 	
 	std::string getType() { return type; }
 	std::string getName() { return name; }
-	const vector<Iface *>& getIfaces() const { return ifaces; } 
+	const std::vector<Iface *>& getIfaces() const { return ifaces; } 
 	
 	int connectIface(std::string ifaceName, Iface *iface); // OVERRIDES IfaceAccepter
 };
 
+}
 #endif

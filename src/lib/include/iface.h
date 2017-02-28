@@ -9,6 +9,7 @@ class IpAddr;
 // include dependencies
 #include <string>
 #include "ipaddr.h"
+#include "ifaceHelper.h"
 
 namespace ns3lxc {
 

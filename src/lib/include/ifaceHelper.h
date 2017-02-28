@@ -6,6 +6,7 @@ class Iface;
 
 // include dependencies
 #include <string>
+#include <map>
 
 namespace ns3lxc {
 
