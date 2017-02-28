@@ -5,19 +5,19 @@
 
 #include "ipaddr.h"
 
-using namespace std;
+using namespace ns3lxc;
 
-Ipaddr::Ipaddr(uint32_t ipv4){
+IpAddr::IpAddr(uint32_t ipv4){
     ipv4_address = ipv4;
     ipv4 = true;
 }
 
-Ipaddr::Ipaddr(uint8_t *ipv6){
+IpAddr::IpAddr(uint8_t *ipv6){
     std::copy(ipv6, ipv6 + 16, ipv6_address_8);
     ipv4 = false;
 }
 
-Ipaddr::Ipaddr(int af, std::string addr){
+IpAddr::IpAddr(int af, std::string addr){
     switch(af){
         case(AF_INET):
             inet_pton(af, addr.c_str(), (void *) &ipv4_address);
@@ -33,7 +33,7 @@ Ipaddr::Ipaddr(int af, std::string addr){
     }
 }
 
-std::string Ipaddr::str(){
+std::string IpAddr::str(){
     char buf[INET6_ADDRSTRLEN];
 
     if(ipv4)

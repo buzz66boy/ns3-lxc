@@ -3,12 +3,16 @@ include: connection_templates
 NetworkTemplates:
     - TunnelNetworkTemplate:
         connections:
-            - CsmaTemplate                
-        ifaces: 2
+            - connect1: CsmaTemplate
+        ifacesAccepted:
+            - csma1 : connect1
+            - csma2 : connect1
         cidr: 24
         
     - WifiNetworkTemplate:
         connections:
-            - WifiTemplate
-        ifaces: 2
+            - connect1: WifiTemplate
+        ifacesAccepted:
+            - wifi1 : connect1
+            - wifi2 : connect1
         cidr: 24

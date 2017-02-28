@@ -8,7 +8,9 @@
 
 #include <arpa/inet.h>
 
-class Ipaddr {
+namespace ns3lxc {
+
+class IpAddr {
 private:
     bool ipv4;
     union {
@@ -16,17 +18,20 @@ private:
         uint32_t ipv6_address_32[4];
         uint32_t ipv4_address;
     };
-public:
-    Ipaddr(uint32_t ipv4_addr);
-    
-    Ipaddr(uint8_t *ipv6_addr);
-    Ipaddr(uint32_t *ipv6_addr) { Ipaddr((uint8_t *)ipv6_addr); }
 
-    Ipaddr(int af, std::string addr);
+public:
+    IpAddr(uint32_t ipv4_addr);
+    
+    IpAddr(uint8_t *ipv6_addr);
+    IpAddr(uint32_t *ipv6_addr) { IpAddr((uint8_t *)ipv6_addr); }
+
+    IpAddr(int af, std::string addr);
 
     bool is_ipv4() { return ipv4; }
 
 	std::string str();
 };
+
+}
 
 #endif

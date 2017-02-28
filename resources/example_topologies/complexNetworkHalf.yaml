@@ -1,5 +1,6 @@
 include:
   - container_templates
+  - connection_templates
   - network_templates
 
 ComplexNetworkHalf:
@@ -20,21 +21,21 @@ ComplexNetworkHalf:
     - network1:
         template: TunnelNetworkTemplate
         ip: 10.0.0.0
-        containers:
-          - end: eth1
-          - middle: eth0
+        ifaces:
+          - csma1: end eth1
+          - csma2: middle eth0
     - network2:
         template: TunnelNetworkTemplate
         ip: 10.0.1.0
-        containers:
-          - middle: eth1
-          - wifi_1: eth0
+        ifaces:
+          - csma1: middle eth1
+          - csma2: wifi_1 eth0
     - network3:
         template: TunnelNetworkTemplate
         ip: 10.0.2.0
         ifaces:
-          - middle: eth2
-          - wifi_2: eth0
+          - csma1: middle eth2
+          - csma2: wifi_2 eth0
           
       public_ifaces:
         - top:
