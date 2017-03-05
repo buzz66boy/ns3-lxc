@@ -11,6 +11,7 @@ class Iface;
 #include <vector>
 
 #include "position.h"
+#include "iface.h"
 
 namespace ns3lxc {
 
@@ -21,7 +22,7 @@ public:
 	std::map<std::string, Iface *> ifaces;
 	std::vector<Application> applications;
 	
-	Iface *getIface(std::string ifaceName) { return iface[ifaceName]; } // OVERRIDE IfaceProvider
+	Iface *getIface(std::string ifaceName) { return ifaces[ifaceName]; } // OVERRIDE IfaceProvider
 };
 
 }

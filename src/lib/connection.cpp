@@ -5,7 +5,7 @@
 
 using namespace ns3lxc;
 
-int Connection::connectIface(std::string ifaceName, Iface *iface){
+int ns3lxc::Connection::connectIface(std::string ifaceName, Iface *iface){
 	if(ifaces.size() < numIfaces){
 		ifaces.push_back(iface);
 		return 1;

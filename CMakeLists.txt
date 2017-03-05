@@ -18,14 +18,14 @@ set(Local_Libs
 		src/lib/include/ipaddr.h
 		src/lib/include/container.h
 		src/lib/include/iface.h
-		src/lib/include/ifaceHelper.h
 		src/lib/include/position.h
 		src/lib/include/connection.h
 		src/lib/include/network.h
 		src/lib/include/application.h
 		src/lib/ipaddr.cpp
-		src/lib/ifaceHelper.cpp
 		src/lib/connection.cpp
+        src/lib/network.cpp
+        src/lib/iface.cpp
 )
 
 set(NS-3_LXC

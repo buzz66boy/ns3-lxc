@@ -9,15 +9,15 @@
 namespace ns3lxc {
 
 // declarations
+class Position {
+public:
+    int x, y, z;
+    int time;
+};
+
 class Positionable {
 public:
 	std::vector<Position> positions;
-};
-
-class Position {
-public:
-	int x, y, z;
-	int time;
 };
 
 }

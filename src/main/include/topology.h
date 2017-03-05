@@ -3,18 +3,14 @@
 
 // forward declared dependencies
 
-class Interface;
-class Position;
-class Network;
-class Container;
-class Topology;
-
 // include dependencies
 #include <string>
 #include <vector>
 #include <map>
 
 #include <arpa/inet.h>
+
+#include "network.h"
 
 // declarations
 
@@ -40,53 +36,6 @@ class Topology;
 #define TAG_NETWORK_TYPE "type"
 #define TAG_NETWORK_CONNECTED "connected"
 
-Topology parse_topology_file(std::string topology_path);
-
-//interfaces
-class Nameable {
-public:
-	std::string name;
-};
-
-class Interfaceable {
-public:
-	std::vector<Interface> interfaces;
-};
-
-class Positionable {
-public:
-	std::vector<Position> positions;
-};
-
-//classes
-class Topology {
-public:
-	std::vector<Container> containers;
-	std::vector<Network> networks;
-	std::vector<Position> time_sorted_positions;
-	std::map<std::string, Interfaceable> if_to_inf;
-};
-
-class Container: public Nameable, public Interfaceable, public Positionable {};
-
-class Interface: public Nameable {
-public:
-	struct in_addr ip;
-};
-
-class Position {
-public:
-	Container *container;
-	int time;
-	int x;
-	int y;
-	int z;
-};
-
-class Network: public Nameable, public Interfaceable {
-public:
-	int type;
-	std::vector<std::string> connected;
-};
+ns3lxc::Network parseNetwork(std::string topology_path);
 
 #endif

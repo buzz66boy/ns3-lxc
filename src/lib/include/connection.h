@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "ifaceHelper.h"
+#include "iface.h"
 
 namespace ns3lxc {
 

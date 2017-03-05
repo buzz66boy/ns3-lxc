@@ -3,9 +3,10 @@
 #include <cstring>
 #include <unistd.h>
 
+#include "yaml-cpp/yaml.h"
+#include "network.h"
 #include "settings.h"
 #include "topology.h"
-#include "yaml-cpp/yaml.h"
 
 #define MAXPATHLEN 1024
 
@@ -45,10 +46,10 @@ int main(int argc, char *argv[]){
 		return result;
 	}
 	
-	Topology topology;
+	ns3lxc::Network topology;
 	
 	if(argc > 1){
-		topology = parse_topology_file(argv[1]);
+		topology = parseNetwork(argv[1]);
 	} else {
 		cerr << NO_FILE_PROVIDED << endl;
 		return 1;
