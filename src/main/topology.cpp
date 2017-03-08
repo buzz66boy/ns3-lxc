@@ -22,10 +22,10 @@ static ns3lxc::Network parseNetwork(YAML::Node network);
 static ns3lxc::Container parseContainer(YAML::Node container);
 static ns3lxc::Iface parseInterface(YAML::Node interface);
 
-ns3lxc::Network parseNetwork(string topology_path){
-	ns3lxc::Network net;
+Topology parseTopology(string topology_path){
+	Topology top;
 	
-	return net;
+	return top;
 }
 
 static ns3lxc::Network parseNetwork(YAML::Node network){

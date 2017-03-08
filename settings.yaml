@@ -1,10 +1,10 @@
 # use this file to set variables and paths that the program relies on
 
 # path variable to ns-3 location
-NS-3_PATH: /home/user/ns-allinone-3.26
+NS-3_PATH: /home/mike/apps/ns-allinone-3.26
 
 # path variable to script output location
-SCRIPT_DEST: /home/user/NS-3_LXC/temp/scripts
+SCRIPT_DEST: /home/mike/NS-3_LXC/temp/scripts
 
 # path variable to store container output
-OUTPUT_DEST: /home/user/NS-3_LXC/temp/output
+OUTPUT_DEST: /home/mike/NS-3_LXC/temp/output

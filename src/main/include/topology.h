@@ -11,6 +11,8 @@
 #include <arpa/inet.h>
 
 #include "network.h"
+#include "container.h"
+
 
 // declarations
 
@@ -36,6 +38,13 @@
 #define TAG_NETWORK_TYPE "type"
 #define TAG_NETWORK_CONNECTED "connected"
 
-ns3lxc::Network parseNetwork(std::string topology_path);
+class Topology {
+	std::map<std::string, ns3lxc::Network> networks;
+	std::map<std::string, ns3lxc::Container> containers;
+	std::map<std::string, ns3lxc::Connection> connections;
+	std::map<std::string, ns3lxc::Application> applications;
+};
+
+Topology parseTopology(std::string topology_path);
 
 #endif

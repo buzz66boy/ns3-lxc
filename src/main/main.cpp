@@ -46,10 +46,10 @@ int main(int argc, char *argv[]){
 		return result;
 	}
 	
-	ns3lxc::Network topology;
+	Topology topology;
 	
 	if(argc > 1){
-		topology = parseNetwork(argv[1]);
+		topology = parseTopology(argv[1]);
 	} else {
 		cerr << NO_FILE_PROVIDED << endl;
 		return 1;
