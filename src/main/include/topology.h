@@ -12,26 +12,22 @@
 
 #include "network.h"
 #include "container.h"
-
+#include "application.h"
 
 // declarations
 
-#define FLAG_START "<"
-#define FLAG_END ">"
-#define FLAG_TERMINATE_START "</"
-
-#define TAG_START_COMMENT "<!--"
-#define TAG_END_COMMENT "-->"
-
-#define TAG_TOPOLOGY "topology" 
+// NOTE: these tags can also be used plurally (checks for tag + "s")
+#define TAG_INCLUDE "include" 
 #define TAG_CONTAINER "container" 
 #define TAG_NETWORK "network"
+#define TAG_APPLICATION "application"
+#define TAG_CONNECTION "connection"
+#define TAG_POSITION "position"
+#define TAG_IFACE "iface"
+#define TAG_IFACES_ACCEPTED "ifacesAccepted"
+#define TAG_IFACES_PROVIDED "ifacesProvided"
 
 #define TAG_COMMON_NAME "name"
-
-#define TAG_CONTAINER_INTERFACE "interface"
-#define TAG_CONTAINER_POSITION "position"
-#define TAG_CONTAINER_OS "os"
 
 #define TAG_INTERFACE_IP "ip"
 
