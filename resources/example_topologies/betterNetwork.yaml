@@ -1,0 +1,16 @@
+include:
+    - simpletNetwork
+
+BetterNetwork:
+    ip: 11.0.0.0
+    cidr: 24
+    containers:
+      - masterPC:
+          ifaces:
+            wlan0
+    networks:
+      - simpleNetwork1:
+          template: SimpleNetwork
+          ip: 11.0.0.100
+          ifaces:
+            - wifiBridge: masterPc wlan0

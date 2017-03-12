@@ -24,6 +24,7 @@
 #define TAG_CONNECTION "connection"
 #define TAG_POSITION "position"
 #define TAG_IFACE "iface"
+
 #define TAG_IFACES_ACCEPTED "ifacesAccepted"
 #define TAG_IFACES_PROVIDED "ifacesProvided"
 

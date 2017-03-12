@@ -1,0 +1,29 @@
+SimpleNetwork:
+    containers:
+        - MyPC:
+            ifaces:
+                - eth0
+                - eth2
+        - Router:
+            ifaces:
+                - fa0/0
+        - Internal:
+            ifaces:
+                - eth0
+    connections:
+        - wire1:
+            ip: 10.0.0.0
+            cidr: 29
+            type: wifi
+            ifaces:
+              - MyPc eth0 10.0.0.1
+              - Router fa0/0 10.0.0.2
+            ifacesAccepted:
+              - wifiBridge
+        - wire2:
+            ip: 12.0.0.0
+            cidr: 24
+            type: csma
+            ifaces:
+              - MyPC eth2 12.0.0.1
+              - Internal eth0 12.0.0.2

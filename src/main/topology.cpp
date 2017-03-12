@@ -22,9 +22,15 @@ static ns3lxc::Network parseNetwork(YAML::Node network);
 static ns3lxc::Container parseContainer(YAML::Node container);
 static ns3lxc::Iface parseInterface(YAML::Node interface);
 
+static std::string pluralize(std::string str){
+	return str + "s";
+}
+
 Topology parseTopology(string topology_path){
 	Topology top;
 	
+	YAML::Node topology = YAML::LoadFile(topology_path);
+
 	return top;
 }
 
