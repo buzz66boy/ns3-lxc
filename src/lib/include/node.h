@@ -16,7 +16,7 @@ class Iface;
 namespace ns3lxc {
 
 // declarations
-class Container : public Positionable, public IfaceProvider {
+class Node : public Positionable, public IfaceProvider {
 public:
 	std::string name;
 	std::map<std::string, Iface *> ifaces;

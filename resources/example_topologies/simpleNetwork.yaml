@@ -1,5 +1,5 @@
 SimpleNetwork:
-    containers:
+    nodes:
         - MyPC:
             ifaces:
                 - eth0

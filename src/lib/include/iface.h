@@ -2,7 +2,7 @@
 #define __IFACE_H_INCLUDED__
 
 // forward declared dependencies
-class Container;
+class Node;
 class Connection;
 class IpAddr;
 
@@ -30,7 +30,7 @@ public:
 class Iface : public IfaceProvider {
 public:
 	std::string name;
-	Container *container;
+	Node *node;
 	Connection *connection;
 	IpAddr *address;
 	ns3lxc::Iface *getIface(std::string ifaceName) { return this; }

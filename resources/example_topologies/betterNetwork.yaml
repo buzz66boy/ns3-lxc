@@ -1,10 +1,10 @@
 include:
-    - simpletNetwork
+    - simpleNetwork
 
 BetterNetwork:
     ip: 11.0.0.0
     cidr: 24
-    containers:
+    nodes:
       - masterPC:
           ifaces:
             wlan0

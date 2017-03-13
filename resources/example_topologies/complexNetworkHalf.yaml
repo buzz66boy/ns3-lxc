@@ -1,13 +1,13 @@
 include:
-  - container_templates
-  - connection_templates
-  - network_templates
+  - nodeTemplates
+  - connectionTemplates
+  - networkTemplates
 
 ComplexNetworkHalf:
   ip: 10.0.0.0
   cidr: 22
 
-  containers:
+  nodes:
     - wifi:
         template: 1eth_1wlan
         num: 2

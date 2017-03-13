@@ -5,7 +5,7 @@
 #include <sys/stat.h>
 
 #include "yaml-cpp/yaml.h"
-#include "settings.h"
+#include "settingsParser.h"
 
 #define NS3_PATH_STR "NS-3_PATH"
 #define SCRIPT_DEST_STR "SCRIPT_DEST"

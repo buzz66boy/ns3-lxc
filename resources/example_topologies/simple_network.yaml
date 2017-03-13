@@ -1,4 +1,4 @@
-containers:
+nodes:
 - node1: &node1
     ifaces:
       - iface: 

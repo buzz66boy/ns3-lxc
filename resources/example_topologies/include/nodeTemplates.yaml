@@ -1,4 +1,4 @@
-ContainerTemplates:
+NodeTemplates:
     - 1eth:
         ifaces:
             - eth0

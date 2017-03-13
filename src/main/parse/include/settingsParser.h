@@ -1,5 +1,5 @@
-#ifndef __SETTINGS_CONF_H_INCLUDED__
-#define __SETTINGS_CONF_H_INCLUDED__
+#ifndef __SETTINGS_PARSER_CONF_H_INCLUDED__
+#define __SETTINGS_PARSER_CONF_H_INCLUDED__
 
 // forward declared dependencies
 

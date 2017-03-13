@@ -2,7 +2,7 @@
 #define __APPLICATION_H_INCLUDED__
 
 // forward declared dependencies
-class Container;
+class Node;
 
 // include dependencies
 #include <vector>
@@ -16,7 +16,7 @@ class Application {
 public:
 	std::string name;
 	std::string path;
-	std::map<Container *, std::string> argMap;
+	std::map<Node *, std::string> argMap;
 };
 
 }
