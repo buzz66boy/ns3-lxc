@@ -10,7 +10,7 @@ Let's now look at how to declare simple links and nodes.
 #Simple Declarations
 
 A simple, unconnected CSMA link (comments denoted by '#'):
-```
+```yaml
 link:
     - simpleCsma:           # Name of link I am creating
         type: csma          # type of link (relates to a type of NS-3 link)
@@ -20,7 +20,7 @@ link:
 ```
 
 A simple, unconnected Node with 2 interfaces:
-```
+```yaml
 node:
     - 2ethNode:             # Name of node
         ifaces:             # Declaring interfaces
@@ -29,7 +29,7 @@ node:
 ```
 
 Now, let's connect two nodes via a link:
-```
+```yaml
 nodes:                          # Declare nodes
     - 1ethNode1:                # Name of first node
         ifaces:
@@ -48,7 +48,7 @@ link:                           # Declare links
 #Templating and Inclusion (Includes)
 In the previous example, two nearly identical (but differently named) nodes were created. To make it easier to create duplicates of nodes or links, templates can be declared for each.
 This is an identical topology to the one previously declared:
-```
+```yaml
 nodes:                          # Declare nodes
     - 1ethNode:                 # Name of template node
         ifaces:
@@ -67,7 +67,7 @@ To prevent redundancy between topologies, explicit templates can be declared. Ex
 An example of explicit templates.
 
 nodeTemplates.yaml
-```
+```yaml
 nodeTemplates:
     - 1ethNode:
         ifaces:
@@ -77,7 +77,7 @@ nodeTemplates:
 Now, let's use that template in a topology. To do so, we need to tell the parser we are using another file to help construct our topology. This is done via the "includes"
 
 myTopology.yaml
-```
+```yaml
 includes:
     - nodeTemplates             # List other files referenced
 
@@ -96,7 +96,7 @@ link:
 The same templating can be done with links.
 
 linkTemplates.yaml
-```
+```yaml
 linkTemplates:
     - csmaLink:
         type: csma
@@ -108,7 +108,7 @@ linkTemplates:
 Now, let's use both of our templates in a topology.
 
 myTopology.yaml
-```
+```yaml
 includes:
     - nodeTemplates                 # List other files referenced
     - linkTemplates
@@ -129,7 +129,7 @@ Notice, this time we explicitly named the topology 'myTopology', this is useful 
 Below is a simple topology that will be instantiated/included in another topology:
 
 simpleTop.yaml
-```
+```yaml
 simpleTop:                          # Name of topology
     nodes:
         - 1ethNode:
@@ -151,7 +151,7 @@ simpleTop:                          # Name of topology
 ```
 
 Now, we'll instantiate two of the above topologies, and connect them with a link
-```
+```yaml
 includes:
     - simpleTop
 
