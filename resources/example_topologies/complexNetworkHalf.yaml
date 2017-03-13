@@ -33,10 +33,10 @@ ComplexNetworkHalf:
           - middle eth2
           - wifi_2 eth0
           
-      ifacesProvided:
-        - top:
-            wifi_1 wlan0
-        - bottom:
-            wifi_2 wlan0
-        - left:
-            end eth0
+  ifacesProvided:
+    - top:
+        wifi_1 wlan0
+    - bottom:
+        wifi_2 wlan0
+    - left:
+        end eth0

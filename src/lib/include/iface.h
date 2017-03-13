@@ -3,7 +3,7 @@
 
 // forward declared dependencies
 class Node;
-class Connection;
+class Link;
 class IpAddr;
 
 // include dependencies
@@ -31,7 +31,7 @@ class Iface : public IfaceProvider {
 public:
 	std::string name;
 	Node *node;
-	Connection *connection;
+	Link *link;
 	IpAddr *address;
 	ns3lxc::Iface *getIface(std::string ifaceName) { return this; }
 

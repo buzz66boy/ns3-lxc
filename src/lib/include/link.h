@@ -13,7 +13,7 @@
 namespace ns3lxc {
 
 // declarations
-class Connection : public IfaceAccepter {
+class Link : public IfaceAccepter {
 private:
 	std::string name;
 	std::string type;
@@ -22,7 +22,7 @@ private:
 	std::vector<Iface *> ifaces;
 	
 public:
-	Connection(std::string name, std::string type, int numIfaces): name(name), type(type), numIfaces(numIfaces) {};
+	Link(std::string name, std::string type, int numIfaces): name(name), type(type), numIfaces(numIfaces) {};
 	
 	std::string getType() { return type; }
 	std::string getName() { return name; }

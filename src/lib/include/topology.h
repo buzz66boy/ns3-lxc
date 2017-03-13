@@ -12,7 +12,7 @@
 #include "iface.h"
 #include "application.h"
 #include "node.h"
-#include "connection.h"
+#include "link.h"
 #include "ipaddr.h"
 
 namespace ns3lxc {
@@ -26,12 +26,12 @@ public:
 
 	std::vector<Topology> subtopologies;
 	std::vector<Node> nodes;
-	std::vector<Connection> connections;
+	std::vector<Link> links;
 	std::vector<Application> applications;
 	
 	std::map<std::string, Topology*> topMap;
 	std::map<std::string, Node*> nodeMap;
-	std::map<std::string, Connection*> connectionMap;
+	std::map<std::string, Link*> linkMap;
 	
 	Topology();
 };

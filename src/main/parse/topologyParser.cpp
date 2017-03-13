@@ -10,7 +10,7 @@
 
 #include "topology.h"
 #include "node.h"
-#include "connection.h"
+#include "link.h"
 #include "iface.h"
 #include "position.h"
 #include "topologyParser.h"
@@ -87,7 +87,7 @@ static ParsedTopology parseIncludes(YAML::Node includes, std::string topPath, Pa
 		}
 
 		parsedTop.nodes.insert(includedTop.nodeMap.begin(), includedTop.nodeMap.end());
-		parsedTop.connections.insert(includedTop.connectionMap.begin(), includedTop.connectionMap.end());
+		parsedTop.links.insert(includedTop.linkMap.begin(), includedTop.linkMap.end());
 		parsedTop.includedTopologies[curInclude] = &includedTop;
 	}
 	return parsedTop;
