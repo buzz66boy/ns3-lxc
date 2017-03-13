@@ -43,4 +43,4 @@ find_library(YAML_LIB yaml-cpp)
 target_link_libraries(ns3lxc ${YAML_LIB})
 
 
-target_compile_options(ns3lxc PUBLIC -std=c++11 -pthread)
+target_compile_options(ns3lxc PUBLIC -std=c++11 -pthread -Wfatal-errors)

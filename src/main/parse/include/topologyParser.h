@@ -38,10 +38,10 @@
 class ParsedTopology {
 public:
     ns3lxc::Topology topology;
-	std::map<std::string, ns3lxc::Topology> includedTopologies;
-	std::map<std::string, ns3lxc::Node> nodes;
-	std::map<std::string, ns3lxc::Connection> connections;
-	std::map<std::string, ns3lxc::Application> applications;
+	std::map<std::string, ns3lxc::Topology *> includedTopologies;
+	std::map<std::string, ns3lxc::Node *> nodes;
+	std::map<std::string, ns3lxc::Connection *> connections;
+	std::map<std::string, ns3lxc::Application *> applications;
 };
 
 ns3lxc::Topology parseTopologyFile(std::string topPath);

@@ -40,6 +40,18 @@ ns3lxc::Topology parseTopologyFile(std::string topPath){
 		parsedTop = parseIncludes(topology[pluralize(TAG_INCLUDE)], topPath, parsedTop);
 	}
 
+	if(topology[TAG_NODE]){
+
+	} else if (topology[pluralize(TAG_NODE)]) {
+
+	}
+
+	if(topology[TAG_TOPOLOGY]){
+
+	} else if (topology[pluralize(TAG_TOPOLOGY)]) {
+
+	}
+
 	return parsedTop.topology;
 }
 
@@ -71,9 +83,9 @@ static ParsedTopology parseIncludes(YAML::Node includes, std::string topPath, Pa
 			}
 		}
 
-		// parsedTop.nodes.insert(includedTop.nodeMap.begin(), includedTop.nodeMap.end());
-		// parsedTop.connections.insert(includedTop.connectionMap.begin(), includedTop.connectionMap.end());
-
+		parsedTop.nodes.insert(includedTop.nodeMap.begin(), includedTop.nodeMap.end());
+		parsedTop.connections.insert(includedTop.connectionMap.begin(), includedTop.connectionMap.end());
+		parsedTop.includedTopologies[curInclude] = &includedTop;
 	}
 	return parsedTop;
 }
