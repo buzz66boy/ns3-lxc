@@ -1,4 +1,5 @@
 SimpleNetwork:
+    ip: 10.0.0.0/29
     nodes:
         - MyPC:
             ifaces:
@@ -10,10 +11,8 @@ SimpleNetwork:
         - Internal:
             ifaces:
                 - eth0
-    connections:
+    links:
         - wire1:
-            ip: 10.0.0.0
-            cidr: 29
             type: wifi
             ifaces:
               - MyPc eth0 10.0.0.1

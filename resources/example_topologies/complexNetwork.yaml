@@ -1,29 +1,28 @@
 include:
   - ComplexNetworkHalf
-  - NetworkTemplates
 
 ComplexNetwork:
-  cidr: 20
-  ip: 10.0.0.0
-  networks:
+  ip: 10.0.0.0/20
+  topologies:
     - firstHalf: 
         template: ComplexNetworkHalf
-        ip: 10.0.0.0
+        offset: 0.0.0.0
     - secondHalf: 
         template: ComplexNetworkHalf
-        ip: 10.0.8.0
+        offset: 0.0.8.0
+  links:
     - topConnect:
-        template: WifiNetworkTemplate
-        ip: 10.0.4.0
+        type: wifi
+        offset: 0.0.4.0
         ifaces:
-          - firstHalf: top
-          - secondHalf: top
+          - firstHalf top 10.0.4.1
+          - secondHalf top 10.0.4.2
     - botConnect:
-        template: WifiNetworkTemplate
-        ip: 10.0.5.0
+        type: wifi
+        offset: 0.0.5.0
         ifaces:
-          - firstHalf: bottom
-          - secondHalf: bottom
+          - firstHalf bottom 10.0.5.1
+          - secondHalf bottom 10.0.5.2
 
   applications:
     - bird: all
@@ -33,8 +32,8 @@ ComplexNetwork:
       - secondHalf: node1_1
           args: -s
           
-  public_ifaces:
+  ifacesProvided:
     - left:
-        - firstHalf: left
+        - firstHalf left
     - right:
-        - secondHalf: left
+        - secondHalf left

@@ -26,7 +26,10 @@ static ns3lxc::Node parseNode(YAML::Node node);
 static ns3lxc::Iface parseInterface(YAML::Node interface);
 
 static std::string pluralize(std::string str){
-	return str + "s";
+	if(str == TAG_TOPOLOGY)
+		return "topologies";
+	else
+		return str + "s";
 }
 
 ns3lxc::Topology parseTopologyFile(std::string topPath){

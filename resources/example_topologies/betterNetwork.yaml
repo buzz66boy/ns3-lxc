@@ -8,9 +8,9 @@ BetterNetwork:
       - masterPC:
           ifaces:
             wlan0
-    networks:
+    topologies:
       - simpleNetwork1:
           template: SimpleNetwork
-          ip: 11.0.0.100
-          ifaces:
+          offset: 0.0.0.100
+          connectIface:
             - wifiBridge: masterPc wlan0

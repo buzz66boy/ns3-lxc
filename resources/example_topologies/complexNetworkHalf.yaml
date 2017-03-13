@@ -1,11 +1,9 @@
 include:
   - nodeTemplates
   - connectionTemplates
-  - networkTemplates
 
 ComplexNetworkHalf:
-  ip: 10.0.0.0
-  cidr: 22
+  ip: 10.0.0.0/22
 
   nodes:
     - wifi:
@@ -13,34 +11,32 @@ ComplexNetworkHalf:
         num: 2
     - end:
         template: 2eth
-        num: 1
     - middle:
         template: 3eth
 
-  networks:
+  links:
     - network1:
-        template: TunnelNetworkTemplate
-        ip: 10.0.0.0
+        class: csma
         ifaces:
-          - csma1: end eth1
-          - csma2: middle eth0
+          - end: eth1
+          - middle: eth0
     - network2:
-        template: TunnelNetworkTemplate
-        ip: 10.0.1.0
+        class: csma
+        offset: 0.0.1.0
         ifaces:
-          - csma1: middle eth1
-          - csma2: wifi_1 eth0
+          - middle eth1
+          - wifi_1 eth0
     - network3:
-        template: TunnelNetworkTemplate
-        ip: 10.0.2.0
+        class: csma
+        offset: 0.0.2.0
         ifaces:
-          - csma1: middle eth2
-          - csma2: wifi_2 eth0
+          - middle eth2
+          - wifi_2 eth0
           
-      public_ifaces:
+      ifacesProvided:
         - top:
-            wifi_1: wlan0
+            wifi_1 wlan0
         - bottom:
-            wifi_2: wlan0
+            wifi_2 wlan0
         - left:
-            end: eth0
+            end eth0

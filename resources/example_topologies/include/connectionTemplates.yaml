@@ -1,7 +1,0 @@
-ConnectionTemplates:
-    - WifiTemplate:
-        type: wifi
-        ifaces: 2
-    - CsmaTemplate:
-        type: csma
-        ifaces: 2
