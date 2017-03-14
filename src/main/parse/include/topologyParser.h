@@ -24,11 +24,13 @@
 #define TAG_CONNECTION "link"
 #define TAG_POSITION "position"
 #define TAG_IFACE "iface"
+#define TAG_TEMPLATE "template"
+#define TAG_NUM "num"
 
 #define TAG_IFACES_ACCEPTED "ifacesAccepted"
 #define TAG_IFACES_PROVIDED "ifacesProvided"
 
-#define TAG_COMMON_NAME "name"
+#define TAG_NAME "name"
 
 #define TAG_INTERFACE_IP "ip"
 

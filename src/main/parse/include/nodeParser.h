@@ -17,12 +17,6 @@
 
 // declarations
 
-class ParsedNode {
-public:
-    ns3lxc::Node node;
-    std::string templateName;
-
-    ParsedNode(YAML::Node node);
-};
+std::vector<ns3lxc::Node> parseNode(YAML::Node node, ParsedTopology top);
 
 #endif

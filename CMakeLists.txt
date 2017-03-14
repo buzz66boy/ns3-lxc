@@ -24,6 +24,7 @@ set(Local_Libs
 		src/lib/include/topology.h
 		src/lib/include/application.h
 		src/lib/ipaddr.cpp
+        src/lib/node.cpp
 		src/lib/link.cpp
         src/lib/topology.cpp
         src/lib/iface.cpp
