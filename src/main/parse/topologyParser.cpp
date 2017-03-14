@@ -27,7 +27,7 @@ static ParsedTopology parseNodes(YAML::Node nodes, ParsedTopology parsedTop);
 static ns3lxc::Topology parseTopology(YAML::Node topology);
 static ns3lxc::Iface parseInterface(YAML::Node interface);
 
-static std::string pluralize(std::string str){
+std::string pluralize(std::string str){
 	if(str == TAG_TOPOLOGY)
 		return "topologies";
 	else
@@ -46,7 +46,6 @@ ns3lxc::Topology parseTopologyFile(std::string topPath){
 	}
 
 	std::string topName = topPath.substr(topPath.find_last_of("\\/") + 1, topPath.find_last_of(".yaml") - topPath.find_last_of("\\/") - 5);
-	cout << topName << endl;
 
 	if(topology[topName]){
 		topology = topology[topName];
@@ -61,7 +60,6 @@ ns3lxc::Topology parseTopologyFile(std::string topPath){
 		parsedTop = parseNodes(topology[TAG_NODE], parsedTop);
 	} else if (topology[pluralize(TAG_NODE)]) {
 		parsedTop = parseNodes(topology[pluralize(TAG_NODE)], parsedTop);
-		cout << "found it" << endl;
 	}
 
 	if(topology[TAG_TOPOLOGY]){
@@ -88,12 +86,10 @@ static ParsedTopology parseIncludes(YAML::Node includes, std::string topPath, Pa
 
 		struct stat buffer;
 		if(stat(searchPath.c_str(), &buffer) == 0 && !S_ISDIR(buffer.st_mode)){
-			cout << "I found inc " << curInclude << " @ " << searchPath << endl;
 			includedTop = parseTopologyFile(searchPath);
 		} else {
 			searchPath = searchPath = topDir + "/include/" + curInclude + ".yaml";
 			if(stat(searchPath.c_str(), &buffer) == 0 && !S_ISDIR(buffer.st_mode)){
-				cout << "I found inc " << curInclude << " @ " << searchPath << endl;
 				includedTop = parseTopologyFile(searchPath);
 			} else {
 				cerr << "Couldn't find included file " << curInclude << " while parsing " << topPath << endl;
@@ -111,10 +107,8 @@ static ParsedTopology parseIncludes(YAML::Node includes, std::string topPath, Pa
 static ParsedTopology parseNodes(YAML::Node nodes, ParsedTopology parsedTop){
 	size_t i;
 	std::vector<ns3lxc::Node> curNodes;
-	cout <<"hhs" << endl;
 	for(i = 0; i < nodes.size(); ++i){
 		curNodes = parseNode(nodes[i], parsedTop);
-		cout << "here" << endl;
 		parsedTop.topology.nodes.insert(parsedTop.topology.nodes.end(), curNodes.begin(), curNodes.end());
 	}
 

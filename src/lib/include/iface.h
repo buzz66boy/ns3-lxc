@@ -2,8 +2,6 @@
 #define __IFACE_H_INCLUDED__
 
 // forward declared dependencies
-class Node;
-class Link;
 class IpAddr;
 
 // include dependencies
@@ -12,6 +10,8 @@ class IpAddr;
 
 namespace ns3lxc {
 class Iface;
+class Node;
+class Link;
 // declarations
 class IfaceProvider {
 public:
@@ -30,8 +30,8 @@ public:
 class Iface : public IfaceProvider {
 public:
 	std::string name;
-	Node *node;
-	Link *link;
+	ns3lxc::Node *node;
+	ns3lxc::Link *link;
 	IpAddr *address;
 	ns3lxc::Iface *getIface(std::string ifaceName) { return this; }
 

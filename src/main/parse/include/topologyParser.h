@@ -46,6 +46,8 @@ public:
 	std::map<std::string, ns3lxc::Application *> applications;
 };
 
+std::string pluralize(std::string str);
+
 ns3lxc::Topology parseTopologyFile(std::string topPath);
 
 #endif

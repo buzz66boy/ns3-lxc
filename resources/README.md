@@ -1,4 +1,4 @@
-#README - Topology Syntax
+# README - Topology Syntax
 
 A Topology in it's most basic form consists of nodes and links between nodes. The point of connection between a link and a node is an interface. This syntax built on top of the YAML
 language relies heavily on the use of interfaces (ifaces) and the ability to "provide" (to have an interface not connected to a link) or to "accept" them (have an unconnected end of
@@ -7,7 +7,7 @@ a link).
 
 Let's now look at how to declare simple links and nodes.
 
-##Simple Declarations
+## Simple Declarations
 
 A simple, unconnected CSMA link (comments denoted by '#'):
 ```yaml
@@ -45,7 +45,7 @@ link:                           # Declare links
             - 1ethNode2 eth0    # Connect 2nd node's eth0
 ```
 
-##Templating and Inclusion (Includes)
+## Templating and Inclusion (Includes)
 In the previous example, two nearly identical (but differently named) nodes were created. To make it easier to create duplicates of nodes or links, templates can be declared for each.
 This is an identical topology to the one previously declared:
 ```yaml
@@ -66,7 +66,7 @@ The previous topology is an example of an anonymous template. Anonymous template
 To prevent redundancy between topologies, explicit templates can be declared. Explicit templates can be included from one file into another.
 An example of explicit templates.
 
-###nodeTemplates.yaml
+### nodeTemplates.yaml
 ```yaml
 nodeTemplates:
     - 1ethNode:
@@ -76,7 +76,7 @@ nodeTemplates:
 
 Now, let's use that template in a topology. To do so, we need to tell the parser we are using another file to help construct our topology. This is done via the "includes"
 
-###myTopology.yaml
+### myTopology.yaml
 ```yaml
 includes:
     - nodeTemplates             # List other files referenced
@@ -95,7 +95,7 @@ link:
 
 The same templating can be done with links.
 
-###linkTemplates.yaml
+### linkTemplates.yaml
 ```yaml
 linkTemplates:
     - csmaLink:
@@ -107,7 +107,7 @@ linkTemplates:
 
 Now, let's use both of our templates in a topology.
 
-###myTopology.yaml
+### myTopology.yaml
 ```yaml
 includes:
     - nodeTemplates                 # List other files referenced
@@ -128,7 +128,7 @@ myTopology:
 Notice, this time we explicitly named the topology 'myTopology', this is useful when including topologies in another topology.
 Below is a simple topology that will be instantiated/included in another topology:
 
-###simpleTop.yaml
+### simpleTop.yaml
 ```yaml
 simpleTop:                          # Name of topology
     nodes:
@@ -151,27 +151,31 @@ simpleTop:                          # Name of topology
 ```
 
 Now, we'll instantiate two of the above topologies, and connect them with a link
-###twoSimpleTops.yaml
+### twoSimpleTops.yaml
 ```yaml
 includes:
     - simpleTop
 
 twoSimpleTops:
     topologies:
-        - simpleTopology1:                      #Instantiate an instance of simpleTop
+        - simpleTopology:                      #Instantiate two instances of simpleTop
             template: simpleTop
-        - simpleTopology2:
-            template: simpleTop
+            num: 2
     links:
         - linkThem:
             type: csma
             ifaces:
-                - simpleTopology1 looseIface    #Reference the ifaces by what they were named in the ifacesProvided of the subTopology
-                - simpleTopology2 looseIface
+                - simpleTopology_1 looseIface    #Reference the ifaces by what they were named in the ifacesProvided of the subTopology
+                - simpleTopology_2 looseIface
 ```
 
-##Inheritance
+## Inheritance
 
-##IP/MAC Address Assignment
+When using templates for nodes, links, or topologies, an important factor to understand is the use of inheritance and how it applies to those structures.
 
-##Positions
+In the scope of this project, inheritance refers to the sharing of attributes between a template and it's child element. In much the same way as Object-Oriented
+Programming, child element's declared attributes override the attributes of the template. 
+
+## IP/MAC Address Assignment
+
+## Positions
