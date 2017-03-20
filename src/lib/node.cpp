@@ -4,12 +4,12 @@ using namespace ns3lxc;
 
 
 
-ns3lxc::Node::Node(ns3lxc::Node temp, std::string nodeName){
+ns3lxc::Node::Node(ns3lxc::Node temp, std::string nodeName): Positionable(), IfaceProvider() {
     name = nodeName;
 
 }
 
-ns3lxc::Node::Node(const ns3lxc::Node &temp){
+ns3lxc::Node::Node(const ns3lxc::Node &temp): Positionable(), IfaceProvider() {
     name = temp.name;
 
 }

@@ -37,7 +37,8 @@ set(NS-3_LXC
     	src/main/parse/topologyParser.cpp
         src/main/parse/settingsParser.cpp
         src/main/parse/nodeParser.cpp
-        src/main/main.cpp)
+        src/main/main.cpp
+)
 
 add_executable(ns3lxc ${NS-3_LXC} ${Local_Libs})
 
@@ -46,4 +47,4 @@ find_library(YAML_LIB yaml-cpp)
 target_link_libraries(ns3lxc ${YAML_LIB})
 
 
-target_compile_options(ns3lxc PUBLIC -std=c++11 -pthread -Wfatal-errors)
+target_compile_options(ns3lxc PUBLIC -std=c++11 -pthread -g -Wfatal-errors)

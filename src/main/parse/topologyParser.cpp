@@ -4,8 +4,10 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+#include <memory>
 
 #include <arpa/inet.h>
+#include <sys/stat.h>
 
 #include "yaml-cpp/yaml.h"
 
@@ -16,7 +18,6 @@
 #include "position.h"
 #include "topologyParser.h"
 #include "nodeParser.h"
-#include <sys/stat.h>
 
 using namespace std;
 
@@ -61,7 +62,6 @@ ns3lxc::Topology parseTopologyFile(std::string topPath){
 	} else if (topology[pluralize(TAG_NODE)]) {
 		parsedTop = parseNodes(topology[pluralize(TAG_NODE)], parsedTop);
 	}
-
 	if(topology[TAG_TOPOLOGY]){
 
 	} else if (topology[pluralize(TAG_TOPOLOGY)]) {
@@ -99,7 +99,7 @@ static ParsedTopology parseIncludes(YAML::Node includes, std::string topPath, Pa
 
 		parsedTop.nodes.insert(includedTop.nodeMap.begin(), includedTop.nodeMap.end());
 		parsedTop.links.insert(includedTop.linkMap.begin(), includedTop.linkMap.end());
-		parsedTop.includedTopologies[curInclude] = &includedTop;
+		parsedTop.includedTopologies[curInclude] = includedTop;
 	}
 	return parsedTop;
 }

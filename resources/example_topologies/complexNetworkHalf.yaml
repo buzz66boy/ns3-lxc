@@ -1,6 +1,6 @@
 include:
   - nodeTemplates
-  - connectionTemplates
+  - linkTemplates
 
 ComplexNetworkHalf:
   ip: 10.0.0.0/22

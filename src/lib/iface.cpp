@@ -1,12 +1,13 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <memory>
 
 #include "iface.h"
 
 using namespace ns3lxc;
 
-ns3lxc::Iface *ns3lxc::IfaceProvider::getIface(std::string ifaceName){
+std::shared_ptr<ns3lxc::Iface> ns3lxc::IfaceProvider::getIface(std::string ifaceName){
     if(ifacesProvided[ifaceName] != nullptr && !ifacesProvidedSubNames[ifaceName].empty()){
         return ifacesProvided[ifaceName]->getIface( ifacesProvidedSubNames[ifaceName] );
     }
@@ -18,8 +19,4 @@ int ns3lxc::IfaceAccepter::connectIface(std::string ifaceName, Iface *iface){
         return ifacesAccepted[ifaceName]->connectIface( ifacesAcceptedSubNames[ifaceName], iface );
     }
     return 0;
-}
-
-ns3lxc::Iface::Iface(){
-    
 }

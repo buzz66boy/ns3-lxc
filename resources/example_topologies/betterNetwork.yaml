@@ -7,7 +7,7 @@ BetterNetwork:
     nodes:
       - masterPC:
           ifaces:
-            wlan0
+            - wlan0
     topologies:
       - simpleNetwork1:
           template: SimpleNetwork

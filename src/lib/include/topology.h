@@ -6,6 +6,7 @@
 // include dependencies
 #include <string>
 #include <vector>
+#include <memory>
 #include <cstdint>
 
 #include "position.h"
@@ -29,9 +30,9 @@ public:
 	std::vector<Link> links;
 	std::vector<Application> applications;
 	
-	std::map<std::string, Topology*> topMap;
-	std::map<std::string, Node*> nodeMap;
-	std::map<std::string, Link*> linkMap;
+	std::map<std::string, std::shared_ptr<Topology> > topMap;
+	std::map<std::string, std::shared_ptr<Node> > nodeMap;
+	std::map<std::string, std::shared_ptr<Link> > linkMap;
 	
 	Topology();
 };

@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <memory>
 
 #include <arpa/inet.h>
 
@@ -40,10 +41,10 @@
 class ParsedTopology {
 public:
     ns3lxc::Topology topology;
-	std::map<std::string, ns3lxc::Topology *> includedTopologies;
-	std::map<std::string, ns3lxc::Node *> nodes;
-	std::map<std::string, ns3lxc::Link *> links;
-	std::map<std::string, ns3lxc::Application *> applications;
+	std::map<std::string, ns3lxc::Topology> includedTopologies;
+	std::map<std::string, std::shared_ptr<ns3lxc::Node> > nodes;
+	std::map<std::string, std::shared_ptr<ns3lxc::Link> > links;
+	std::map<std::string, std::shared_ptr<ns3lxc::Application> > applications;
 };
 
 std::string pluralize(std::string str);
