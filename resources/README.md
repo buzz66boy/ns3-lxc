@@ -143,8 +143,8 @@ simpleTop:                          # Name of topology
         - nodeLinker:
             type: csma
             ifaces:
-                - 1ethNode1 eth0
-                - 1ethNode2 eth0
+                - 1ethNode eth0
+                - 2ethNode eth0
     ifacesProvided:                 # Declare there are unconnected interfaces
         - looseIface:               # Name the unconnected interface
             2ethNode eth1           # Map the name to the actual interface
