@@ -5,38 +5,15 @@
 
 // include dependencies
 #include <string>
-#include <vector>
 #include <map>
 #include <memory>
 
-#include <arpa/inet.h>
-
 #include "topology.h"
 #include "node.h"
+#include "link.h"
 #include "application.h"
 
 // declarations
-
-// NOTE: these tags can also be used plurally (checks for tag + "s")
-#define TAG_INCLUDE "include" 
-#define TAG_NODE "node" 
-#define TAG_TOPOLOGY "topology"
-#define TAG_APPLICATION "application"
-#define TAG_CONNECTION "link"
-#define TAG_POSITION "position"
-#define TAG_IFACE "iface"
-#define TAG_TEMPLATE "template"
-#define TAG_NUM "num"
-
-#define TAG_IFACES_ACCEPTED "ifacesAccepted"
-#define TAG_IFACES_PROVIDED "ifacesProvided"
-
-#define TAG_NAME "name"
-
-#define TAG_INTERFACE_IP "ip"
-
-#define TAG_NETWORK_TYPE "type"
-#define TAG_NETWORK_CONNECTED "connected"
 
 class ParsedTopology {
 public:
@@ -46,9 +23,6 @@ public:
 	std::map<std::string, std::shared_ptr<ns3lxc::Link> > links;
 	std::map<std::string, std::shared_ptr<ns3lxc::Application> > applications;
 };
-
-std::string pluralize(std::string str);
-std::vector<std::string> splitString(std::string str);
 
 ns3lxc::Topology parseTopologyFile(std::string topPath);
 

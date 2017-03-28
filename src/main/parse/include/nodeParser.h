@@ -4,15 +4,9 @@
 // forward declared dependencies
 
 // include dependencies
-#include <string>
 #include <vector>
-#include <map>
 
-#include <arpa/inet.h>
-
-#include "topology.h"
 #include "node.h"
-#include "application.h"
 #include "topologyParser.h"
 
 // declarations

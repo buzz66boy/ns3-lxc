@@ -2,7 +2,9 @@
 
 #include "yaml-cpp/yaml.h"
 
+#include "parserTags.h"
 #include "topologyParser.h"
+#include "link.h"
 #include "linkParser.h"
 
 using namespace std;

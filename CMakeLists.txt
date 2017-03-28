@@ -15,6 +15,12 @@ include_directories(
         src/lib/include
 )
 
+set(Link_Types
+        src/linkTypes/include/linkType.h
+        src/linkTypes/include/linkTypeMap.h
+        # Add your link types here (both .h and .cpp)
+)
+
 set(Local_Libs
 		src/lib/include/ipaddr.h
 		src/lib/include/node.h
@@ -31,10 +37,12 @@ set(Local_Libs
 )
 
 set(NS-3_LXC
+        src/main/parse/include/parserTags.h
         src/main/parse/include/settingsParser.h
     	src/main/parse/include/topologyParser.h
         src/main/parse/include/nodeParser.h
         src/main/parse/include/linkParser.h
+        src/main/parse/parserTags.cpp
     	src/main/parse/topologyParser.cpp
         src/main/parse/settingsParser.cpp
         src/main/parse/nodeParser.cpp
@@ -44,11 +52,11 @@ set(NS-3_LXC
         src/main/main.cpp
 )
 
-add_executable(ns3lxc ${NS-3_LXC} ${Local_Libs})
+add_executable(ns3lxc ${NS-3_LXC} ${Local_Libs} ${Link_Types})
 
 find_library(YAML_LIB yaml-cpp)
 
 target_link_libraries(ns3lxc ${YAML_LIB})
 
 
-target_compile_options(ns3lxc PUBLIC -std=c++11 -pthread -g -Wfatal-errors)
+target_compile_options(ns3lxc PUBLIC -std=c++11 -pthread -g -Wfatal-errors -pipe)

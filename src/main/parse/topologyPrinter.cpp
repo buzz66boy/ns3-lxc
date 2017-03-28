@@ -1,3 +1,5 @@
+#include "logger.h"
+#include "topologyParser.h"
 #include "topologyPrinter.h"
 
 using namespace std;

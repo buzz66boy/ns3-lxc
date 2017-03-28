@@ -16,9 +16,10 @@
 #include "link.h"
 #include "iface.h"
 #include "position.h"
-#include "topologyParser.h"
+#include "parserTags.h"
 #include "nodeParser.h"
 #include "linkParser.h"
+#include "topologyParser.h"
 
 using namespace std;
 
@@ -29,22 +30,6 @@ static ParsedTopology parseLinks(YAML::Node links, ParsedTopology parsedTop);
 // for parsing a structure, string returned is remainder of string passed in
 static ns3lxc::Topology parseTopology(YAML::Node topology);
 static ns3lxc::Iface parseInterface(YAML::Node interface);
-
-std::string pluralize(std::string str){
-	if(str == TAG_TOPOLOGY)
-		return "topologies";
-	else
-		return str + "s";
-}
-
-std::vector<std::string> splitString(std::string str){
-    std::vector<std::string> result;
-    std::istringstream stream(str);
-    for(std::string s; stream >> s; ){
-        result.push_back(s);
-    }
-    return result;
-}
 
 ns3lxc::Topology parseTopologyFile(std::string topPath){
 	ParsedTopology parsedTop;

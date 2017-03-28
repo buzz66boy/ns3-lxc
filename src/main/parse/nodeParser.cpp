@@ -6,12 +6,22 @@
 #include "yaml-cpp/yaml.h"
 
 #include "node.h"
+#include "iface.h"
+#include "parserTags.h"
 #include "topologyParser.h"
 #include "nodeParser.h"
 
 using namespace std;
 
-static std::vector<std::shared_ptr<ns3lxc::Iface> > parseNodeIfaces(YAML::Node ifaces, ns3lxc::Node *node);
+static std::vector<std::shared_ptr<ns3lxc::Iface> > parseNodeIfaces(YAML::Node ifaces, ns3lxc::Node *node){
+    vector<std::shared_ptr<ns3lxc::Iface> > ifaceList(ifaces.size());
+    for(size_t i = 0; i < ifaces.size(); ++i){
+        ifaceList[i] = std::shared_ptr<ns3lxc::Iface>(new ns3lxc::Iface);
+        ifaceList[i]->node = node;
+        ifaceList[i]->name = ifaces[i].as<std::string>();
+    }
+    return ifaceList;
+}
 
 std::vector<ns3lxc::Node> parseNode(YAML::Node node, ParsedTopology top){
     size_t iters = 1;
@@ -47,14 +57,4 @@ std::vector<ns3lxc::Node> parseNode(YAML::Node node, ParsedTopology top){
         }
     }
     return nodeList;
-}
-
-static std::vector<std::shared_ptr<ns3lxc::Iface> > parseNodeIfaces(YAML::Node ifaces, ns3lxc::Node *node){
-    vector<std::shared_ptr<ns3lxc::Iface> > ifaceList(ifaces.size());
-    for(size_t i = 0; i < ifaces.size(); ++i){
-        ifaceList[i] = std::shared_ptr<ns3lxc::Iface>(new ns3lxc::Iface);
-        ifaceList[i]->node = node;
-        ifaceList[i]->name = ifaces[i].as<std::string>();
-    }
-    return ifaceList;
 }
