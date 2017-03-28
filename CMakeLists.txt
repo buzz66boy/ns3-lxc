@@ -37,6 +37,8 @@ set(NS-3_LXC
     	src/main/parse/topologyParser.cpp
         src/main/parse/settingsParser.cpp
         src/main/parse/nodeParser.cpp
+        src/main/include/logger.h
+        src/main/logger.cpp
         src/main/main.cpp
 )
 
