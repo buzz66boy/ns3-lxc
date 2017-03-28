@@ -14,7 +14,7 @@ std::shared_ptr<ns3lxc::Iface> ns3lxc::IfaceProvider::getIface(std::string iface
     return nullptr;
 }
 
-int ns3lxc::IfaceAccepter::connectIface(std::string ifaceName, Iface *iface){
+int ns3lxc::IfaceAccepter::connectIface(std::string ifaceName, std::shared_ptr<ns3lxc::Iface> iface){
     if(ifacesAccepted[ifaceName] != nullptr && !ifacesAcceptedSubNames[ifaceName].empty()){
         return ifacesAccepted[ifaceName]->connectIface( ifacesAcceptedSubNames[ifaceName], iface );
     }

@@ -48,6 +48,7 @@ public:
 };
 
 std::string pluralize(std::string str);
+std::vector<std::string> splitString(std::string str);
 
 ns3lxc::Topology parseTopologyFile(std::string topPath);
 

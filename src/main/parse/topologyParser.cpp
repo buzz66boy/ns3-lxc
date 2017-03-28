@@ -18,11 +18,13 @@
 #include "position.h"
 #include "topologyParser.h"
 #include "nodeParser.h"
+#include "linkParser.h"
 
 using namespace std;
 
 static ParsedTopology parseIncludes(YAML::Node includes, std::string topPath, ParsedTopology parsedTop);
 static ParsedTopology parseNodes(YAML::Node nodes, ParsedTopology parsedTop);
+static ParsedTopology parseLinks(YAML::Node links, ParsedTopology parsedTop);
 
 // for parsing a structure, string returned is remainder of string passed in
 static ns3lxc::Topology parseTopology(YAML::Node topology);
@@ -33,6 +35,15 @@ std::string pluralize(std::string str){
 		return "topologies";
 	else
 		return str + "s";
+}
+
+std::vector<std::string> splitString(std::string str){
+    std::vector<std::string> result;
+    std::istringstream stream(str);
+    for(std::string s; stream >> s; ){
+        result.push_back(s);
+    }
+    return result;
 }
 
 ns3lxc::Topology parseTopologyFile(std::string topPath){
@@ -112,6 +123,15 @@ static ParsedTopology parseNodes(YAML::Node nodes, ParsedTopology parsedTop){
 		parsedTop.topology.nodes.insert(parsedTop.topology.nodes.end(), curNodes.begin(), curNodes.end());
 	}
 
+	return parsedTop;
+}
+
+static ParsedTopology parseLinks(YAML::Node links, ParsedTopology parsedTop){
+	size_t i;
+	for(i = 0; i < links.size(); ++i){
+		ns3lxc::Link curLink = parseLink(links[i], parsedTop);
+		parsedTop.topology.links.push_back(curLink);
+	}
 	return parsedTop;
 }
 

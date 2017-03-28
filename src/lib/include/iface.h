@@ -20,6 +20,7 @@ public:
     IpAddr *address;
 
     Iface() {};
+    Iface(std::string name): name(name) {};
 };
 
 class IfaceProvider {
@@ -33,7 +34,7 @@ class IfaceAccepter {
 public:
     std::map<std::string, std::string> ifacesAcceptedSubNames; //maps this level's iface names to lower level's
     std::map<std::string, std::shared_ptr<ns3lxc::IfaceAccepter> > ifacesAccepted; //keep a ref to who below us accepts ifaces
-    int connectIface(std::string ifaceName, Iface *iface);
+    int connectIface(std::string ifaceName, std::shared_ptr<Iface> iface);
 };
 
 }
