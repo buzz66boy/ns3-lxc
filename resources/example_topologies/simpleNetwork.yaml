@@ -15,7 +15,7 @@ SimpleNetwork:
         - wire1:
             type: wifi
             ifaces:
-              - MyPc eth0 10.0.0.1
+              - MyPC eth0 10.0.0.1
               - Router fa0/0 10.0.0.2
             ifacesAccepted:
               - wifiBridge

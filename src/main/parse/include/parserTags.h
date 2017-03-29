@@ -9,7 +9,7 @@
 #define TAG_NODE "node" 
 #define TAG_TOPOLOGY "topology"
 #define TAG_APPLICATION "application"
-#define TAG_CONNECTION "link"
+#define TAG_LINK "link"
 #define TAG_POSITION "position"
 #define TAG_IFACE "iface"
 #define TAG_TEMPLATE "template"
@@ -20,10 +20,9 @@
 
 #define TAG_NAME "name"
 
-#define TAG_INTERFACE_IP "ip"
+#define TAG_IP "ip"
 
-#define TAG_NETWORK_TYPE "type"
-#define TAG_NETWORK_CONNECTED "connected"
+#define TAG_TYPE "type"
 
 //Utility functions for dealing with tags and topologies
 std::string pluralize(std::string str);

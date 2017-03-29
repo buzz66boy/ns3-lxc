@@ -5,12 +5,13 @@
 
 // include dependencies
 #include <vector>
+#include <memory>
 
 #include "node.h"
 #include "topologyParser.h"
 
 // declarations
 
-std::vector<ns3lxc::Node> parseNode(YAML::Node node, ParsedTopology top);
+std::vector<std::shared_ptr<ns3lxc::Node> > parseNode(YAML::Node node, ParsedTopology *top);
 
 #endif

@@ -25,10 +25,10 @@ public:
 	IpAddr *ip;
 	IpAddr *subnetMask;
 
-	std::vector<Topology> subtopologies;
-	std::vector<Node> nodes;
-	std::vector<Link> links;
-	std::vector<Application> applications;
+	std::vector<std::shared_ptr<Topology> > subtopologies;
+	std::vector<std::shared_ptr<Node> > nodes;
+	std::vector<std::shared_ptr<Link> > links;
+	std::vector<std::shared_ptr<Application> > applications;
 	
 	std::map<std::string, std::shared_ptr<Topology> > topMap;
 	std::map<std::string, std::shared_ptr<Node> > nodeMap;

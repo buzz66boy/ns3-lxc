@@ -40,10 +40,12 @@ set(NS-3_LXC
         src/main/parse/include/parserTags.h
         src/main/parse/include/settingsParser.h
     	src/main/parse/include/topologyParser.h
+        src/main/parse/include/subTopologyParser.h
         src/main/parse/include/nodeParser.h
         src/main/parse/include/linkParser.h
         src/main/parse/parserTags.cpp
     	src/main/parse/topologyParser.cpp
+        src/main/parse/subTopologyParser.cpp
         src/main/parse/settingsParser.cpp
         src/main/parse/nodeParser.cpp
         src/main/parse/linkParser.cpp

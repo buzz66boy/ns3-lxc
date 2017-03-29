@@ -15,12 +15,13 @@ class Link;
 class Iface {
 public:
     std::string name;
-    ns3lxc::Node *node;
-    ns3lxc::Link *link;
+    std::weak_ptr<ns3lxc::Node> node;
+    std::weak_ptr<ns3lxc::Link> link;
     IpAddr *address;
 
     Iface() {};
     Iface(std::string name): name(name) {};
+    Iface(std::string name, std::shared_ptr<ns3lxc::Node> node): name(name), node(node) {};
 };
 
 class IfaceProvider {
