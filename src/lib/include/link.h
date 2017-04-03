@@ -26,6 +26,7 @@ public:
 	Link(std::string name, std::string type, int numIfaces): name(name), type(type), numIfaces(numIfaces) {};
 	Link(std::string name, Link link);
 	Link(std::string name): name(name) {}
+	Link(const Link&);
 
 	std::string getType() { return type; }
 	void setType(std::string typ) { type = typ; }
@@ -37,7 +38,8 @@ public:
 
 	const std::vector<std::shared_ptr<Iface> >& getIfaces() const { return ifaces; } 
 	
-	int connectIface(std::shared_ptr<ns3lxc::Iface> iface); // OVERRIDES IfaceAccepter
+	int connectIface(std::weak_ptr<ns3lxc::Iface> iface); 
+	int connectIface(std::string ifaceName, std::weak_ptr<ns3lxc::Iface> iface); // OVERRIDES IfaceAccepter
 };
 
 }

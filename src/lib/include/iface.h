@@ -20,6 +20,7 @@ public:
     IpAddr *address;
 
     Iface() {};
+    Iface(const Iface&);
     Iface(std::string name): name(name) {};
     Iface(std::string name, std::shared_ptr<ns3lxc::Node> node): name(name), node(node) {};
 };
@@ -27,15 +28,15 @@ public:
 class IfaceProvider {
 public:
     std::map<std::string, std::string> ifacesProvidedSubNames; //maps this level's iface names to lower level's
-    std::map<std::string, std::shared_ptr<ns3lxc::IfaceProvider> > ifacesProvided; //keep a ref to the providers we contain
-    std::shared_ptr<ns3lxc::Iface> getIface(std::string ifaceName);
+    std::map<std::string, ns3lxc::IfaceProvider *> ifacesProvided; //keep a ref to the providers we contain
+    std::weak_ptr<ns3lxc::Iface> getIface(std::string ifaceName);
 };
 
 class IfaceAccepter {
 public:
     std::map<std::string, std::string> ifacesAcceptedSubNames; //maps this level's iface names to lower level's
-    std::map<std::string, std::shared_ptr<ns3lxc::IfaceAccepter> > ifacesAccepted; //keep a ref to who below us accepts ifaces
-    int connectIface(std::string ifaceName, std::shared_ptr<Iface> iface);
+    std::map<std::string, ns3lxc::IfaceAccepter *> ifacesAccepted; //keep a ref to who below us accepts ifaces
+    int connectIface(std::string ifaceName, std::weak_ptr<Iface> iface);
 };
 
 }

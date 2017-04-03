@@ -22,7 +22,7 @@ public:
 	std::map<std::string, std::shared_ptr<Iface> > ifaces;
 	std::vector<Application> applications;
 	
-	std::shared_ptr<Iface> getIface(std::string ifaceName); // OVERRIDE IfaceProvider
+	std::weak_ptr<Iface> getIface(std::string ifaceName); // OVERRIDE IfaceProvider
 
     Node(): Positionable(), IfaceProvider() {};
     Node(std::string name): Positionable(), IfaceProvider(), name(name) {};

@@ -110,9 +110,7 @@ static void parseNodes(YAML::Node nodes, ParsedTopology *parsedTop){
 		curNodes = parseNode(nodes[i], parsedTop);
 		parsedTop->topology.nodes.insert(parsedTop->topology.nodes.end(), curNodes.begin(), curNodes.end());
 		for(auto j = 0; j < curNodes.size(); ++j){
-			parsedTop->topology.nodes.push_back(curNodes[j]);
-			size_t curPos = curNodes.size() - 1;
-			parsedTop->topology.nodeMap.insert(std::map<std::string, std::shared_ptr<ns3lxc::Node> >::value_type(curNodes[j]->name, parsedTop->topology.nodes[curPos]));
+			parsedTop->topology.nodeMap.insert(std::map<std::string, std::shared_ptr<ns3lxc::Node> >::value_type(curNodes[j]->name, curNodes[j]));
 		}
 	}
 }

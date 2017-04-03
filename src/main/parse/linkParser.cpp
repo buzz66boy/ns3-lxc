@@ -38,8 +38,14 @@ std::shared_ptr<ns3lxc::Link> parseLink(YAML::Node node, ParsedTopology *top){
             std::vector<std::string> split = splitString(ifaceNode[i].as<std::string>());
             cout << "connecting " << split[0] << " " << split[1] << endl;
             if(top->topology.nodeMap.count(split[0]) > 0){
-                link->connectIface(top->topology.nodeMap[split[0]]->getIface(split[1]));
-                cout << "connected" << endl;
+                shared_ptr<ns3lxc::Node> nodePtr = top->topology.nodeMap[split[0]];
+                if(!nodePtr)
+                    cout << "NONODE" << endl;
+                shared_ptr<ns3lxc::Iface> ifacePtr = nodePtr->ifaces[split[1]];
+                if(!ifacePtr)
+                    cout << "NOIFACE" << endl;
+                else
+                    cout << nodePtr->ifaces[split[1]]->name << "connected" << endl;
             } else {
                 // Error
                 cerr << split[0] << " not found" << endl;

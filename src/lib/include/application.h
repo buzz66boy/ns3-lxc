@@ -16,7 +16,7 @@ class Application {
 public:
 	std::string name;
 	std::string path;
-	std::map<Node *, std::string> argMap;
+	std::map<std::string, std::string> argMap;
 };
 
 }
