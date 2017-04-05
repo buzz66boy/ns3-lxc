@@ -28,7 +28,8 @@ static void parseIncludes(YAML::Node includes, std::string topPath, ParsedTopolo
 static void parseNodes(YAML::Node nodes, ParsedTopology *parsedTop);
 static void parseLinks(YAML::Node links, ParsedTopology *parsedTop);
 static void parseSubTopologies(YAML::Node topologies, ParsedTopology *parsedTop);
-
+static void parseIfacesProvided(YAML::Node ifaces, ParsedTopology *parsedTop);
+static void parseIfacesAccepted(YAML::Node ifacesAccepted, ParsedTopology *parsedTop);
 static ns3lxc::Iface parseInterface(YAML::Node interface);
 
 ns3lxc::Topology parseTopologyFile(std::string topPath){
@@ -37,8 +38,10 @@ ns3lxc::Topology parseTopologyFile(std::string topPath){
 	YAML::Node topology = YAML::LoadFile(topPath);
 
 	if(topology[TAG_INCLUDE]){
+		cout << "Parsing includes" << endl;
 		parseIncludes(topology[TAG_INCLUDE], topPath, &parsedTop);
 	} else if (topology[pluralize(TAG_INCLUDE)]){
+		cout << "Parsing includes" << endl;
 		parseIncludes(topology[pluralize(TAG_INCLUDE)], topPath, &parsedTop);
 	}
 
@@ -50,6 +53,15 @@ ns3lxc::Topology parseTopologyFile(std::string topPath){
 		topName[0] = toupper(topName[0]);
 		if(topology[topName]){
 			topology = topology[topName];
+		}else{
+			
+		}
+	} else if ('A' <= topName[0] <= 'Z'){
+		topName[0] = tolower(topName[0]);
+		if(topology[topName]){
+			topology = topology[topName];
+		}else{
+
 		}
 	}
 
@@ -59,15 +71,23 @@ ns3lxc::Topology parseTopologyFile(std::string topPath){
 		parseNodes(topology[pluralize(TAG_NODE)], &parsedTop);
 	}
 	if(topology[TAG_TOPOLOGY]){
-
+		parseSubTopologies(topology[TAG_TOPOLOGY], &parsedTop);
 	} else if (topology[pluralize(TAG_TOPOLOGY)]) {
-
+		parseSubTopologies(topology[pluralize(TAG_TOPOLOGY)], &parsedTop);
 	}
 
 	if(topology[TAG_LINK]){
 		parseLinks(topology[TAG_LINK], &parsedTop);
 	} else if (topology[pluralize(TAG_LINK)]){
 		parseLinks(topology[pluralize(TAG_LINK)], &parsedTop);
+	}
+
+	if(topology[TAG_IFACES_PROVIDED]){
+		parseIfacesProvided(topology[TAG_IFACES_PROVIDED], &parsedTop);
+	}
+
+	if(topology[TAG_IFACES_ACCEPTED]){
+		parseIfacesAccepted(topology[TAG_IFACES_ACCEPTED], &parsedTop);
 	}
 
 	return parsedTop.topology;
@@ -104,6 +124,16 @@ static void parseIncludes(YAML::Node includes, std::string topPath, ParsedTopolo
 	}
 }
 
+static void parseSubTopologies(YAML::Node topologies, ParsedTopology *parsedTop){
+	for(auto i = 0; i < topologies.size(); ++i){
+		std::vector<std::shared_ptr<ns3lxc::Topology> > curTops = parseSubTopology(topologies[i], parsedTop);
+		for(auto curTop : curTops){
+			parsedTop->topology.subTopologies.push_back(curTop);
+			parsedTop->topology.topMap[curTop->name] = curTop;
+		}
+	}
+}
+
 static void parseNodes(YAML::Node nodes, ParsedTopology *parsedTop){
 	std::vector<shared_ptr<ns3lxc::Node> > curNodes;
 	for(auto i = 0; i < nodes.size(); ++i){
@@ -119,16 +149,14 @@ static void parseLinks(YAML::Node links, ParsedTopology *parsedTop){
 	for(auto i = 0; i < links.size(); ++i){
 		shared_ptr<ns3lxc::Link> curLink = parseLink(links[i], parsedTop);
 		parsedTop->topology.links.push_back(curLink);
+		parsedTop->topology.linkMap[curLink->getName()] = curLink;
 	}
 }
 
-static ns3lxc::Topology parseTopology(YAML::Node topology){
-	ns3lxc::Topology top;
-	
-	return top;
+static void parseIfacesProvided(YAML::Node ifaces, ParsedTopology *parsedTop){
+
 }
 
-static ns3lxc::Iface parseInterface(YAML::Node interface){
-	ns3lxc::Iface iface;
-	return iface;
+static void parseIfacesAccepted(YAML::Node ifacesAccepted, ParsedTopology *parsedTop){
+
 }

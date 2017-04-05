@@ -15,11 +15,11 @@
 using namespace std;
 
 static void parseNodeIfaces(YAML::Node ifaces, std::shared_ptr<ns3lxc::Node> node){
+    cout << "\tifaces:" << endl;
     for(size_t i = 0; i < ifaces.size(); ++i){
         std::string name = ifaces[i].as<std::string>();
-        cout << "ADDING " << name << endl;
-        node->ifaces[name] = std::shared_ptr<ns3lxc::Iface>(new ns3lxc::Iface(name, node));
-        cout << "add " << node->getIface(name).lock()->name << endl;
+        cout << "\t\t- " << name << endl;
+        node->ifaces[name] = std::shared_ptr<ns3lxc::Iface>(new ns3lxc::Iface(name, &(*node)));
     }
 }
 
@@ -36,12 +36,12 @@ std::vector<std::shared_ptr<ns3lxc::Node> > parseNode(YAML::Node node, ParsedTop
 
     for(size_t i = 0; i < iters; ++i){
         std::string name = origName;
-        std::vector<ns3lxc::Iface> ifaceList;
         std::shared_ptr<ns3lxc::Node> nodePtr = nullptr;
 
         if(iters > 1){
             name += "_" + std::to_string(i + 1); //start indexing at 1
         }
+        cout << "Node: " << name << endl;
         if(node[TAG_TEMPLATE]){
             nodePtr = shared_ptr<ns3lxc::Node>(new ns3lxc::Node( *top->nodes[node[TAG_TEMPLATE].as<std::string>()], name));
         } else {
@@ -53,7 +53,6 @@ std::vector<std::shared_ptr<ns3lxc::Node> > parseNode(YAML::Node node, ParsedTop
             parseNodeIfaces(node[pluralize(TAG_IFACE)], nodePtr);
         }
         nodeList.push_back(nodePtr);
-        cout << "node: " << name << endl;
     }
     return nodeList;
 }

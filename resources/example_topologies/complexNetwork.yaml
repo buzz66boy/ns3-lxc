@@ -1,5 +1,5 @@
 include:
-  - ComplexNetworkHalf
+  - complexNetworkHalf
 
 ComplexNetwork:
   ip: 10.0.0.0/20
@@ -27,13 +27,13 @@ ComplexNetwork:
   applications:
     - bird: all
     - udp:
-      - firstHalf: node1_1
+      - firstHalf:
           args: -c ${secondHalf.node1_1.eth0.ip}
-      - secondHalf: node1_1
+      - secondHalf:
           args: -s
           
   ifacesProvided:
     - left:
         - firstHalf left
     - right:
-        - secondHalf left
+        - secondHalf left 

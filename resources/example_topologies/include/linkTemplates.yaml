@@ -1,4 +1,4 @@
-LinkTemplates:
+links:
   - WifiTemplate:
       type: wifi
       ifaces: 2

@@ -1,4 +1,4 @@
-NodeTemplates:
+nodes:
     - 1eth:
         ifaces:
             - eth0

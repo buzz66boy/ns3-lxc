@@ -25,7 +25,7 @@ public:
 	IpAddr *ip;
 	IpAddr *subnetMask;
 
-	std::vector<std::shared_ptr<Topology> > subtopologies;
+	std::vector<std::shared_ptr<Topology> > subTopologies;
 	std::vector<std::shared_ptr<Node> > nodes;
 	std::vector<std::shared_ptr<Link> > links;
 	std::vector<std::shared_ptr<Application> > applications;
@@ -35,6 +35,9 @@ public:
 	std::map<std::string, std::shared_ptr<Link> > linkMap;
 	
 	Topology();
+	Topology(std::string name): name(name) {};
+	Topology(Topology *temp, std::string name);
+	Topology(const Topology&);
 };
 
 }

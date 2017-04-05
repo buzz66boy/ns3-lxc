@@ -6,22 +6,24 @@
 
 using namespace ns3lxc;
 
-static void copyIfaces(const ns3lxc::Node *from, const ns3lxc::Node *to){
+static void copyIfaces(const ns3lxc::Node *from, ns3lxc::Node *to){
+    to->ifaces = from->ifaces;
     for(auto it = from->ifaces.begin(); it != from->ifaces.end(); it++){
-
+        it->second->node = to;
     }
 }
 
 ns3lxc::Node::Node(ns3lxc::Node temp, std::string nodeName): Positionable(), IfaceProvider() {
     name = nodeName;
+    copyIfaces(&temp, this);
+    applications = temp.applications;
 
 }
 
 ns3lxc::Node::Node(const ns3lxc::Node &temp): Positionable(), IfaceProvider() {
     name = temp.name;
-    ifaces = temp.ifaces;
+    copyIfaces(&temp, this);
     applications = temp.applications;
-    std::cout << "copy node" << std::endl;
 }
 
 std::weak_ptr<Iface> ns3lxc::Node::getIface(std::string ifaceName){

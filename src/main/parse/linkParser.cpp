@@ -7,12 +7,17 @@
 #include "parserTags.h"
 #include "topologyParser.h"
 #include "link.h"
+#include "topology.h"
 #include "linkParser.h"
 
 using namespace std;
 
+bool doesLinkExist(YAML::Node node, ParsedTopology *top){
+    return (top->topology.linkMap.count(node.begin()->first.as<std::string>()) > 0);
+}
+
 std::shared_ptr<ns3lxc::Link> parseLink(YAML::Node node, ParsedTopology *top){
-    YAML::Node ifaceNode;
+    
     std::string name = node.begin()->first.as<std::string>();
     node = node[name];
 
@@ -25,6 +30,7 @@ std::shared_ptr<ns3lxc::Link> parseLink(YAML::Node node, ParsedTopology *top){
         link = std::shared_ptr<ns3lxc::Link>(new ns3lxc::Link(name));
     }
     int numIfaces = 0;
+    YAML::Node ifaceNode;
 
     if(node[TAG_IFACE]){
         ifaceNode = node[TAG_IFACE];
@@ -36,16 +42,31 @@ std::shared_ptr<ns3lxc::Link> parseLink(YAML::Node node, ParsedTopology *top){
     } else {
         for(size_t i = 0; i < ifaceNode.size(); ++i){
             std::vector<std::string> split = splitString(ifaceNode[i].as<std::string>());
-            cout << "connecting " << split[0] << " " << split[1] << endl;
+            cout << "\tconnecting " << split[0] << " " << split[1] << endl;
             if(top->topology.nodeMap.count(split[0]) > 0){
                 shared_ptr<ns3lxc::Node> nodePtr = top->topology.nodeMap[split[0]];
-                if(!nodePtr)
-                    cout << "NONODE" << endl;
-                shared_ptr<ns3lxc::Iface> ifacePtr = nodePtr->ifaces[split[1]];
-                if(!ifacePtr)
-                    cout << "NOIFACE" << endl;
-                else
-                    cout << nodePtr->ifaces[split[1]]->name << "connected" << endl;
+                if(!nodePtr){
+                    cout << "NO NODE" << endl;
+                    //err
+                }
+                shared_ptr<ns3lxc::Iface> ifacePtr = nodePtr->getIface(split[1]).lock();
+                if(!ifacePtr){
+                    cout << "NO IFACE" << endl;
+                    //err
+                }
+                link->connectIface(ifacePtr);
+            } else if(top->topology.topMap.count(split[0]) > 0){
+                shared_ptr<ns3lxc::Topology> topPtr = top->topology.topMap[split[0]];
+                if(!topPtr){
+                    cout << "NO TOP" << endl;
+                    //err
+                }
+                shared_ptr<ns3lxc::Iface> ifacePtr = topPtr->getIface(split[1]).lock();
+                if(!ifacePtr){
+                    cout << "NO IFACE" << endl;
+                    //err
+                }
+                link->connectIface(ifacePtr);
             } else {
                 // Error
                 cerr << split[0] << " not found" << endl;
@@ -54,4 +75,8 @@ std::shared_ptr<ns3lxc::Link> parseLink(YAML::Node node, ParsedTopology *top){
         }
     }
     return link;
+}
+
+void overrideLink(YAML::Node link, ParsedTopology *top){
+
 }

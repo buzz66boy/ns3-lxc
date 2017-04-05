@@ -16,9 +16,15 @@ include_directories(
 )
 
 set(Link_Types
-        src/linkTypes/include/linkType.h
-        src/linkTypes/include/linkTypeMap.h
+        src/links/include/linkType.h
+        src/links/include/linkTypeMap.h
         # Add your link types here (both .h and .cpp)
+)
+
+set(Application_Types
+        src/applications/include/applicationType.h
+        src/applications/include/applicationTypeMap.h
+        # Add your custom app files here
 )
 
 set(Local_Libs

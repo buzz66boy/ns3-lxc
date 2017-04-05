@@ -18,8 +18,8 @@ ComplexNetworkHalf:
     - network1:
         class: csma
         ifaces:
-          - end: eth1
-          - middle: eth0
+          - end eth1
+          - middle eth0
     - network2:
         class: csma
         offset: 0.0.1.0
