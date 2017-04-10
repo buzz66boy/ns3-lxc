@@ -32,7 +32,7 @@ static void parseIfacesProvided(YAML::Node ifaces, ParsedTopology *parsedTop);
 static void parseIfacesAccepted(YAML::Node ifacesAccepted, ParsedTopology *parsedTop);
 static ns3lxc::Iface parseInterface(YAML::Node interface);
 
-ns3lxc::Topology parseTopologyFile(std::string topPath){
+ns3lxc::Topology parseTopologyFile(std::string topPath){	
 	ParsedTopology parsedTop;
 	
 	YAML::Node topology = YAML::LoadFile(topPath);
@@ -53,44 +53,47 @@ ns3lxc::Topology parseTopologyFile(std::string topPath){
 		topName[0] = toupper(topName[0]);
 		if(topology[topName]){
 			topology = topology[topName];
-		}else{
-			
 		}
 	} else if ('A' <= topName[0] <= 'Z'){
 		topName[0] = tolower(topName[0]);
 		if(topology[topName]){
 			topology = topology[topName];
-		}else{
-
 		}
 	}
 
+	parseTopology(topology, &parsedTop);
+	return parsedTop.topology;
+}
+
+void parseTopology(YAML::Node topology, ParsedTopology *parsedTop){
+	
+	cout << "PARSING TOPOLOGY " << parsedTop->topology.name << endl;
+
 	if(topology[TAG_NODE]){
-		parseNodes(topology[TAG_NODE], &parsedTop);
+		parseNodes(topology[TAG_NODE], parsedTop);
 	} else if (topology[pluralize(TAG_NODE)]) {
-		parseNodes(topology[pluralize(TAG_NODE)], &parsedTop);
+		parseNodes(topology[pluralize(TAG_NODE)], parsedTop);
 	}
 	if(topology[TAG_TOPOLOGY]){
-		parseSubTopologies(topology[TAG_TOPOLOGY], &parsedTop);
+		parseSubTopologies(topology[TAG_TOPOLOGY], parsedTop);
 	} else if (topology[pluralize(TAG_TOPOLOGY)]) {
-		parseSubTopologies(topology[pluralize(TAG_TOPOLOGY)], &parsedTop);
+		parseSubTopologies(topology[pluralize(TAG_TOPOLOGY)], parsedTop);
 	}
 
 	if(topology[TAG_LINK]){
-		parseLinks(topology[TAG_LINK], &parsedTop);
+		parseLinks(topology[TAG_LINK], parsedTop);
 	} else if (topology[pluralize(TAG_LINK)]){
-		parseLinks(topology[pluralize(TAG_LINK)], &parsedTop);
+		parseLinks(topology[pluralize(TAG_LINK)], parsedTop);
 	}
 
 	if(topology[TAG_IFACES_PROVIDED]){
-		parseIfacesProvided(topology[TAG_IFACES_PROVIDED], &parsedTop);
+		parseIfacesProvided(topology[TAG_IFACES_PROVIDED], parsedTop);
 	}
 
 	if(topology[TAG_IFACES_ACCEPTED]){
-		parseIfacesAccepted(topology[TAG_IFACES_ACCEPTED], &parsedTop);
+		parseIfacesAccepted(topology[TAG_IFACES_ACCEPTED], parsedTop);
 	}
 
-	return parsedTop.topology;
 }
 
 static void parseIncludes(YAML::Node includes, std::string topPath, ParsedTopology *parsedTop){
@@ -127,9 +130,10 @@ static void parseIncludes(YAML::Node includes, std::string topPath, ParsedTopolo
 static void parseSubTopologies(YAML::Node topologies, ParsedTopology *parsedTop){
 	for(auto i = 0; i < topologies.size(); ++i){
 		std::vector<std::shared_ptr<ns3lxc::Topology> > curTops = parseSubTopology(topologies[i], parsedTop);
-		for(auto curTop : curTops){
+		for(shared_ptr<ns3lxc::Topology> curTop : curTops){
 			parsedTop->topology.subTopologies.push_back(curTop);
 			parsedTop->topology.topMap[curTop->name] = curTop;
+			
 		}
 	}
 }
@@ -138,9 +142,16 @@ static void parseNodes(YAML::Node nodes, ParsedTopology *parsedTop){
 	std::vector<shared_ptr<ns3lxc::Node> > curNodes;
 	for(auto i = 0; i < nodes.size(); ++i){
 		curNodes = parseNode(nodes[i], parsedTop);
+
 		parsedTop->topology.nodes.insert(parsedTop->topology.nodes.end(), curNodes.begin(), curNodes.end());
 		for(auto j = 0; j < curNodes.size(); ++j){
-			parsedTop->topology.nodeMap.insert(std::map<std::string, std::shared_ptr<ns3lxc::Node> >::value_type(curNodes[j]->name, curNodes[j]));
+			if(parsedTop->topology.nodeMap.count(curNodes[j]->name) > 0){
+				cout << "NODE EXISTS" << endl;
+			} else {
+				parsedTop->topology.nodeMap.insert(std::map<std::string, std::shared_ptr<ns3lxc::Node> >::value_type(curNodes[j]->name, curNodes[j]));
+				parsedTop->topology.nodes.push_back(curNodes[j]);
+			}
+
 		}
 	}
 }
@@ -148,13 +159,35 @@ static void parseNodes(YAML::Node nodes, ParsedTopology *parsedTop){
 static void parseLinks(YAML::Node links, ParsedTopology *parsedTop){
 	for(auto i = 0; i < links.size(); ++i){
 		shared_ptr<ns3lxc::Link> curLink = parseLink(links[i], parsedTop);
-		parsedTop->topology.links.push_back(curLink);
-		parsedTop->topology.linkMap[curLink->getName()] = curLink;
+		if(parsedTop->topology.linkMap.count(curLink->getName()) > 0){
+			cout << "LINK EXISTS" << endl;
+		} else {
+			parsedTop->topology.links.push_back(curLink);
+			parsedTop->topology.linkMap[curLink->getName()] = curLink;
+		}
 	}
 }
 
 static void parseIfacesProvided(YAML::Node ifaces, ParsedTopology *parsedTop){
+	cout << "PARSING IFACE PROV" << endl;
+	for(auto i = 0; i < ifaces.size(); ++i){
+		//cout << "THING " << ifaces[i] << endl;
+		vector<string> split = splitString(ifaces[i].begin()->second.as<string>());
+		parsedTop->topology.ifacesProvidedSubNames[ifaces[i].begin()->first.as<string>()] = split[1];
 
+		ns3lxc::IfaceProvider *provPtr;
+		if(parsedTop->topology.nodeMap.count(split[0]) > 0){
+			provPtr = &(*parsedTop->topology.nodeMap[split[0]]);
+		} else if(parsedTop->topology.topMap.count(split[0]) > 0){
+			provPtr = &(*parsedTop->topology.topMap[split[0]]);
+		} else {
+			cerr << "COULDNT FIND" << endl;
+		}
+		parsedTop->topology.ifacesProvided[ifaces[i].begin()->first.as<string>()] = provPtr;
+		// for(auto j = 0; j < ifaces[i].size(); ++i){
+
+		// }
+	}
 }
 
 static void parseIfacesAccepted(YAML::Node ifacesAccepted, ParsedTopology *parsedTop){

@@ -29,12 +29,13 @@ std::vector<std::shared_ptr<ns3lxc::Topology> > parseSubTopology(YAML::Node node
         if(iters > 1){
             name += "_" + std::to_string(i + 1); //start indexing at 1
         }
-        cout << "SubTopology: " << name << endl;
+        ParsedTopology tempTop;
+
         if(node[TAG_TEMPLATE]){
-            topPtr = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology( &top->includedTopologies[node[TAG_TEMPLATE].as<std::string>()], name));
-        } else {
-            topPtr = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(name));
+            tempTop.topology = ns3lxc::Topology( &top->includedTopologies[node[TAG_TEMPLATE].as<std::string>()], name);
         }
+        parseTopology(node, &tempTop);
+        topPtr = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(tempTop.topology));
         topList.push_back(topPtr);
     }
     return topList;

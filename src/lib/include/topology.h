@@ -36,7 +36,7 @@ public:
 	
 	Topology();
 	Topology(std::string name): name(name) {};
-	Topology(Topology *temp, std::string name);
+	Topology(Topology *temp, std::string newName);
 	Topology(const Topology&);
 };
 

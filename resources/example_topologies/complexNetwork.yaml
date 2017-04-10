@@ -33,7 +33,5 @@ ComplexNetwork:
           args: -s
           
   ifacesProvided:
-    - left:
-        - firstHalf left
-    - right:
-        - secondHalf left 
+    - left: firstHalf left
+    - right: secondHalf left 

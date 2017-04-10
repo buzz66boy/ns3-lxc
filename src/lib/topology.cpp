@@ -1,5 +1,6 @@
 #include <string>
 #include <memory>
+#include <iostream>
 
 #include "topology.h"
 
@@ -9,11 +10,14 @@ Topology::Topology(){
     
 }
 
-Topology::Topology(Topology *temp, std::string name): name(name){
+Topology::Topology(Topology *temp, std::string newName){
     Topology((const Topology&) *temp);
+    name = newName;
 }
 
 Topology::Topology(const Topology& temp){
+    name = temp.name;
+
     size_t i;
     for(i = 0; i < temp.subTopologies.size(); ++i){
         std::shared_ptr<Topology> ptr = std::shared_ptr<Topology>(new Topology(*temp.subTopologies[i]));
@@ -34,4 +38,9 @@ Topology::Topology(const Topology& temp){
         std::shared_ptr<Application> ptr = std::shared_ptr<Application>(new Application(*temp.applications[i]));
         applications.push_back(ptr);
     }
+    for(i = 0; i < temp.ifacesProvided.size(); ++i){
+        
+    }
+
+
 }

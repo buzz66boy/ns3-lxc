@@ -25,5 +25,6 @@ public:
 };
 
 ns3lxc::Topology parseTopologyFile(std::string topPath);
+void parseTopology(YAML::Node topology, ParsedTopology *parsedTop);
 
 #endif
