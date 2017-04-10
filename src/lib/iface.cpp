@@ -16,17 +16,16 @@ ns3lxc::Iface::Iface(const Iface& ifa){
 }
 
 std::weak_ptr<ns3lxc::Iface> ns3lxc::IfaceProvider::getIface(std::string ifaceName){
-    if(ifacesProvided[ifaceName] != nullptr && !ifacesProvidedSubNames[ifaceName].empty()){
-        return ifacesProvided[ifaceName]->getIface( ifacesProvidedSubNames[ifaceName] );
+    if(ifacesProvided.count(ifaceName) > 0){
+        std::cout <<"dasssGUD" <<std::endl;
+        return ifacesProvided[ifaceName].lock()->getIface( ifacesProvidedSubNames[ifaceName] );
     }
-    std::cout<< "BADBADBAD" << std::endl;
     return std::weak_ptr<ns3lxc::Iface>();
 }
 
 int ns3lxc::IfaceAccepter::connectIface(std::string ifaceName, std::weak_ptr<ns3lxc::Iface> iface){
-    if(ifacesAccepted[ifaceName] != nullptr && !ifacesAcceptedSubNames[ifaceName].empty()){
-        return ifacesAccepted[ifaceName]->connectIface( ifacesAcceptedSubNames[ifaceName], iface );
+    if(ifacesAccepted.count(ifaceName) > 0){
+        return ifacesAccepted[ifaceName].lock()->connectIface( ifacesAcceptedSubNames[ifaceName], iface );
     }
-    std::cout<< "BADBADBAD 2" << std::endl;
     return 0;
 }

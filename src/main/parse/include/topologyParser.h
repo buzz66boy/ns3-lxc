@@ -18,7 +18,7 @@
 class ParsedTopology {
 public:
     ns3lxc::Topology topology;
-	std::map<std::string, ns3lxc::Topology> includedTopologies;
+	std::map<std::string, std::shared_ptr<ns3lxc::Topology> > includedTopologies;
 	std::map<std::string, std::shared_ptr<ns3lxc::Node> > nodes;
 	std::map<std::string, std::shared_ptr<ns3lxc::Link> > links;
 	std::map<std::string, std::shared_ptr<ns3lxc::Application> > applications;

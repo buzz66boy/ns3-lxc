@@ -63,7 +63,7 @@ std::shared_ptr<ns3lxc::Link> parseLink(YAML::Node node, ParsedTopology *top){
                 }
                 shared_ptr<ns3lxc::Iface> ifacePtr = topPtr->getIface(split[1]).lock();
                 if(!ifacePtr){
-                    cout << "NO IFACE" << endl;
+                    cout << "NO IFACE " << split[1] << " "<< topPtr->ifacesProvidedSubNames.size() << endl;
                     //err
                 }
                 link->connectIface(ifacePtr);

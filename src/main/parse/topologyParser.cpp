@@ -60,7 +60,7 @@ ns3lxc::Topology parseTopologyFile(std::string topPath){
 			topology = topology[topName];
 		}
 	}
-
+	parsedTop.topology.name = topName;
 	parseTopology(topology, &parsedTop);
 	return parsedTop.topology;
 }
@@ -94,11 +94,13 @@ void parseTopology(YAML::Node topology, ParsedTopology *parsedTop){
 		parseIfacesAccepted(topology[TAG_IFACES_ACCEPTED], parsedTop);
 	}
 
+	cout << "DONE PARSING TOP " << parsedTop->topology.name << endl;
+
 }
 
 static void parseIncludes(YAML::Node includes, std::string topPath, ParsedTopology *parsedTop){
 	//Get dir of top file to search for included files
-	ns3lxc::Topology includedTop;
+	shared_ptr<ns3lxc::Topology> includedTop;
 	std::string curInclude;
 	std::string searchPath;
 	std::string topDir = topPath.substr(0, topPath.find_last_of("\\/"));
@@ -110,20 +112,20 @@ static void parseIncludes(YAML::Node includes, std::string topPath, ParsedTopolo
 
 		struct stat buffer;
 		if(stat(searchPath.c_str(), &buffer) == 0 && !S_ISDIR(buffer.st_mode)){
-			includedTop = parseTopologyFile(searchPath);
+			includedTop = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(parseTopologyFile(searchPath)));
 		} else {
 			searchPath = searchPath = topDir + "/include/" + curInclude + ".yaml";
 			if(stat(searchPath.c_str(), &buffer) == 0 && !S_ISDIR(buffer.st_mode)){
-				includedTop = parseTopologyFile(searchPath);
+				includedTop = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(parseTopologyFile(searchPath)));
 			} else {
 				cerr << "Couldn't find included file " << curInclude << " while parsing " << topPath << endl;
 				exit(10);
 			}
 		}
 
-		parsedTop->nodes.insert(includedTop.nodeMap.begin(), includedTop.nodeMap.end());
-		parsedTop->links.insert(includedTop.linkMap.begin(), includedTop.linkMap.end());
-		parsedTop->includedTopologies[curInclude] = includedTop;
+		parsedTop->nodes.insert(includedTop->nodeMap.begin(), includedTop->nodeMap.end());
+		parsedTop->links.insert(includedTop->linkMap.begin(), includedTop->linkMap.end());
+		parsedTop->includedTopologies[includedTop->name] = includedTop;
 	}
 }
 
@@ -133,7 +135,7 @@ static void parseSubTopologies(YAML::Node topologies, ParsedTopology *parsedTop)
 		for(shared_ptr<ns3lxc::Topology> curTop : curTops){
 			parsedTop->topology.subTopologies.push_back(curTop);
 			parsedTop->topology.topMap[curTop->name] = curTop;
-			
+			cout << "DA SIZE: " << curTop->ifacesProvidedSubNames.size() << endl;
 		}
 	}
 }
@@ -159,11 +161,11 @@ static void parseNodes(YAML::Node nodes, ParsedTopology *parsedTop){
 static void parseLinks(YAML::Node links, ParsedTopology *parsedTop){
 	for(auto i = 0; i < links.size(); ++i){
 		shared_ptr<ns3lxc::Link> curLink = parseLink(links[i], parsedTop);
-		if(parsedTop->topology.linkMap.count(curLink->getName()) > 0){
-			cout << "LINK EXISTS" << endl;
+		if(parsedTop->topology.linkMap.count(curLink->name) > 0){
+			cout << "LINK EXISTS" << curLink->name << endl;
 		} else {
 			parsedTop->topology.links.push_back(curLink);
-			parsedTop->topology.linkMap[curLink->getName()] = curLink;
+			parsedTop->topology.linkMap[curLink->name] = curLink;
 		}
 	}
 }
@@ -171,15 +173,15 @@ static void parseLinks(YAML::Node links, ParsedTopology *parsedTop){
 static void parseIfacesProvided(YAML::Node ifaces, ParsedTopology *parsedTop){
 	cout << "PARSING IFACE PROV" << endl;
 	for(auto i = 0; i < ifaces.size(); ++i){
-		//cout << "THING " << ifaces[i] << endl;
+		cout << "THING " << ifaces[i].begin()->first.as<string>() << endl;
 		vector<string> split = splitString(ifaces[i].begin()->second.as<string>());
 		parsedTop->topology.ifacesProvidedSubNames[ifaces[i].begin()->first.as<string>()] = split[1];
 
-		ns3lxc::IfaceProvider *provPtr;
+		std::weak_ptr<ns3lxc::IfaceProvider> provPtr;
 		if(parsedTop->topology.nodeMap.count(split[0]) > 0){
-			provPtr = &(*parsedTop->topology.nodeMap[split[0]]);
+			provPtr = parsedTop->topology.nodeMap[split[0]];
 		} else if(parsedTop->topology.topMap.count(split[0]) > 0){
-			provPtr = &(*parsedTop->topology.topMap[split[0]]);
+			provPtr = parsedTop->topology.topMap[split[0]];
 		} else {
 			cerr << "COULDNT FIND" << endl;
 		}

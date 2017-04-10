@@ -9,12 +9,13 @@ class Node;
 #include <string>
 #include <map>
 
+#include "nameable.h"
+
 namespace ns3lxc {
 
 // declarations
-class Application {
+class Application: public Nameable {
 public:
-	std::string name;
 	std::string path;
 	std::map<std::string, std::string> argMap;
 };

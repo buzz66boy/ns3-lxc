@@ -32,11 +32,19 @@ std::vector<std::shared_ptr<ns3lxc::Topology> > parseSubTopology(YAML::Node node
         ParsedTopology tempTop;
 
         if(node[TAG_TEMPLATE]){
-            tempTop.topology = ns3lxc::Topology( &top->includedTopologies[node[TAG_TEMPLATE].as<std::string>()], name);
+            string templateName = node[TAG_TEMPLATE].as<std::string>();
+            cout << "template: " << templateName << endl;
+            if(top->includedTopologies.count(templateName) > 0){
+                //tempTop.topology = ns3lxc::Topology(top->includedTopologies[templateName], name);
+                topPtr = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(top->includedTopologies[templateName], name));
+            } else {
+                cout <<"PRPOGBGB" << endl;
+            }
         }
-        parseTopology(node, &tempTop);
-        topPtr = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(tempTop.topology));
+        //parseTopology(node, &tempTop);
+        //topPtr = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(tempTop.topology));
         topList.push_back(topPtr);
+        cout << "SIZE AGAIN " << topPtr->ifacesProvidedSubNames.size() << endl;
     }
     return topList;
 }

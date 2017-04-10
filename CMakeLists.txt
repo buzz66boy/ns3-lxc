@@ -35,6 +35,7 @@ set(Local_Libs
 		src/lib/include/link.h
 		src/lib/include/topology.h
 		src/lib/include/application.h
+        src/lib/include/nameable.h
 		src/lib/ipaddr.cpp
         src/lib/node.cpp
 		src/lib/link.cpp

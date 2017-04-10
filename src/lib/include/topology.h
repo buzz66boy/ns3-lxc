@@ -15,13 +15,15 @@
 #include "node.h"
 #include "link.h"
 #include "ipaddr.h"
+#include "nameable.h"
 
 namespace ns3lxc {
 
 // declarations
-class Topology : public Positionable, public IfaceProvider, public IfaceAccepter {
+class Topology : public Positionable, public IfaceProvider, public IfaceAccepter, virtual public Nameable {
 public:
-	std::string name;
+	std::string name = "";
+
 	IpAddr *ip;
 	IpAddr *subnetMask;
 
@@ -36,7 +38,7 @@ public:
 	
 	Topology();
 	Topology(std::string name): name(name) {};
-	Topology(Topology *temp, std::string newName);
+	Topology(std::shared_ptr<Topology> temp, std::string newName);
 	Topology(const Topology&);
 };
 

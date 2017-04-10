@@ -5,6 +5,7 @@
 
 // include dependencies
 #include <vector>
+#include "nameable.h"
 
 namespace ns3lxc {
 
@@ -17,6 +18,7 @@ public:
 
 class Positionable {
 public:
+    virtual ~Positionable () {}
 	std::vector<Position> positions;
 };
 

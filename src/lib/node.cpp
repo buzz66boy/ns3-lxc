@@ -27,6 +27,7 @@ ns3lxc::Node::Node(const ns3lxc::Node &temp): Positionable(), IfaceProvider() {
 }
 
 std::weak_ptr<Iface> ns3lxc::Node::getIface(std::string ifaceName){
+    std::cout << "Calling getiface on node " << name << std::endl;
     if(ifaces.count(ifaceName) > 0){
         return std::weak_ptr<Iface>(ifaces[ifaceName]);
     } else {
