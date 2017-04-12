@@ -13,11 +13,15 @@ include_directories(
         src/main/include
         src/main/parse/include
         src/lib/include
+        src/links/include
+        src/applications/include
 )
 
 set(Link_Types
         src/links/include/linkType.h
         src/links/include/linkTypeMap.h
+        src/links/include/csma.h
+        src/links/csma.cpp
         # Add your link types here (both .h and .cpp)
 )
 
@@ -43,6 +47,10 @@ set(Local_Libs
         src/lib/iface.cpp
 )
 
+set(NS-3_Template_Write
+
+)
+
 set(NS-3_LXC
         src/main/parse/include/parserTags.h
         src/main/parse/include/settingsParser.h
@@ -61,7 +69,7 @@ set(NS-3_LXC
         src/main/main.cpp
 )
 
-add_executable(ns3lxc ${NS-3_LXC} ${Local_Libs} ${Link_Types})
+add_executable(ns3lxc ${NS-3_LXC} ${NS-3_Template_Write} ${Local_Libs} ${Link_Types})
 
 find_library(YAML_LIB yaml-cpp)
 

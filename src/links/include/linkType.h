@@ -6,13 +6,12 @@
 #include <ostream>
 
 class LinkType {
-    virtual ~LinkType() = 0;
 public:
-    int getIfacesSupported();
-    void writeTypeInit(std::ostream str);
-    void writeLinkInit(std::ostream str, std::string linkName, int linkNum);
-    void addIfaceToLink(std::ostream str, std::string ifaceName, std::string linkName, int linkNum);
-
+    virtual int getIfacesSupported() = 0;
+    virtual void writeIncludes(std::ostream str) = 0;
+    virtual void writeTypeInit(std::ostream str) = 0;
+    virtual void writeLinkInit(std::ostream str, std::string linkName, int linkNum) = 0;
+    virtual void addIfaceToLink(std::ostream str, std::string ifaceName, std::string linkName, int linkNum) = 0;
 };
 
 #endif

@@ -5,7 +5,8 @@
 #include <string>
 
 #include "linkType.h"
+#include "csma.h"
 
-static std::map<std::string, linkType> linkTypeMap = {};
+static std::map<std::string, linkType> linkTypeMap = {"csma", CSMA()};
 
 #endif

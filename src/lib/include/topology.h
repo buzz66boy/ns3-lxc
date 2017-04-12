@@ -22,6 +22,7 @@ namespace ns3lxc {
 // declarations
 class Topology : public Positionable, public IfaceProvider, public IfaceAccepter, virtual public Nameable {
 public:
+	int runTime = 60;
 	std::string name = "";
 
 	IpAddr *ip;

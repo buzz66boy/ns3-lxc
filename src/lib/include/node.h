@@ -20,6 +20,7 @@ namespace ns3lxc {
 class Node : public Positionable, public IfaceProvider, virtual public Nameable {
 public:
     std::string name;
+
 	std::map<std::string, std::shared_ptr<Iface> > ifaces;
 	std::vector<Application> applications;
 	

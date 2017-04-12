@@ -6,6 +6,8 @@
 // include dependencies
 #include <string>
 #include <memory>
+#include <cstdint>
+
 #include "ipaddr.h"
 #include "nameable.h"
 
@@ -17,7 +19,13 @@ class Iface : public Nameable {
 public:
     ns3lxc::Node *node;
     std::weak_ptr<ns3lxc::Link> link;
-    IpAddr *address;
+    std::string bridgeName;
+    std::string tapName;
+
+    IpAddr *ip;
+    IpAddr *subnetMask;
+
+    std::array<uint8_t, 6> macAddr;
 
     Iface() {};
     Iface(const Iface&);

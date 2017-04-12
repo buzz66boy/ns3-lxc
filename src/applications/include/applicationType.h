@@ -11,6 +11,11 @@
 class ApplicationType {
     virtual ~ApplicationType() = 0;
 public:
+    /**
+     * Denotes whether the application should start with the simulation or before
+     *
+     **/
+    bool isApplicationSynced();
     std::string getConfigLocation(ns3lxc::Node, ns3lxc::Topology);
     void writeConfig(ns3lxc::Node, ns3lxc::Topology, std::ostream);
     void startExecution(ns3lxc::Node, ns3lxc::Topology, std::ostream);

@@ -12,7 +12,11 @@ ns3lxc::Iface::Iface(const Iface& ifa){
     name = ifa.name;
     node = ifa.node;
     link = ifa.link;
-    address = ifa.address;
+    ip = ifa.ip;
+    subnetMask = ifa.subnetMask;
+    tapName = ifa.tapName;
+    bridgeName = ifa.bridgeName;
+    macAddr = ifa.macAddr;
 }
 
 std::weak_ptr<ns3lxc::Iface> ns3lxc::IfaceProvider::getIface(std::string ifaceName){

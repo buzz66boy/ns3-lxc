@@ -24,6 +24,9 @@ private:
 	
 public:
 	std::string name;
+
+	IpAddr *ip;
+	IpAddr *subnetMask;
 	
 	Link(std::string name, std::string type, int numIfaces): name(name), type(type), numIfaces(numIfaces) {};
 	Link(std::string name, Link link);

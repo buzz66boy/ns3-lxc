@@ -6,6 +6,7 @@
 
 // NOTE: these tags can also be used plurally (checks for tag + "s")
 #define TAG_INCLUDE "include" 
+#define TAG_TIME "time"
 #define TAG_NODE "node" 
 #define TAG_TOPOLOGY "topology"
 #define TAG_APPLICATION "application"

@@ -45,6 +45,10 @@ ns3lxc::Topology parseTopologyFile(std::string topPath){
 		parseIncludes(topology[pluralize(TAG_INCLUDE)], topPath, &parsedTop);
 	}
 
+	if(topology[TAG_TIME]){
+		parsedTop.topology.runTime = topology[TAG_TIME].as<int>();
+	}
+
 	std::string topName = topPath.substr(topPath.find_last_of("\\/") + 1, topPath.find_last_of(".yaml") - topPath.find_last_of("\\/") - 5);
 
 	if(topology[topName]){
