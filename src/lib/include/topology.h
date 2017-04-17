@@ -20,10 +20,10 @@
 namespace ns3lxc {
 
 // declarations
-class Topology : public Positionable, public IfaceProvider, public IfaceAccepter, virtual public Nameable {
+class Topology : public Positionable, public IfaceProvider, public IfaceAccepter, public Nameable {
 public:
 	int runTime = 60;
-	std::string name = "";
+	//std::string name = "";
 
 	IpAddr *ip;
 	IpAddr *subnetMask;
@@ -38,7 +38,7 @@ public:
 	std::map<std::string, std::shared_ptr<Link> > linkMap;
 	
 	Topology();
-	Topology(std::string name): name(name) {};
+	Topology(std::string name): Nameable(name) {};
 	Topology(std::shared_ptr<Topology> temp, std::string newName);
 	Topology(const Topology&);
 };

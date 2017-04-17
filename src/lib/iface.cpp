@@ -21,7 +21,6 @@ ns3lxc::Iface::Iface(const Iface& ifa){
 
 std::weak_ptr<ns3lxc::Iface> ns3lxc::IfaceProvider::getIface(std::string ifaceName){
     if(ifacesProvided.count(ifaceName) > 0){
-        std::cout <<"dasssGUD" <<std::endl;
         return ifacesProvided[ifaceName].lock()->getIface( ifacesProvidedSubNames[ifaceName] );
     }
     return std::weak_ptr<ns3lxc::Iface>();

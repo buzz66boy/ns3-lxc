@@ -17,17 +17,17 @@ ns3lxc::Node::Node(ns3lxc::Node temp, std::string nodeName): Positionable(), Ifa
     name = nodeName;
     copyIfaces(&temp, this);
     applications = temp.applications;
-
 }
 
 ns3lxc::Node::Node(const ns3lxc::Node &temp): Positionable(), IfaceProvider() {
     name = temp.name;
     copyIfaces(&temp, this);
     applications = temp.applications;
+    bridges = temp.bridges;
+    taps = temp.taps;
 }
 
 std::weak_ptr<Iface> ns3lxc::Node::getIface(std::string ifaceName){
-    std::cout << "Calling getiface on node " << name << std::endl;
     if(ifaces.count(ifaceName) > 0){
         return std::weak_ptr<Iface>(ifaces[ifaceName]);
     } else {

@@ -6,6 +6,7 @@
 #include "yaml-cpp/yaml.h"
 #include "settingsParser.h"
 #include "topologyParser.h"
+#include "topologyGenerator.h"
 #include "topology.h"
 
 #define MAXPATHLEN 1024
@@ -54,6 +55,9 @@ int main(int argc, char *argv[]){
 		cerr << NO_FILE_PROVIDED << endl;
 		return 1;
 	}
+
+	generateTopology(&topology);
+
 	return 0;
 	
 }

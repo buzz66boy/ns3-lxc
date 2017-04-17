@@ -38,13 +38,10 @@ std::vector<std::shared_ptr<ns3lxc::Topology> > parseSubTopology(YAML::Node node
                 //tempTop.topology = ns3lxc::Topology(top->includedTopologies[templateName], name);
                 topPtr = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(top->includedTopologies[templateName], name));
             } else {
-                cout <<"PRPOGBGB" << endl;
+                cout <<"PROB" << endl;
             }
         }
-        //parseTopology(node, &tempTop);
-        //topPtr = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(tempTop.topology));
         topList.push_back(topPtr);
-        cout << "SIZE AGAIN " << topPtr->ifacesProvidedSubNames.size() << endl;
     }
     return topList;
 }

@@ -9,9 +9,8 @@
 #include "topology.h"
 
 class LXCSpawner {
-private:
-    static std::string defaultContainer = "ubuntu"
 public:
+    static const std::string defaultContainer;
     static void createContainers(ns3lxc::Topology *);
     static void startContainers(ns3lxc::Topology *); //Change to string?
     static void installApplications(ns3lxc::Topology *);

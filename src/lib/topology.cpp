@@ -39,7 +39,6 @@ Topology::Topology(const Topology& temp){
     }
     for(auto it: temp.ifacesProvided){
         try {
-            std::cout << it.first << " : " << temp.ifacesProvidedSubNames.find(it.first)->second << std::endl;
             ifacesProvidedSubNames[it.first] = temp.ifacesProvidedSubNames.find(it.first)->second;
             try {
                 Node nodeCast = dynamic_cast<Node&>(*it.second.lock());

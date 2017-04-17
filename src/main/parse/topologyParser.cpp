@@ -139,7 +139,6 @@ static void parseSubTopologies(YAML::Node topologies, ParsedTopology *parsedTop)
 		for(shared_ptr<ns3lxc::Topology> curTop : curTops){
 			parsedTop->topology.subTopologies.push_back(curTop);
 			parsedTop->topology.topMap[curTop->name] = curTop;
-			cout << "DA SIZE: " << curTop->ifacesProvidedSubNames.size() << endl;
 		}
 	}
 }
@@ -175,9 +174,7 @@ static void parseLinks(YAML::Node links, ParsedTopology *parsedTop){
 }
 
 static void parseIfacesProvided(YAML::Node ifaces, ParsedTopology *parsedTop){
-	cout << "PARSING IFACE PROV" << endl;
 	for(auto i = 0; i < ifaces.size(); ++i){
-		cout << "THING " << ifaces[i].begin()->first.as<string>() << endl;
 		vector<string> split = splitString(ifaces[i].begin()->second.as<string>());
 		parsedTop->topology.ifacesProvidedSubNames[ifaces[i].begin()->first.as<string>()] = split[1];
 
@@ -190,12 +187,11 @@ static void parseIfacesProvided(YAML::Node ifaces, ParsedTopology *parsedTop){
 			cerr << "COULDNT FIND" << endl;
 		}
 		parsedTop->topology.ifacesProvided[ifaces[i].begin()->first.as<string>()] = provPtr;
-		// for(auto j = 0; j < ifaces[i].size(); ++i){
-
-		// }
 	}
 }
 
 static void parseIfacesAccepted(YAML::Node ifacesAccepted, ParsedTopology *parsedTop){
-
+	for(auto i = 0; i < ifacesAccepted.size(); ++i){
+		cout << "TURTLE" << ifacesAccepted[i] << endl;
+	}
 }

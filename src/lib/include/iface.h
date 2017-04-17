@@ -33,20 +33,18 @@ public:
     Iface(std::string name, ns3lxc::Node *node): Nameable(name), node(node) {};
 };
 
-class IfaceProvider : virtual public Nameable {
+class IfaceProvider {
 public:
-    virtual ~IfaceProvider () {}
     std::map<std::string, std::string> ifacesProvidedSubNames; //maps this level's iface names to lower level's
     std::map<std::string, std::weak_ptr<ns3lxc::IfaceProvider> > ifacesProvided; //keep a ref to the providers we contain
-    std::weak_ptr<ns3lxc::Iface> getIface(std::string ifaceName);
+    virtual std::weak_ptr<ns3lxc::Iface> getIface(std::string ifaceName);
 };
 
-class IfaceAccepter : virtual public Nameable {
+class IfaceAccepter {
 public:
-    virtual ~IfaceAccepter () {}
     std::map<std::string, std::string> ifacesAcceptedSubNames; //maps this level's iface names to lower level's
     std::map<std::string, std::weak_ptr<ns3lxc::IfaceAccepter> > ifacesAccepted; //keep a ref to who below us accepts ifaces
-    int connectIface(std::string ifaceName, std::weak_ptr<Iface> iface);
+    virtual int connectIface(std::string ifaceName, std::weak_ptr<Iface> iface);
 };
 
 }

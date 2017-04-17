@@ -12,6 +12,7 @@ include_directories(
         /usr/src/linux-headers-4.4.0-63/
         src/main/include
         src/main/parse/include
+        src/main/generation/include
         src/lib/include
         src/links/include
         src/applications/include
@@ -47,10 +48,6 @@ set(Local_Libs
         src/lib/iface.cpp
 )
 
-set(NS-3_Template_Write
-
-)
-
 set(NS-3_LXC
         src/main/parse/include/parserTags.h
         src/main/parse/include/settingsParser.h
@@ -64,6 +61,14 @@ set(NS-3_LXC
         src/main/parse/settingsParser.cpp
         src/main/parse/nodeParser.cpp
         src/main/parse/linkParser.cpp
+        src/main/generation/include/bridgeTapBuilder.h
+        src/main/generation/include/lxcSpawner.h
+        src/main/generation/include/ns3Writer.h
+        src/main/generation/include/topologyGenerator.h
+        src/main/generation/bridgeTapBuilder.cpp
+        src/main/generation/lxcSpawner.cpp
+        src/main/generation/ns3Writer.cpp
+        src/main/generation/topologyGenerator.cpp
         src/main/include/logger.h
         src/main/logger.cpp
         src/main/main.cpp
