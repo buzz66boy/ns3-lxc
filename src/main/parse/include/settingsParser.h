@@ -15,6 +15,7 @@ public:
 	static std::string ns3_path;
 	static std::string output_dest;
 	static std::string script_dest;
+    static std::string container_type;
 
 	static int parse_settings_file(std::string settings_file);
 };

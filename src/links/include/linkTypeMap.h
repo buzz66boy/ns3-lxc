@@ -7,6 +7,6 @@
 #include "linkType.h"
 #include "csma.h"
 
-static std::map<std::string, linkType> linkTypeMap = {"csma", CSMA()};
+static std::map<std::string, LinkType> linkTypeMap = {{"csma", CSMA()}, {"wifi", Wifi()}};
 
 #endif

@@ -148,7 +148,6 @@ static void parseNodes(YAML::Node nodes, ParsedTopology *parsedTop){
 	for(auto i = 0; i < nodes.size(); ++i){
 		curNodes = parseNode(nodes[i], parsedTop);
 
-		parsedTop->topology.nodes.insert(parsedTop->topology.nodes.end(), curNodes.begin(), curNodes.end());
 		for(auto j = 0; j < curNodes.size(); ++j){
 			if(parsedTop->topology.nodeMap.count(curNodes[j]->name) > 0){
 				cout << "NODE EXISTS" << endl;

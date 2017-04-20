@@ -10,9 +10,11 @@
 #define NS3_PATH_STR "NS-3_PATH"
 #define SCRIPT_DEST_STR "SCRIPT_DEST"
 #define OUTPUT_DEST_STR "OUTPUT_DEST"
+#define CONTAINER_TYPE "CONTAINER_TYPE"
 
 #define SCRIPT_DEFAULT_DEST "../../output/scripts"
 #define OUTPUT_DEFAULT_DEST "../../output"
+#define DEFAULT_CONTAINER "ubuntu xenial"
 
 #define MKDIR_MODE S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH
 
@@ -31,6 +33,7 @@ void create_template_settings_file(string settings_file){
 string Settings::ns3_path;
 string Settings::script_dest;
 string Settings::output_dest;
+string Settings::container_type;
 
 int Settings::parse_settings_file(std::string settings_file){
 	// open settings file and obtain directory locations
@@ -87,6 +90,12 @@ int Settings::parse_settings_file(std::string settings_file){
 			cerr << "Cannot make default output destination, aborting" << endl;
 			return 5;
 		}
+	}
+
+	if(settings[CONTAINER_TYPE]){
+		Settings::container_type = settings[CONTAINER_TYPE].as<std::string>();
+	} else {
+		Settings::container_type = DEFAULT_CONTAINER;
 	}
 
 	return 0;

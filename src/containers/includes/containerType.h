@@ -10,11 +10,12 @@
 
 class ContainerType {
 public:
-    virtual void createContainer(ns3lxc::Node);
-    virtual void startContainer(ns3lxc::Node); //Change to string?
-    virtual void installApplications(ns3lxc::Node);
-    virtual void runApplications(ns3lxc::Node); // for now, change to sync'ed packet later?
-    virtual void grabOutput(ns3lxc::Node);
+    virtual void createContainer(std::shared_ptr<ns3lxc::Node>) = 0;
+    virtual void startContainer(std::shared_ptr<ns3lxc::Node>) = 0; //Change to string?
+    virtual void installApplications(std::shared_ptr<ns3lxc::Node>) = 0;
+    virtual void runApplications(std::shared_ptr<ns3lxc::Node>) = 0; // for now, change to sync'ed packet later?
+    virtual void grabOutput(std::shared_ptr<ns3lxc::Node>) = 0;
+    virtual void teardownContainer(std::shared_ptr<ns3lxc::Node>) = 0;
 };
 
 #endif

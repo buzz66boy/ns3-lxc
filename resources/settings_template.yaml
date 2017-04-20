@@ -8,3 +8,6 @@ SCRIPT_DEST:
 
 # path variable to store container output
 OUTPUT_DEST:
+
+# default container template to use for LXC
+CONTAINER_TYPE: ubuntu xenial

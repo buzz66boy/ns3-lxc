@@ -1,5 +1,5 @@
-#ifndef __LXC_SPAWNER_H_INCLUDED__
-#define __LXC_SPAWNER_H_INCLUDED__
+#ifndef __NODE_SPAWNER_H_INCLUDED__
+#define __NODE_SPAWNER_H_INCLUDED__
 
 #include <map>
 #include <string>
@@ -8,14 +8,14 @@
 
 #include "topology.h"
 
-class LXCSpawner {
+class NodeSpawner {
 public:
-    static const std::string defaultContainer;
-    static void createContainers(ns3lxc::Topology *);
-    static void startContainers(ns3lxc::Topology *); //Change to string?
+    static void createNodes(ns3lxc::Topology *);
+    static void startNodes(ns3lxc::Topology *); //Change to string?
     static void installApplications(ns3lxc::Topology *);
     static void runApplications(ns3lxc::Topology *); // for now, change to sync'ed packet later?
     static void grabOutput(ns3lxc::Topology *);
+    static void teardownNodes(ns3lxc::Topology *);
 };
 
 #endif

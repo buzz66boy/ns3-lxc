@@ -8,3 +8,6 @@ SCRIPT_DEST: /home/mike/NS-3_LXC/temp/scripts
 
 # path variable to store container output
 OUTPUT_DEST: /home/mike/NS-3_LXC/temp/output
+
+# default container template to use for LXC
+CONTAINER_TYPE: ubuntu xenial
