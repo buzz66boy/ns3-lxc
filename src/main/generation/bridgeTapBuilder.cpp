@@ -2,6 +2,7 @@
 #include <memory>
 #include <string>
 #include <cstdlib>
+#include <iostream>
 
 #include "node.h"
 #include "iface.h"
@@ -12,6 +13,7 @@ using namespace std;
 void buildAllBridgesTaps(std::vector<std::shared_ptr<ns3lxc::Node> > nodeList){
     for(auto nodePtr : nodeList){
         for(auto it : nodePtr->ifaces){
+            cout << nodePtr->name << ": " << it.first << endl;
             buildBridgeTap(it.second);
         }
     }
@@ -21,6 +23,7 @@ void buildBridgeTap(std::shared_ptr<ns3lxc::Iface> ifacePtr){
     int err;
     string tap = ifacePtr->tapName;
     string bridge = ifacePtr->bridgeName;
+    cout << ifacePtr->name << " " << ifacePtr->ip << endl;
     //brctl addbr 'bridge'
     err = system(("brctl addbr " + bridge).c_str());
     if(err){
@@ -62,7 +65,7 @@ void tearDownBridgeTap(std::shared_ptr<ns3lxc::Iface> ifacePtr){
     string tap = ifacePtr->tapName;
     string bridge = ifacePtr->bridgeName;
     //ifconfig 'bridge' down
-    err = system(("ifconfig " + bridge + " " + tap).c_str());
+    err = system(("ifconfig " + bridge + " down").c_str());
     if(err){
 
     }

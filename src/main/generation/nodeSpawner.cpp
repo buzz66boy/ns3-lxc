@@ -1,5 +1,6 @@
 #include <string>
 #include <memory>
+#include <iostream>
 
 #include <lxc/lxccontainer.h>
 
@@ -11,6 +12,7 @@ using namespace std;
 
 void NodeSpawner::createNodes(ns3lxc::Topology *top){
     for(shared_ptr<ns3lxc::Node> nodePtr : top->nodes){
+        cout << "Creating Container " << nodePtr->name << endl;
         containerTypeMap[Settings::container_type]->createContainer(nodePtr);
     }
 }

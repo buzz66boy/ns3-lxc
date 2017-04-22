@@ -152,6 +152,7 @@ static void parseNodes(YAML::Node nodes, ParsedTopology *parsedTop){
 			if(parsedTop->topology.nodeMap.count(curNodes[j]->name) > 0){
 				cout << "NODE EXISTS" << endl;
 			} else {
+				cout << "Parsed node " << curNodes[j]->name << endl;
 				parsedTop->topology.nodeMap.insert(std::map<std::string, std::shared_ptr<ns3lxc::Node> >::value_type(curNodes[j]->name, curNodes[j]));
 				parsedTop->topology.nodes.push_back(curNodes[j]);
 			}

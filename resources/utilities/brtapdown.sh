@@ -1,7 +1,7 @@
 #!/bin/bash
 
-br_name="$1_br"
-tap_name="$1_tap"
+br_name="$1_b"
+tap_name="$1_t"
 
 ifconfig $br_name down
 brctl delif $br_name $tap_name

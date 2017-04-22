@@ -4,6 +4,7 @@
 
 #include "yaml-cpp/yaml.h"
 
+#include "ipaddr.h"
 #include "parserTags.h"
 #include "topologyParser.h"
 #include "link.h"
@@ -42,7 +43,7 @@ std::shared_ptr<ns3lxc::Link> parseLink(YAML::Node node, ParsedTopology *top){
     } else {
         for(size_t i = 0; i < ifaceNode.size(); ++i){
             std::vector<std::string> split = splitString(ifaceNode[i].as<std::string>());
-            cout << "\tconnecting " << split[0] << " " << split[1] << endl;
+            cout << "\tconnecting " << split[0] << " " << split[1] << " with ip " << (split.size() > 2 ? split[2] : "") << endl;
             if(top->topology.nodeMap.count(split[0]) > 0){
                 shared_ptr<ns3lxc::Node> nodePtr = top->topology.nodeMap[split[0]];
                 if(!nodePtr){
@@ -55,6 +56,12 @@ std::shared_ptr<ns3lxc::Link> parseLink(YAML::Node node, ParsedTopology *top){
                     //err
                 }
                 link->connectIface(ifacePtr);
+                if(split.size() > 2){
+                    //handle ip
+                    cout << "IP Assigned" << endl;
+                    ifacePtr->ip = new ns3lxc::IpAddr(AF_INET, split[2]);
+                    ifacePtr->subnetMask = new ns3lxc::IpAddr(AF_INET, "255.255.255.0");
+                }
             } else if(top->topology.topMap.count(split[0]) > 0){
                 shared_ptr<ns3lxc::Topology> topPtr = top->topology.topMap[split[0]];
                 if(!topPtr){
@@ -67,6 +74,12 @@ std::shared_ptr<ns3lxc::Link> parseLink(YAML::Node node, ParsedTopology *top){
                     //err
                 }
                 link->connectIface(ifacePtr);
+                if(split.size() > 2){
+                    //handle ip
+                    cout << "IP Assigned" << endl;
+                    ifacePtr->ip = new ns3lxc::IpAddr(AF_INET, split[2]);
+                    ifacePtr->subnetMask = new ns3lxc::IpAddr(AF_INET, "255.255.255.0");
+                }
             } else {
                 // Error
                 cerr << split[0] << " not found" << endl;

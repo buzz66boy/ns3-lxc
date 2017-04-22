@@ -6,6 +6,9 @@ NS-3_PATH: /home/mike/apps/ns-allinone-3.26
 # path variable to script output location
 SCRIPT_DEST: /home/mike/NS-3_LXC/temp/scripts
 
+# path to store various temporary output (like container config files)
+TEMP_DIR: /home/mike/NS-3_LXC/temp
+
 # path variable to store container output
 OUTPUT_DEST: /home/mike/NS-3_LXC/temp/output
 

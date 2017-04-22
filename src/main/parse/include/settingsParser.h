@@ -14,6 +14,8 @@ class Settings {
 public:
 	static std::string ns3_path;
 	static std::string output_dest;
+    static std::string temp_dir;
+    static std::string container_config_dir;
 	static std::string script_dest;
     static std::string container_type;
 

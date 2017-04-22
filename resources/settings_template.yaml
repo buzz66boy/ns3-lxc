@@ -6,6 +6,9 @@ NS-3_PATH:
 # path variable to script output location
 SCRIPT_DEST:
 
+# path to store various temporary output (like container config files)
+TEMP_DIR:
+
 # path variable to store container output
 OUTPUT_DEST:
 

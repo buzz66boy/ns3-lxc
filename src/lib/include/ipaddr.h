@@ -21,6 +21,7 @@ private:
     };
 
 public:
+    IpAddr(const IpAddr&);
     IpAddr(uint32_t ipv4_addr);
     
     IpAddr(uint8_t *ipv6_addr);

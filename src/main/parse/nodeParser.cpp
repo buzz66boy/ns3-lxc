@@ -4,6 +4,8 @@
 #include <memory>
 #include <map>
 
+#include <arpa/inet.h>
+
 #include "yaml-cpp/yaml.h"
 
 #include "node.h"
@@ -20,6 +22,8 @@ static void parseNodeIfaces(YAML::Node ifaces, std::shared_ptr<ns3lxc::Node> nod
         std::string name = ifaces[i].as<std::string>();
         cout << "\t\t- " << name << endl;
         node->ifaces[name] = std::shared_ptr<ns3lxc::Iface>(new ns3lxc::Iface(name, &(*node)));
+        node->ifaces[name]->bridgeName = node->name + "_" + to_string(i) + "_b";
+        node->ifaces[name]->tapName = node->name + "_" + to_string(i) + "_t";
     }
 }
 

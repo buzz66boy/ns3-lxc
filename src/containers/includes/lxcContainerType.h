@@ -15,6 +15,9 @@ class LxcContainerType : public ContainerType {
     std::string containerRelease;
 
     std::map<std::string, std::shared_ptr<lxc_container> > containerMap;
+    std::map<std::string, std::string> configMap;
+
+    void writeContainerConfig(std::shared_ptr<ns3lxc::Node> nodePtr, std::string configPath);
 public:
     LxcContainerType(std::string distro, std::string release): containerDistro(distro), containerRelease(release) {};
 
