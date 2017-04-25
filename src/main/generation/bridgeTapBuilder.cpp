@@ -10,11 +10,28 @@
 
 using namespace std;
 
-void buildAllBridgesTaps(std::vector<std::shared_ptr<ns3lxc::Node> > nodeList){
-    for(auto nodePtr : nodeList){
+void assignBridgesTaps(ns3lxc::Topology *top){
+    for(auto nodePtr : top->nodes){
+        int i = 0;
         for(auto it : nodePtr->ifaces){
             cout << nodePtr->name << ": " << it.first << endl;
-            buildBridgeTap(it.second);
+            it.second->bridgeName = nodePtr->name + "_" + to_string(i) + "_b";
+            it.second->tapName = nodePtr->name + "_" + to_string(i) + "_t";
+            i++;
+        }
+    }
+}
+
+void buildAllBridgesTaps(ns3lxc::Topology *top){
+    for(auto nodePtr : top->nodes){
+        int i = 0;
+        for(auto it : nodePtr->ifaces){
+            
+            if(it.second->ip != nullptr && it.second->subnetMask != nullptr){
+                cout << nodePtr->name << ": " << it.first << endl;
+                buildBridgeTap(it.second);
+                i++;
+            }
         }
     }
 }
@@ -44,16 +61,17 @@ void buildBridgeTap(std::shared_ptr<ns3lxc::Iface> ifacePtr){
     if(err){
 
     }
-    //ifconfig 'bridge' 'ipAddr' netmask 'subnetAddr'  ### adds two to IPADDR??? 
+    
+    //ifconfig 'bridge' 'ipAddr' netmask 'subnetAddr' up  ### adds two to IPADDR??? 
     err = system(("ifconfig " + bridge + " " + ifacePtr->ip->str() + \
-        " netmask " + ifacePtr->subnetMask->str()).c_str());
+        " netmask " + ifacePtr->subnetMask->str() + " up").c_str());
     if(err){
 
     }
 }
 
-void tearDownAllBridgesTaps(std::vector<std::shared_ptr<ns3lxc::Node> > nodeList){
-    for(auto nodePtr : nodeList){
+void tearDownAllBridgesTaps(ns3lxc::Topology *top){
+    for(auto nodePtr : top->nodes){
         for(auto it : nodePtr->ifaces){
             tearDownBridgeTap(it.second);
         }

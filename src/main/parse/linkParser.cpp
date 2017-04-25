@@ -9,6 +9,7 @@
 #include "topologyParser.h"
 #include "link.h"
 #include "topology.h"
+#include "linkTypeMap.h"
 #include "linkParser.h"
 
 using namespace std;
@@ -30,6 +31,16 @@ std::shared_ptr<ns3lxc::Link> parseLink(YAML::Node node, ParsedTopology *top){
     } else {
         link = std::shared_ptr<ns3lxc::Link>(new ns3lxc::Link(name));
     }
+
+    if(node[TAG_TYPE]){
+        link->setType(node[TAG_TYPE].as<std::string>());
+        linkTypeMap[link->getType()]->setUsed();
+        cout << "TPYPYPY " << link->getType() << endl; 
+    } else {
+        //err
+        cerr << "No Type specified for link " << name << endl;
+    }
+
     int numIfaces = 0;
     YAML::Node ifaceNode;
 

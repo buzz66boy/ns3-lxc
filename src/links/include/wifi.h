@@ -4,16 +4,18 @@
 #include <map>
 #include <string>
 #include <ostream>
+#include <memory>
 
+#include "link.h"
 #include "linkType.h"
 
 class Wifi : public LinkType {
 public:
     int getIfacesSupported() override;
-    void writeIncludes(std::ostream str) override;
-    void writeTypeInit(std::ostream str) override;
-    void writeLinkInit(std::ostream str, std::string linkName, int linkNum) override;
-    void addIfaceToLink(std::ostream str, std::string ifaceName, std::string linkName, int linkNum) override;
+    void writeIncludes(std::ostream& str) override;
+    void writeTypeInit(std::ostream& str) override;
+    void writeLinkInit(std::ostream& str, std::shared_ptr<ns3lxc::Link> linkPtr) override;
+    void addIfacesToLink(std::ostream& str, std::shared_ptr<ns3lxc::Link> linkPtr) override;
 };
 
 #endif

@@ -9,7 +9,6 @@
 #include "topology.h"
 
 class ApplicationType {
-    virtual ~ApplicationType() = 0;
 public:
     /**
      * Denotes whether the application should start with the simulation or before

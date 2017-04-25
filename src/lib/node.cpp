@@ -7,9 +7,15 @@
 using namespace ns3lxc;
 
 static void copyIfaces(const ns3lxc::Node *from, ns3lxc::Node *to){
-    to->ifaces = from->ifaces;
+    //FIXME: refs don't copy right
     for(auto it = from->ifaces.begin(); it != from->ifaces.end(); it++){
-        it->second->node = to;
+        to->ifaces[it->first] = std::shared_ptr<Iface>(new Iface(*it->second));
+    }
+}
+
+void ns3lxc::Node::reRefIfaces(ns3lxc::Node *node){
+    for(auto it = node->ifaces.begin(); it != node->ifaces.end(); it++){
+        it->second->node = node;
     }
 }
 
@@ -25,6 +31,7 @@ ns3lxc::Node::Node(const ns3lxc::Node &temp): Positionable(), IfaceProvider() {
     applications = temp.applications;
     bridges = temp.bridges;
     taps = temp.taps;
+    nodeNum = temp.nodeNum;
 }
 
 std::weak_ptr<Iface> ns3lxc::Node::getIface(std::string ifaceName){

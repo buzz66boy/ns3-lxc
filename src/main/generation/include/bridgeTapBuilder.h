@@ -8,12 +8,15 @@
 
 #include "node.h"
 #include "iface.h"
+#include "topology.h"
 
-void buildAllBridgesTaps(std::vector<std::shared_ptr<ns3lxc::Node> >);
+void assignBridgesTaps(ns3lxc::Topology *top);
+
+void buildAllBridgesTaps(ns3lxc::Topology *top);
 
 void buildBridgeTap(std::shared_ptr<ns3lxc::Iface>);
 
-void tearDownAllBridgesTaps(std::vector<std::shared_ptr<ns3lxc::Node> > nodeList);
+void tearDownAllBridgesTaps(ns3lxc::Topology *top);
 
 void tearDownBridgeTap(std::shared_ptr<ns3lxc::Iface>);
 

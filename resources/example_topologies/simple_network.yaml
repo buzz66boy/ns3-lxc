@@ -1,21 +1,17 @@
 nodes:
-- node1: &node1
+- node1:
     ifaces:
       - iface: 
           name: eth0
           ip: 10.0.0.1
-    pos :
-      - pos1:
-          time : 0
-          coords: {10,0,0}
-- node2: &node2
+- node2:
     ifaces:
     - iface : 
         name : eth0
         ip : 10.0.0.2
 
 networks :
-- connection: &con1
+- connection:
     type : csma
     nodes:
     - node1

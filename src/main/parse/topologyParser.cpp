@@ -155,6 +155,8 @@ static void parseNodes(YAML::Node nodes, ParsedTopology *parsedTop){
 				cout << "Parsed node " << curNodes[j]->name << endl;
 				parsedTop->topology.nodeMap.insert(std::map<std::string, std::shared_ptr<ns3lxc::Node> >::value_type(curNodes[j]->name, curNodes[j]));
 				parsedTop->topology.nodes.push_back(curNodes[j]);
+				curNodes[j]->nodeNum = parsedTop->topology.nodes.size() - 1;
+				cout << "NODE NUM: " << to_string(curNodes[j]->nodeNum) << endl;
 			}
 
 		}

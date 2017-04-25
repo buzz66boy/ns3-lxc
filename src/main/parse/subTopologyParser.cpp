@@ -11,6 +11,15 @@
 
 using namespace std;
 
+static int getNextNodeNum(ns3lxc::Topology *top){
+    int num = top->nodes.size();
+    for(auto topPtr : top->subTopologies){
+        num = num + getNextNodeNum(topPtr.get());
+    }
+    cout << "GLADOS " << to_string(num) << endl;
+    return num;
+}
+
 std::vector<std::shared_ptr<ns3lxc::Topology> > parseSubTopology(YAML::Node node, ParsedTopology *top){
     size_t iters = 1;
     std::string origName = node.begin()->first.as<std::string>();
@@ -42,6 +51,12 @@ std::vector<std::shared_ptr<ns3lxc::Topology> > parseSubTopology(YAML::Node node
             }
         }
         topList.push_back(topPtr);
+    }
+    int curNodeNum = getNextNodeNum(&top->topology);
+    for(auto topPtr : topList){
+        for(auto nodePtr : topPtr->nodes){
+            nodePtr->nodeNum = curNodeNum++;
+        }
     }
     return topList;
 }

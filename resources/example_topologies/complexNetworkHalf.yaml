@@ -16,22 +16,22 @@ ComplexNetworkHalf:
 
   links:
     - network1:
-        class: csma
+        type: csma
         ifaces:
-          - end eth1
-          - middle eth0
+          - end eth1 10.0.0.1
+          - middle eth0 10.0.0.2
     - network2:
-        class: csma
+        type: csma
         offset: 0.0.1.0
         ifaces:
-          - middle eth1
-          - wifi_1 eth0
+          - middle eth1 10.0.1.1
+          - wifi_1 eth0 10.0.1.2
     - network3:
-        class: csma
+        type: csma
         offset: 0.0.2.0
         ifaces:
-          - middle eth2
-          - wifi_2 eth0
+          - middle eth2 10.0.2.1
+          - wifi_2 eth0 10.0.2.2
           
   ifacesProvided:
     - top:

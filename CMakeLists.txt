@@ -9,7 +9,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
 
 include_directories(
-        /usr/src/linux-headers-4.4.0-74/
+        /usr/src/linux-headers-generic/
         /usr/include
         src/main/include
         src/main/parse/include
@@ -23,8 +23,11 @@ include_directories(
 set(Link_Types
         src/links/include/linkType.h
         src/links/include/linkTypeMap.h
+        src/links/linkType.cpp
         src/links/include/csma.h
+        src/links/include/wifi.h
         src/links/csma.cpp
+        src/links/wifi.cpp
         # Add your link types here (both .h and .cpp)
 )
 
