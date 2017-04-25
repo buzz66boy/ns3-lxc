@@ -20,9 +20,11 @@ private:
 	std::string type;
 	
 	int numIfaces = 0;
-	std::vector<std::shared_ptr<Iface> > ifaces;
 	
 public:
+
+	std::vector<std::shared_ptr<Iface> > ifaces;
+	
 	std::string name;
 
 	IpAddr *ip;
@@ -43,6 +45,8 @@ public:
 	
 	int connectIface(std::weak_ptr<ns3lxc::Iface> iface); 
 	int connectIface(std::string ifaceName, std::weak_ptr<ns3lxc::Iface> iface); // OVERRIDES IfaceAccepter
+
+	static void reRefIfaces(Link *linkPtr);
 };
 
 }

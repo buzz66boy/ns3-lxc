@@ -9,6 +9,7 @@
 #include "topologyGenerator.h"
 #include "topology.h"
 #include "node.h"
+#include "link.h"
 
 #define MAXPATHLEN 1024
 
@@ -59,6 +60,9 @@ int main(int argc, char *argv[]){
 	
 	for(auto nodePtr : topology.nodes){
 		ns3lxc::Node::reRefIfaces(nodePtr.get());
+	}
+	for(auto linkPtr : topology.links){
+		ns3lxc::Link::reRefIfaces(linkPtr.get());
 	}
 	generateTopology(&topology);
 

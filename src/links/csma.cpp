@@ -30,10 +30,9 @@ void CSMA::writeLinkInit(std::ostream& str, shared_ptr<ns3lxc::Link> linkPtr){
     string devName = linkPtr->name + "_dev";
     str << "NodeContainer " + contName + " = NodeContainer(";
 
-    vector<shared_ptr<ns3lxc::Iface> > ifaces = linkPtr->getIfaces();
-    for(auto i = 0; i < ifaces.size(); ++i){
-        str << "nodes.Get(" + to_string(ifaces[i]->node->nodeNum) + ")";
-        if(i != ifaces.size() - 1){
+    for(auto i = 0; i < linkPtr->ifaces.size(); ++i){
+        str << "nodes.Get(" + to_string(linkPtr->ifaces[i]->node->nodeNum) + ")";
+        if(i != linkPtr->ifaces.size() - 1){
             str << ", ";
         }
     }
@@ -41,9 +40,9 @@ void CSMA::writeLinkInit(std::ostream& str, shared_ptr<ns3lxc::Link> linkPtr){
 
     str << "NetDeviceContainer " + devName + " = csma.Install(" + contName + ");" << endl;
 
-    for(auto i = 0; i < ifaces.size(); ++i){
-        str << "csmaTapBridge.SetAttribute (\"DeviceName\", StringValue (\"" + ifaces[i]->tapName + "\"));" << endl;
-        str << "csmaTapBridge.Install(nodes.Get(" + to_string(ifaces[i]->node->nodeNum) + "), " + devName + ".Get(" + to_string(i) + "));" << endl;
+    for(auto i = 0; i < linkPtr->ifaces.size(); ++i){
+        str << "csmaTapBridge.SetAttribute (\"DeviceName\", StringValue (\"" + linkPtr->ifaces[i]->tapName + "\"));" << endl;
+        str << "csmaTapBridge.Install(nodes.Get(" + to_string(linkPtr->ifaces[i]->node->nodeNum) + "), " + devName + ".Get(" + to_string(i) + "));" << endl;
     }
 
 }

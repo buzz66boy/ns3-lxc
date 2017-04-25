@@ -141,6 +141,7 @@ static void parseSubTopologies(YAML::Node topologies, ParsedTopology *parsedTop)
 			parsedTop->topology.topMap[curTop->name] = curTop;
 		}
 	}
+	renameSubTopologies(&parsedTop->topology);
 }
 
 static void parseNodes(YAML::Node nodes, ParsedTopology *parsedTop){
@@ -156,7 +157,6 @@ static void parseNodes(YAML::Node nodes, ParsedTopology *parsedTop){
 				parsedTop->topology.nodeMap.insert(std::map<std::string, std::shared_ptr<ns3lxc::Node> >::value_type(curNodes[j]->name, curNodes[j]));
 				parsedTop->topology.nodes.push_back(curNodes[j]);
 				curNodes[j]->nodeNum = parsedTop->topology.nodes.size() - 1;
-				cout << "NODE NUM: " << to_string(curNodes[j]->nodeNum) << endl;
 			}
 
 		}
@@ -195,5 +195,24 @@ static void parseIfacesProvided(YAML::Node ifaces, ParsedTopology *parsedTop){
 static void parseIfacesAccepted(YAML::Node ifacesAccepted, ParsedTopology *parsedTop){
 	for(auto i = 0; i < ifacesAccepted.size(); ++i){
 		cout << "TURTLE" << ifacesAccepted[i] << endl;
+	}
+}
+
+void renameSubTopologies(ns3lxc::Topology *topology, std::string prefix){
+	if(prefix == ""){
+		prefix = topology->name + "_";
+	} else {
+		prefix = prefix + "_" + topology->name + "_";
+	}
+	for(auto topPtr : topology->subTopologies){
+		renameSubTopologies(topPtr.get(), prefix);
+	}
+
+	for(auto nodePtr : topology->nodes){
+		nodePtr->name = prefix + nodePtr->name;
+	}
+
+	for(auto linkPtr : topology->links){
+		linkPtr->name = prefix + linkPtr->name;
 	}
 }

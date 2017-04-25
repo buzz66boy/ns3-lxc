@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <memory>
 
 #include "link.h"
 
@@ -11,6 +12,7 @@ ns3lxc::Link::Link(const Link& ln){
     name = ln.name;
     numIfaces = ln.numIfaces;
     ifaces = ln.ifaces;
+    reRefIfaces(this);
 }
 
 ns3lxc::Link::Link(std::string name, ns3lxc::Link link): name(name) {
@@ -27,4 +29,10 @@ int ns3lxc::Link::connectIface(std::weak_ptr<ns3lxc::Iface> iface){
         return 1;
     }
     return 0; //none added
+}
+
+void ns3lxc::Link::reRefIfaces(Link *linkPtr){
+    for(auto i = 0; i < linkPtr->ifaces.size(); ++i){
+        linkPtr->ifaces[i]->link = linkPtr;
+    }
 }

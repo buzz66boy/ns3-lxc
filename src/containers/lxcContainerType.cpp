@@ -20,6 +20,7 @@ void LxcContainerType::writeContainerConfig(std::shared_ptr<ns3lxc::Node> nodePt
             continue;
         }
         ofs << "lxc.network.type = veth" << endl;
+        ofs << "lxc.network.name = " << it.first << endl;
         ofs << "lxc.network.flags = up" << endl;
         ofs << "lxc.network.link = " << it.second->bridgeName << endl;
         //FIXME: change to using right subnet

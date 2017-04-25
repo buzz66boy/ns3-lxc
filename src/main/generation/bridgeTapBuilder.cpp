@@ -44,36 +44,40 @@ void buildBridgeTap(std::shared_ptr<ns3lxc::Iface> ifacePtr){
     //brctl addbr 'bridge'
     err = system(("brctl addbr " + bridge).c_str());
     if(err){
-
+        cerr << "BAD" << endl;
     }
     //ip tuntap add 'tap' mode tap
     err = system(("ip tuntap add " + tap + " mode tap").c_str());
     if(err){
-
+        cerr << "BAD2" << endl;
     }
     //ifconfig 'tap' 0.0.0.0 promisc up
     err = system(("ifconfig " + tap + " 0.0.0.0 promisc up").c_str());
     if(err){
-
+        cerr << "BAD3" << endl;
     }
     //brctl addif 'bridge' 'tap'
     err = system(("brctl addif " + bridge + " " + tap).c_str());
     if(err){
-
+        cerr << "BAD4" << endl;
     }
-    
+
     //ifconfig 'bridge' 'ipAddr' netmask 'subnetAddr' up  ### adds two to IPADDR??? 
-    err = system(("ifconfig " + bridge + " " + ifacePtr->ip->str() + \
+    string sub = ifacePtr->ip->str();
+    sub = sub.substr(0, sub.find_last_of(".")) + '2';
+    err = system(("ifconfig " + bridge + " " + sub + \
         " netmask " + ifacePtr->subnetMask->str() + " up").c_str());
     if(err){
-
+        cerr << "BAD5" << endl;
     }
 }
 
 void tearDownAllBridgesTaps(ns3lxc::Topology *top){
     for(auto nodePtr : top->nodes){
         for(auto it : nodePtr->ifaces){
-            tearDownBridgeTap(it.second);
+            if(it.second->ip != nullptr && it.second->subnetMask != nullptr){
+                tearDownBridgeTap(it.second);
+            }
         }
     }
 }

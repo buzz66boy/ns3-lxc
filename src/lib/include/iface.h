@@ -18,7 +18,7 @@ class Link;
 class Iface : public Nameable {
 public:
     ns3lxc::Node *node;
-    std::weak_ptr<ns3lxc::Link> link;
+    ns3lxc::Link *link;
     std::string bridgeName;
     std::string tapName;
 

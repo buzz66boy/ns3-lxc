@@ -15,12 +15,7 @@ using namespace std;
 
 void generateTopology(ns3lxc::Topology *topology){
     GeneratedTopology genTop(topology);
-    assignBridgesTaps(topology);
-
-    tearDownAllBridgesTaps(topology);
-    buildAllBridgesTaps(topology);
-    NodeSpawner::createNodes(topology);
-    NodeSpawner::startNodes(topology);
+    spawnTopology(topology);
 
     string scriptLoc = Settings::script_dest + "/" + topology->name + ".cc";
     Ns3Writer::writeScript(topology, scriptLoc);
@@ -37,7 +32,27 @@ void generateTopology(ns3lxc::Topology *topology){
 
     chdir(Settings::ns3_path.c_str());
     system(("./waf --run scratch/" + topology->name).c_str());
+    cout << endl;
+    
+    despawnTopology(topology);
+}
+
+void spawnTopology(ns3lxc::Topology *topology){
+    for(auto topPtr : topology->subTopologies){
+        spawnTopology(topPtr.get());
+    }
+    assignBridgesTaps(topology);
+
+    tearDownAllBridgesTaps(topology);
+    buildAllBridgesTaps(topology);
+    NodeSpawner::createNodes(topology);
+    NodeSpawner::startNodes(topology);
+}
+
+void despawnTopology(ns3lxc::Topology *topology){
+    for(auto topPtr : topology->subTopologies){
+        despawnTopology(topPtr.get());
+    }
     NodeSpawner::teardownNodes(topology);
     tearDownAllBridgesTaps(topology);
-
 }

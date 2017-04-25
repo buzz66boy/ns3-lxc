@@ -22,4 +22,8 @@ public:
 
 void generateTopology(ns3lxc::Topology *topology);
 
+void spawnTopology(ns3lxc::Topology *topology);
+
+void despawnTopology(ns3lxc::Topology *topology);
+
 #endif

@@ -67,6 +67,7 @@ std::shared_ptr<ns3lxc::Link> parseLink(YAML::Node node, ParsedTopology *top){
                     //err
                 }
                 link->connectIface(ifacePtr);
+                ifacePtr->link = link.get();
                 if(split.size() > 2){
                     //handle ip
                     cout << "IP Assigned" << endl;
@@ -85,6 +86,7 @@ std::shared_ptr<ns3lxc::Link> parseLink(YAML::Node node, ParsedTopology *top){
                     //err
                 }
                 link->connectIface(ifacePtr);
+                ifacePtr->link = link.get();
                 if(split.size() > 2){
                     //handle ip
                     cout << "IP Assigned" << endl;

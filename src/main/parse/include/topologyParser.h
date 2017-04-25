@@ -26,5 +26,6 @@ public:
 
 ns3lxc::Topology parseTopologyFile(std::string topPath);
 void parseTopology(YAML::Node topology, ParsedTopology *parsedTop);
+void renameSubTopologies(ns3lxc::Topology *topology, std::string prefix="");
 
 #endif
