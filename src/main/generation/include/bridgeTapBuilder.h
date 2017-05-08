@@ -10,7 +10,7 @@
 #include "iface.h"
 #include "topology.h"
 
-void assignBridgesTaps(ns3lxc::Topology *top);
+int assignBridgesTaps(ns3lxc::Topology *top, int curNum = 0);
 
 void buildAllBridgesTaps(ns3lxc::Topology *top);
 

@@ -33,6 +33,7 @@ void create_template_settings_file(string settings_file){
 	file_stream.close();
 }
 
+Mode Settings::run_mode = Mode::NORMAL;
 string Settings::ns3_path;
 string Settings::script_dest;
 string Settings::temp_dir;

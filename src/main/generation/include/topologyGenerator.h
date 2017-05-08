@@ -9,16 +9,16 @@
 
 #include "topology.h"
 
-class GeneratedTopology {
-public:
-    ns3lxc::Topology *topPtr;
+// class GeneratedTopology {
+// public:
+//     ns3lxc::Topology *topPtr;
 
-    std::map<std::string, std::shared_ptr<lxc_container> > containerMap;
+//     std::map<std::string, std::shared_ptr<lxc_container> > containerMap;
 
-    std::string tempDir;
+//     std::string tempDir;
 
-    GeneratedTopology(ns3lxc::Topology *topology): topPtr(topology) {}
-};
+//     GeneratedTopology(ns3lxc::Topology *topology): topPtr(topology) {}
+// };
 
 void generateTopology(ns3lxc::Topology *topology);
 

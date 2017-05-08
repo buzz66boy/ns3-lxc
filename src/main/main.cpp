@@ -40,6 +40,11 @@ static std::string compute_settings_path(){
 }
 
 int main(int argc, char *argv[]){
+
+	if(geteuid()){
+		cerr << "Must run with root privileges" << endl;
+		exit(-1);
+	}
 	
 	std::string settings_path = compute_settings_path();
 
@@ -50,20 +55,18 @@ int main(int argc, char *argv[]){
 	}
 	
 	ns3lxc::Topology topology;
-	
-	if(argc > 1){
-		topology = parseTopologyFile(argv[1]);
-	} else {
+
+	if(argc < 2) {
 		cerr << NO_FILE_PROVIDED << endl;
 		return 1;
 	}
-	
-	for(auto nodePtr : topology.nodes){
-		ns3lxc::Node::reRefIfaces(nodePtr.get());
+
+	topology = parseTopologyFile(argv[1]);
+	if(argc > 2){
+		Settings::run_mode = Mode::NS3_GEN;
+		cout << "RUN mode ns3" << endl;
 	}
-	for(auto linkPtr : topology.links){
-		ns3lxc::Link::reRefIfaces(linkPtr.get());
-	}
+
 	generateTopology(&topology);
 
 	return 0;

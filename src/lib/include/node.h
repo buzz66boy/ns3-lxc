@@ -18,6 +18,8 @@ namespace ns3lxc {
 
 // declarations
 class Node : public Positionable, public IfaceProvider, public Nameable {
+private:
+    bool requiresReRef = false;
 public:
     int nodeNum = 0; //For ns-3 writing, keep track of what # the node is (for ref)
 
@@ -30,7 +32,7 @@ public:
 
     Node(): Positionable(), IfaceProvider() {};
     Node(std::string name):  Nameable(name), Positionable(), IfaceProvider() {};
-    Node(ns3lxc::Node temp, std::string nodeName);
+    Node(ns3lxc::Node& temp, std::string nodeName);
     Node(const ns3lxc::Node &temp);
 
     static void reRefIfaces(ns3lxc::Node*);

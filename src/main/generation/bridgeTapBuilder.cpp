@@ -10,19 +10,24 @@
 
 using namespace std;
 
-void assignBridgesTaps(ns3lxc::Topology *top){
+int assignBridgesTaps(ns3lxc::Topology *top, int curNum){
     for(auto nodePtr : top->nodes){
-        int i = 0;
         for(auto it : nodePtr->ifaces){
-            cout << nodePtr->name << ": " << it.first << endl;
-            it.second->bridgeName = nodePtr->name + "_" + to_string(i) + "_b";
-            it.second->tapName = nodePtr->name + "_" + to_string(i) + "_t";
-            i++;
+            it.second->bridgeName = to_string(curNum) + "_b";
+            it.second->tapName = to_string(curNum) + "_t";
+            curNum++;
         }
     }
+    for(auto topPtr : top->subTopologies){
+        curNum = assignBridgesTaps(topPtr.get(), curNum);
+    }
+    return curNum;
 }
 
 void buildAllBridgesTaps(ns3lxc::Topology *top){
+    for(auto topPtr : top->subTopologies){
+        buildAllBridgesTaps(topPtr.get());
+    }
     for(auto nodePtr : top->nodes){
         int i = 0;
         for(auto it : nodePtr->ifaces){
@@ -73,6 +78,9 @@ void buildBridgeTap(std::shared_ptr<ns3lxc::Iface> ifacePtr){
 }
 
 void tearDownAllBridgesTaps(ns3lxc::Topology *top){
+    for(auto topPtr : top->subTopologies){
+        tearDownAllBridgesTaps(topPtr.get());
+    }
     for(auto nodePtr : top->nodes){
         for(auto it : nodePtr->ifaces){
             if(it.second->ip != nullptr && it.second->subnetMask != nullptr){
@@ -86,28 +94,34 @@ void tearDownBridgeTap(std::shared_ptr<ns3lxc::Iface> ifacePtr){
     int err;
     string tap = ifacePtr->tapName;
     string bridge = ifacePtr->bridgeName;
+    string nullRedir = " &> /dev/null";
     //ifconfig 'bridge' down
-    err = system(("ifconfig " + bridge + " down").c_str());
+    // err = system(("ifconfig " + bridge + " down" + nullRedir).c_str());
+    pclose(popen(("ifconfig " + bridge + " down" + nullRedir).c_str(), "r"));
     if(err){
 
     }
     //brctl delif 'bridge' 'tap'
-    err = system(("brctl delif " + bridge + " " + tap).c_str());
+    // err = system(("brctl delif " + bridge + " " + tap + nullRedir).c_str());
+    pclose(popen(("brctl delif " + bridge + " " + tap + nullRedir).c_str(), "r"));
     if(err){
 
     }
     //brctl delbr 'bridge'
-    err = system(("brctl delbr " + bridge).c_str());
+    // err = system(("brctl delbr " + bridge + nullRedir).c_str());
+    pclose(popen(("brctl delbr " + bridge + nullRedir).c_str(), "r"));
     if(err){
 
     }
     //ifconfig 'tap' down
-    err = system(("ifconfig " + tap + " down").c_str());
+    // err = system(("ifconfig " + tap + " down" + nullRedir).c_str());
+    pclose(popen(("ifconfig " + tap + " down" + nullRedir).c_str(), "r"));
     if(err){
 
     }
     //ip tuntap del 'tap' mode tap
-    err = system(("ip tuntap del " + tap + " mode tap").c_str());
+    // err = system(("ip tuntap del " + tap + " mode tap" + nullRedir).c_str());
+    pclose(popen(("ip tuntap del " + tap + " mode tap" + nullRedir).c_str(), "r"));
     if(err){
 
     }

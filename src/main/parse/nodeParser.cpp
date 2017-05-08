@@ -48,6 +48,7 @@ std::vector<std::shared_ptr<ns3lxc::Node> > parseNode(YAML::Node node, ParsedTop
         cout << "Node: " << name << endl;
         if(node[TAG_TEMPLATE]){
             nodePtr = shared_ptr<ns3lxc::Node>(new ns3lxc::Node( *top->nodes[node[TAG_TEMPLATE].as<std::string>()], name));
+            ns3lxc::Node::reRefIfaces(nodePtr.get());
         } else {
             nodePtr = shared_ptr<ns3lxc::Node>(new ns3lxc::Node(name));
         }

@@ -39,8 +39,11 @@ public:
 	
 	Topology();
 	Topology(std::string name): Nameable(name) {};
+	Topology(Topology *temp);
 	Topology(std::shared_ptr<Topology> temp, std::string newName);
 	Topology(const Topology&);
+
+	int getNumNodes();
 };
 
 }

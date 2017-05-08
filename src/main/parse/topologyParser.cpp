@@ -116,11 +116,13 @@ static void parseIncludes(YAML::Node includes, std::string topPath, ParsedTopolo
 
 		struct stat buffer;
 		if(stat(searchPath.c_str(), &buffer) == 0 && !S_ISDIR(buffer.st_mode)){
-			includedTop = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(parseTopologyFile(searchPath)));
+			ns3lxc::Topology tempTop = parseTopologyFile(searchPath);
+			includedTop = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(&tempTop));
 		} else {
 			searchPath = searchPath = topDir + "/include/" + curInclude + ".yaml";
 			if(stat(searchPath.c_str(), &buffer) == 0 && !S_ISDIR(buffer.st_mode)){
-				includedTop = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(parseTopologyFile(searchPath)));
+				ns3lxc::Topology tempTop = parseTopologyFile(searchPath);
+				includedTop = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(&tempTop));
 			} else {
 				cerr << "Couldn't find included file " << curInclude << " while parsing " << topPath << endl;
 				exit(10);
@@ -202,7 +204,7 @@ void renameSubTopologies(ns3lxc::Topology *topology, std::string prefix){
 	if(prefix == ""){
 		prefix = topology->name + "_";
 	} else {
-		prefix = prefix + "_" + topology->name + "_";
+		prefix = prefix + topology->name + "_";
 	}
 	for(auto topPtr : topology->subTopologies){
 		renameSubTopologies(topPtr.get(), prefix);
