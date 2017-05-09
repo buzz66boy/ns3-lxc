@@ -62,6 +62,7 @@ int main(int argc, char *argv[]){
 	}
 
 	topology = parseTopologyFile(argv[1]);
+	ns3lxc::Topology::reNumNodes(&topology);
 	if(argc > 2){
 		Settings::run_mode = Mode::NS3_GEN;
 		cout << "RUN mode ns3" << endl;

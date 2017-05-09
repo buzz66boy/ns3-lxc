@@ -24,6 +24,7 @@ class Topology : public Positionable, public IfaceProvider, public IfaceAccepter
 public:
 	int runTime = 60;
 	//std::string name = "";
+	int curNodeNum = 0;
 
 	IpAddr *ip;
 	IpAddr *subnetMask;
@@ -43,7 +44,7 @@ public:
 	Topology(std::shared_ptr<Topology> temp, std::string newName);
 	Topology(const Topology&);
 
-	int getNumNodes();
+	static void reNumNodes(Topology*);
 };
 
 }

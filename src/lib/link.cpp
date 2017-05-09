@@ -11,13 +11,15 @@ ns3lxc::Link::Link(const Link& ln){
     type = ln.type;
     name = ln.name;
     numIfaces = ln.numIfaces;
+    ip = ln.ip;
+    subnetMask = ln.subnetMask;
     ifaces.assign(ln.ifaces.begin(), ln.ifaces.end());
     for(auto iface : ifaces){
         iface->link = this;
     }
 }
 
-ns3lxc::Link::Link(std::string name, ns3lxc::Link link): name(name) {
+ns3lxc::Link::Link(std::string name, ns3lxc::Link& link): name(name) {
     type = link.type;
 }
 

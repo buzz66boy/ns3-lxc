@@ -25,6 +25,7 @@ Topology::Topology(Topology *temp){
     }
     for(i = 0; i < temp->links.size(); ++i){
         std::shared_ptr<Link> ptr = std::shared_ptr<Link>(new Link(*temp->links[i]));
+        ptr->ifaces.clear();
         links.push_back(ptr);
         linkMap[ptr->name] = ptr;
     }
@@ -36,7 +37,9 @@ Topology::Topology(Topology *temp){
         for(auto ifacePair : ptr->ifaces){
             if(ifacePair.second->link != nullptr){
                 ifacePair.second->link = linkMap[ifacePair.second->link->name].get();
+                ifacePair.second->link->connectIface(ifacePair.second);
                 Link::reRefIfaces(ifacePair.second->link);
+                std::cout << ifacePair.second->node->name << ": " << ptr->name << std::endl;
             }
         }
     }
@@ -66,6 +69,7 @@ Topology::Topology(Topology *temp){
             }
         }
     }
+    curNodeNum = temp->curNodeNum;
 }
 
 Topology::Topology(const Topology& temp){
@@ -81,9 +85,22 @@ Topology::Topology(const Topology& temp){
     linkMap = temp.linkMap;
     ifacesProvided = temp.ifacesProvided;
     ifacesProvidedSubNames = temp.ifacesProvidedSubNames;
-
+    curNodeNum = temp.curNodeNum;
 }
 
-int getNumNodes(){
-    
+static int reNum(Topology *top, int curNum){
+    for(auto topPtr : top->subTopologies){
+        curNum = reNum(topPtr.get(), curNum);
+    }
+    for(auto nodePtr : top->nodes){
+        nodePtr->nodeNum = curNum++;
+    }
+    top->curNodeNum = curNum;
+    return curNum;
+}
+
+void Topology::reNumNodes(Topology *top){
+    top->curNodeNum = 0;
+    reNum(top, 0);
+
 }

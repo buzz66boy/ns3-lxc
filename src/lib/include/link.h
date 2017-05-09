@@ -33,7 +33,7 @@ public:
 	IpAddr *subnetMask;
 	
 	Link(std::string name, std::string type, int numIfaces): name(name), type(type), numIfaces(numIfaces) {};
-	Link(std::string name, Link link);
+	Link(std::string name, Link& link);
 	Link(std::string name): name(name) {}
 	Link(const Link&);
 

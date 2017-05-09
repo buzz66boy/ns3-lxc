@@ -94,7 +94,7 @@ void printTime(){
 
 void Ns3Writer::writeInit(std::ostream& str, ns3lxc::Topology *top){
     str << "Simulator::Stop (Seconds (" + to_string(top->runTime) + ".));" << endl;
-    str << "nodes.Create(" + to_string(top->nodes.size()) + ");" << endl;
+    str << "nodes.Create(" + to_string(top->curNodeNum) + ");" << endl;
     //str << "AnimationInterface anim (\"animation.xml\");" << endl;
     for(auto it : linkTypeMap){
         if(it.second->isUsed()){
