@@ -9,10 +9,10 @@
 #include "link.h"
 
 class LinkType {
-    static bool used;
+    bool used = false;
 public:
-    void setUsed() {LinkType::used = true;}
-    bool isUsed() {return LinkType::used;}
+    void setUsed() {used = true;}
+    bool isUsed() {return used;}
 
     virtual int getIfacesSupported() = 0;
     virtual void writeIncludes(std::ostream& str) = 0;

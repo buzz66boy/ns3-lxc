@@ -34,7 +34,6 @@ std::shared_ptr<ns3lxc::Link> parseLink(YAML::Node node, ParsedTopology *top){
 
     if(node[TAG_TYPE]){
         link->setType(node[TAG_TYPE].as<std::string>());
-        linkTypeMap[link->getType()]->setUsed();
     } else {
         //err
         cerr << "No Type specified for link " << name << endl;

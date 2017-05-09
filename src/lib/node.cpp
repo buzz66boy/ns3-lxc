@@ -12,18 +12,6 @@ using namespace ns3lxc;
 void ns3lxc::Node::reRefIfaces(ns3lxc::Node *node){
     for(auto it = node->ifaces.begin(); it != node->ifaces.end(); it++){
         it->second->node = node;
-        // if(it->second->link != nullptr){
-        //     Link *link = it->second->link;
-        //     auto iter = std::find(link->ifaces.begin(), link->ifaces.end(), it->second);
-        //     if(iter != link->ifaces.end()){
-        //         link->ifaces.erase(iter);
-        //     } else {
-        //         std::cerr << "DBDBDBDB" << std::endl;
-        //     }
-        //     link->ifaces.push_back(it->second);
-        // } else {
-        //     // std::cerr << "NULL LINK FOR " << it->first << std::endl;
-        // }
     }
 }
 

@@ -97,6 +97,7 @@ void Ns3Writer::writeInit(std::ostream& str, ns3lxc::Topology *top){
     str << "nodes.Create(" + to_string(top->curNodeNum) + ");" << endl;
     //str << "AnimationInterface anim (\"animation.xml\");" << endl;
     for(auto it : linkTypeMap){
+        cout << "USED: " << it.second->isUsed() << endl;
         if(it.second->isUsed()){
             it.second->writeTypeInit(str);
         }
@@ -108,8 +109,8 @@ void Ns3Writer::writeLinksForTopology(std::ostream& str, ns3lxc::Topology *top){
         writeLinksForTopology(str, subTopPtr.get());
     }
     for(auto linkPtr : top->links){
-        linkTypeMap[linkPtr->getType()]->writeLinkInit(str, linkPtr);
-        linkTypeMap[linkPtr->getType()]->addIfacesToLink(str, linkPtr);
+        linkTypeMap.find(linkPtr->getType())->second->writeLinkInit(str, linkPtr);
+        linkTypeMap.find(linkPtr->getType())->second->addIfacesToLink(str, linkPtr);
     }
 }
 

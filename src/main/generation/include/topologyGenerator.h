@@ -26,4 +26,6 @@ void spawnTopology(ns3lxc::Topology *topology);
 
 void despawnTopology(ns3lxc::Topology *topology);
 
+void findLinkTypesUsed(ns3lxc::Topology *topology);
+
 #endif

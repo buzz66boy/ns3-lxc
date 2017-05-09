@@ -23,7 +23,7 @@ include_directories(
 set(Link_Types
         src/links/include/linkType.h
         src/links/include/linkTypeMap.h
-        src/links/linkType.cpp
+        src/links/linkTypeMap.cpp
         src/links/include/csma.h
         src/links/include/wifi.h
         src/links/csma.cpp

@@ -8,6 +8,7 @@
 #include "nodeSpawner.h"
 #include "bridgeTapBuilder.h"
 #include "ns3Writer.h"
+#include "linkTypeMap.h"
 
 #include "topologyGenerator.h"
 
@@ -15,6 +16,7 @@ using namespace std;
 
 void generateTopology(ns3lxc::Topology *topology){
     assignBridgesTaps(topology);
+    findLinkTypesUsed(topology);
     if(Settings::genContainers()){
         spawnTopology(topology);
     }
@@ -39,6 +41,15 @@ void generateTopology(ns3lxc::Topology *topology){
     }
     if(Settings::genContainers()){
         despawnTopology(topology);
+    }
+}
+
+void findLinkTypesUsed(ns3lxc::Topology *topology){
+    for(auto linkPtr : topology->links){
+        linkTypeMap.find(linkPtr->getType())->second->setUsed();
+    }
+    for(auto subTopPtr : topology->subTopologies){
+        findLinkTypesUsed(subTopPtr.get());
     }
 }
 
