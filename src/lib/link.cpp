@@ -11,7 +11,7 @@ ns3lxc::Link::Link(const Link& ln){
     type = ln.type;
     name = ln.name;
     numIfaces = ln.numIfaces;
-    ifaces = ln.ifaces;
+    ifaces.assign(ln.ifaces.begin(), ln.ifaces.end());
     for(auto iface : ifaces){
         iface->link = this;
     }

@@ -98,10 +98,8 @@ void Ns3Writer::writeInit(std::ostream& str, ns3lxc::Topology *top){
     //str << "AnimationInterface anim (\"animation.xml\");" << endl;
     for(auto it : linkTypeMap){
         if(it.second->isUsed()){
-            cout << "ISUSED" << endl;
             it.second->writeTypeInit(str);
         }
-        cout << "USED??" << endl;
     }
 }
 
