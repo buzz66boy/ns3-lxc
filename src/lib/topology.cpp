@@ -79,6 +79,7 @@ Topology::Topology(const Topology& temp){
     name = temp.name;
 
     size_t i;
+    runTime = temp.runTime;
     subTopologies = temp.subTopologies;
     nodes = temp.nodes;
     links = temp.links;

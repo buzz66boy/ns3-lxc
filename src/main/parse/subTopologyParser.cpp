@@ -13,11 +13,8 @@ using namespace std;
 
 static void applyIpOffset(string offset, ns3lxc::Topology *topology){
     for(auto linkPtr : topology->links){
-        // linkPtr->ip->applyOffset(offset);
-        // linkPtr->subnetMask->applyOffset(offset);
         for(auto ifacePtr : linkPtr->ifaces){
             ifacePtr->ip->applyOffset(offset);
-            cout << ifacePtr->ip->str() << endl;
         }
     }
     for(auto topPtr : topology->subTopologies){

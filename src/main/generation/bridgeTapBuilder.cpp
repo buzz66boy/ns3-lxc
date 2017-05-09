@@ -92,7 +92,7 @@ void tearDownBridgeTap(std::shared_ptr<ns3lxc::Iface> ifacePtr){
     int err;
     string tap = ifacePtr->tapName;
     string bridge = ifacePtr->bridgeName;
-    string nullRedir = " &> /dev/null";
+    string nullRedir = " 2>&1 > /dev/null";
     //ifconfig 'bridge' down
     // err = system(("ifconfig " + bridge + " down" + nullRedir).c_str());
     pclose(popen(("ifconfig " + bridge + " down" + nullRedir).c_str(), "r"));

@@ -46,6 +46,7 @@ void generateTopology(ns3lxc::Topology *topology){
         cout << endl;
     }
     if(Settings::teardownContainers()){
+        cout << "Tearing Down Topology" << endl;
         despawnTopology(topology);
         tearDownAllBridgesTaps(topology);
     }
