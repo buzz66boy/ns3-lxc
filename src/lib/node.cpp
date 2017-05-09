@@ -43,6 +43,7 @@ ns3lxc::Node::Node(const ns3lxc::Node &temp): Positionable(), IfaceProvider() {
     ifaces = temp.ifaces;
     for(auto ifacePair : ifaces){
         ifacePair.second->node = this;
+
     }
     requiresReRef = true;
     applications = temp.applications;
@@ -59,6 +60,7 @@ std::weak_ptr<Iface> ns3lxc::Node::getIface(std::string ifaceName){
     if(ifaces.count(ifaceName) > 0){
         return std::weak_ptr<Iface>(ifaces[ifaceName]);
     } else {
+        std::cerr << "Couldn't find iface " << ifaceName << " " << ifaces.size() << std::endl;
         return std::weak_ptr<Iface>();
     }
 }

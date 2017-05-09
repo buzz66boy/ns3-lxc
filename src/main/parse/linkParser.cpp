@@ -35,7 +35,6 @@ std::shared_ptr<ns3lxc::Link> parseLink(YAML::Node node, ParsedTopology *top){
     if(node[TAG_TYPE]){
         link->setType(node[TAG_TYPE].as<std::string>());
         linkTypeMap[link->getType()]->setUsed();
-        cout << "TPYPYPY " << link->getType() << endl; 
     } else {
         //err
         cerr << "No Type specified for link " << name << endl;
@@ -69,7 +68,12 @@ std::shared_ptr<ns3lxc::Link> parseLink(YAML::Node node, ParsedTopology *top){
                 link->connectIface(ifacePtr);
                 if(split.size() > 2){
                     //handle ip
-                    cout << "IP Assigned" << endl;
+                    if(ifacePtr->ip == nullptr){
+                        delete ifacePtr->ip;
+                    }
+                    if(ifacePtr->subnetMask == nullptr){
+                        delete ifacePtr->ip;
+                    }
                     ifacePtr->ip = new ns3lxc::IpAddr(AF_INET, split[2]);
                     ifacePtr->subnetMask = new ns3lxc::IpAddr(AF_INET, "255.255.255.0");
                 }
@@ -83,11 +87,19 @@ std::shared_ptr<ns3lxc::Link> parseLink(YAML::Node node, ParsedTopology *top){
                 if(!ifacePtr){
                     cout << "NO IFACE " << split[1] << " "<< topPtr->ifacesProvidedSubNames.size() << endl;
                     //err
+                    for(auto it: topPtr->ifacesProvidedSubNames){
+                        cout << it.first << endl;
+                    }
                 }
                 link->connectIface(ifacePtr);
                 if(split.size() > 2){
                     //handle ip
-                    cout << "IP Assigned" << endl;
+                    if(ifacePtr->ip == nullptr){
+                        delete ifacePtr->ip;
+                    }
+                    if(ifacePtr->subnetMask == nullptr){
+                        delete ifacePtr->ip;
+                    }
                     ifacePtr->ip = new ns3lxc::IpAddr(AF_INET, split[2]);
                     ifacePtr->subnetMask = new ns3lxc::IpAddr(AF_INET, "255.255.255.0");
                 }

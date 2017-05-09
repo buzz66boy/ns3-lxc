@@ -116,13 +116,11 @@ static void parseIncludes(YAML::Node includes, std::string topPath, ParsedTopolo
 
 		struct stat buffer;
 		if(stat(searchPath.c_str(), &buffer) == 0 && !S_ISDIR(buffer.st_mode)){
-			ns3lxc::Topology tempTop = parseTopologyFile(searchPath);
-			includedTop = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(&tempTop));
+			includedTop = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(parseTopologyFile(searchPath)));
 		} else {
 			searchPath = searchPath = topDir + "/include/" + curInclude + ".yaml";
 			if(stat(searchPath.c_str(), &buffer) == 0 && !S_ISDIR(buffer.st_mode)){
-				ns3lxc::Topology tempTop = parseTopologyFile(searchPath);
-				includedTop = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(&tempTop));
+				includedTop = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(parseTopologyFile(searchPath)));
 			} else {
 				cerr << "Couldn't find included file " << curInclude << " while parsing " << topPath << endl;
 				exit(10);
@@ -181,7 +179,6 @@ static void parseIfacesProvided(YAML::Node ifaces, ParsedTopology *parsedTop){
 	for(auto i = 0; i < ifaces.size(); ++i){
 		vector<string> split = splitString(ifaces[i].begin()->second.as<string>());
 		parsedTop->topology.ifacesProvidedSubNames[ifaces[i].begin()->first.as<string>()] = split[1];
-
 		std::weak_ptr<ns3lxc::IfaceProvider> provPtr;
 		if(parsedTop->topology.nodeMap.count(split[0]) > 0){
 			provPtr = parsedTop->topology.nodeMap[split[0]];

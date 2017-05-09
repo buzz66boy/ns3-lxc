@@ -16,7 +16,6 @@ static int getNextNodeNum(ns3lxc::Topology *top){
     for(auto topPtr : top->subTopologies){
         num = num + getNextNodeNum(topPtr.get());
     }
-    cout << "GLADOS " << to_string(num) << endl;
     return num;
 }
 

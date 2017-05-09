@@ -17,13 +17,13 @@ class Link;
 // declarations
 class Iface : public Nameable {
 public:
-    ns3lxc::Node *node;
-    ns3lxc::Link *link;
+    ns3lxc::Node *node = nullptr;
+    ns3lxc::Link *link = nullptr;
     std::string bridgeName;
     std::string tapName;
 
-    IpAddr *ip;
-    IpAddr *subnetMask;
+    IpAddr *ip = nullptr;
+    IpAddr *subnetMask = nullptr;
 
     std::array<uint8_t, 6> macAddr;
 

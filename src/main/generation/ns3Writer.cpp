@@ -12,7 +12,7 @@ using namespace std;
 
 void Ns3Writer::writeScript(ns3lxc::Topology *top, std::string scriptLoc){
     ofstream str;
-    cout << Settings::script_dest + "/" + top->name + ".cc" << endl;
+    cout << "Saving ns-3 file @ " + Settings::script_dest + "/" + top->name + ".cc" << endl;
     str.open(scriptLoc);
 
     writeIncludes(str);
