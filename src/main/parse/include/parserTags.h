@@ -24,6 +24,7 @@
 #define TAG_IP "ip"
 
 #define TAG_TYPE "type"
+#define TAG_OFFSET "offset"
 
 //Utility functions for dealing with tags and topologies
 std::string pluralize(std::string str);

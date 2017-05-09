@@ -114,11 +114,37 @@ void Ns3Writer::writeLinksForTopology(std::ostream& str, ns3lxc::Topology *top){
     }
 }
 
+static void allocNodePos(std::ostream& str, ns3lxc::Topology *top){
+    for(auto nodePtr : top->nodes){
+        str << "positionAlloc->Add (Vector (0,0,0));" << endl;
+    }
+    for(auto topPtr : top->subTopologies){
+        allocNodePos(str, topPtr.get());
+    }
+}
+
+static void writeNodePos(std::ostream& str, ns3lxc::Topology *top){
+    for(auto nodePtr : top->nodes){
+        str << "mobility.Install (nodes.Get(" + to_string(nodePtr->nodeNum) + "));" << endl;
+    }
+    for(auto topPtr : top->subTopologies){
+        writeNodePos(str, topPtr.get());
+    }
+}
+
 void Ns3Writer::writePositions(std::ostream& str, ns3lxc::Topology *top){
     str << R"(
 MobilityHelper mobility;
 MobilityHelper waymobility;
 Ptr<WaypointMobilityModel> mob;
 waymobility.SetMobilityModel("ns3::WaypointMobilityModel");
+Ptr<ListPositionAllocator> positionAlloc = CreateObject<ListPositionAllocator> ();
     )" << endl;
+
+    allocNodePos(str, top);
+
+    str << "mobility.SetPositionAllocator (positionAlloc);" << endl;
+    str << "mobility.SetMobilityModel (\"ns3::ConstantPositionMobilityModel\");" << endl;
+
+    writeNodePos(str, top);
 }

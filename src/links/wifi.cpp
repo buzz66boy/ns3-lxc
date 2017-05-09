@@ -52,8 +52,6 @@ void Wifi::writeLinkInit(std::ostream& str, shared_ptr<ns3lxc::Link> linkPtr){
     for(auto i = 0; i < linkPtr->ifaces.size(); ++i){
         str << "wifiTapBridge.SetAttribute (\"DeviceName\", StringValue (\"" + linkPtr->ifaces[i]->tapName + "\"));" << endl;
         str << "wifiTapBridge.Install(nodes.Get(" + to_string(linkPtr->ifaces[i]->node->nodeNum) + "), " + devName + ".Get(" + to_string(i) + "));" << endl;
-
-        cout << linkPtr->ifaces[i]->node->name << endl;
     }
     
 }

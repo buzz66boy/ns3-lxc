@@ -59,3 +59,15 @@ std::string IpAddr::str(){
 
     return std::string(buf);
 }
+
+void IpAddr::applyOffset(std::string offset){
+    uint32_t temp;
+    if(ipv4) {
+        inet_pton(AF_INET, offset.c_str(), &(temp));
+        temp = ntohl(temp);
+        ipv4_address = ipv4_address + temp;
+    } else {
+        //Probably backwards
+        // inet_ntop(AF_INET6, ipv6_address_8, buf, INET6_ADDRSTRLEN);
+    }
+}

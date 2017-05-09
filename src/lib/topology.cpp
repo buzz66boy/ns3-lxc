@@ -35,6 +35,9 @@ Topology::Topology(Topology *temp){
         nodeMap[ptr->name] = ptr;
         Node::reRefIfaces(ptr.get());
         for(auto ifacePair : ptr->ifaces){
+            if(ifacePair.second->ip != nullptr){
+                ifacePair.second->ip = new ns3lxc::IpAddr(*ifacePair.second->ip);
+            }
             if(ifacePair.second->link != nullptr){
                 ifacePair.second->link = linkMap[ifacePair.second->link->name].get();
                 ifacePair.second->link->connectIface(ifacePair.second);

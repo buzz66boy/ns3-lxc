@@ -11,6 +11,20 @@
 
 using namespace std;
 
+static void applyIpOffset(string offset, ns3lxc::Topology *topology){
+    for(auto linkPtr : topology->links){
+        // linkPtr->ip->applyOffset(offset);
+        // linkPtr->subnetMask->applyOffset(offset);
+        for(auto ifacePtr : linkPtr->ifaces){
+            ifacePtr->ip->applyOffset(offset);
+            cout << ifacePtr->ip->str() << endl;
+        }
+    }
+    for(auto topPtr : topology->subTopologies){
+        applyIpOffset(offset, topPtr.get());
+    }
+}
+
 std::vector<std::shared_ptr<ns3lxc::Topology> > parseSubTopology(YAML::Node node, ParsedTopology *top){
     size_t iters = 1;
     std::string origName = node.begin()->first.as<std::string>();
@@ -40,6 +54,10 @@ std::vector<std::shared_ptr<ns3lxc::Topology> > parseSubTopology(YAML::Node node
             } else {
                 cout <<"PROB" << endl;
             }
+        }
+        if(node[TAG_OFFSET]){
+            string offset = node[TAG_OFFSET].as<std::string>();
+            applyIpOffset(offset, topPtr.get());
         }
         topList.push_back(topPtr);
     }

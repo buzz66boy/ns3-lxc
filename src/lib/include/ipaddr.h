@@ -32,6 +32,7 @@ public:
     bool is_ipv4() { return ipv4; }
 
 	std::string str();
+    void applyOffset(std::string);
 };
 
 }

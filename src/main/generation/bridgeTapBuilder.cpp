@@ -33,7 +33,6 @@ void buildAllBridgesTaps(ns3lxc::Topology *top){
         for(auto it : nodePtr->ifaces){
             
             if(it.second->ip != nullptr && it.second->subnetMask != nullptr){
-                cout << nodePtr->name << ": " << it.first << endl;
                 buildBridgeTap(it.second);
                 i++;
             }
@@ -45,7 +44,6 @@ void buildBridgeTap(std::shared_ptr<ns3lxc::Iface> ifacePtr){
     int err;
     string tap = ifacePtr->tapName;
     string bridge = ifacePtr->bridgeName;
-    cout << ifacePtr->name << " " << ifacePtr->ip << endl;
     //brctl addbr 'bridge'
     err = system(("brctl addbr " + bridge).c_str());
     if(err){

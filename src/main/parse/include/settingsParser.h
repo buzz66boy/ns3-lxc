@@ -12,6 +12,7 @@ enum class Mode {
     CONTAINER_GEN,
     NS3_GEN, 
     NS3_RUN,
+    CLEANUP,
     NORMAL
 };
 
@@ -20,6 +21,7 @@ void create_template_settings_file(std::string settings_file);
 class Settings {
 public:
     static Mode run_mode;
+    static bool gdb;
 	static std::string ns3_path;
 	static std::string output_dest;
     static std::string temp_dir;
@@ -33,6 +35,8 @@ public:
     static bool genContainers(){ return (run_mode == Mode::NORMAL || run_mode == Mode::CONTAINER_GEN); }
     static bool genNS3() { return (run_mode == Mode::NORMAL || run_mode == Mode::NS3_GEN); }
     static bool runNS3() { return (run_mode == Mode::NORMAL || run_mode == Mode::NS3_RUN); }
+    static bool gdbNS3() { return gdb; }
+    static bool teardownContainers() { return (run_mode == Mode::NORMAL || run_mode == Mode::CLEANUP); }
 };
 
 #endif
