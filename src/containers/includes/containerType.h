@@ -12,6 +12,7 @@ class ContainerType {
 public:
     virtual void createContainer(std::shared_ptr<ns3lxc::Node>) = 0;
     virtual void startContainer(std::shared_ptr<ns3lxc::Node>) = 0; //Change to string?
+    virtual void prepForInstall(std::vector<std::shared_ptr<ns3lxc::Application> > appList) = 0;
     virtual void installApplications(std::shared_ptr<ns3lxc::Node>) = 0;
     virtual void runApplications(std::shared_ptr<ns3lxc::Node>) = 0; // for now, change to sync'ed packet later?
     virtual void grabOutput(std::shared_ptr<ns3lxc::Node>) = 0;

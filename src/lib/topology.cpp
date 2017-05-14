@@ -42,7 +42,6 @@ Topology::Topology(Topology *temp){
                 ifacePair.second->link = linkMap[ifacePair.second->link->name].get();
                 ifacePair.second->link->connectIface(ifacePair.second);
                 Link::reRefIfaces(ifacePair.second->link);
-                std::cout << ifacePair.second->node->name << ": " << ptr->name << std::endl;
             }
         }
     }

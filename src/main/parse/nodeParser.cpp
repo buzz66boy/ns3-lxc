@@ -27,6 +27,12 @@ static void parseNodeIfaces(YAML::Node ifaces, std::shared_ptr<ns3lxc::Node> nod
     }
 }
 
+void parseNodeApplications(YAML::Node apps, std::shared_ptr<ns3lxc::Node> node){
+    for(size_t i = 0; i < apps.size(); ++i){
+        cout << "TEST " << apps[i] << endl;
+    }
+}
+
 std::vector<std::shared_ptr<ns3lxc::Node> > parseNode(YAML::Node node, ParsedTopology *top){
     size_t iters = 1;
     std::string origName = node.begin()->first.as<std::string>();
@@ -56,6 +62,11 @@ std::vector<std::shared_ptr<ns3lxc::Node> > parseNode(YAML::Node node, ParsedTop
             parseNodeIfaces(node[TAG_IFACE], nodePtr);
         } else if (node[pluralize(TAG_IFACE)]){
             parseNodeIfaces(node[pluralize(TAG_IFACE)], nodePtr);
+        }
+        if(node[TAG_APPLICATION]){
+            parseNodeApplications(node[TAG_APPLICATION], nodePtr);
+        } else if (node[pluralize(TAG_APPLICATION)]){
+            parseNodeApplications(node[pluralize(TAG_APPLICATION)], nodePtr);
         }
         nodeList.push_back(nodePtr);
     }

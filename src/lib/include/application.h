@@ -18,6 +18,9 @@ class Application: public Nameable {
 public:
 	std::string path;
 	std::map<std::string, std::string> argMap;
+
+    Application(std::string name): Nameable(name) {};
+    Application(const Application& temp);
 };
 
 }

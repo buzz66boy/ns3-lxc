@@ -6,6 +6,6 @@
 
 #include "applicationType.h"
 
-static std::map<std::string, applicationType> applicationTypeMap = {};
+extern const std::map<std::string, ApplicationType*> applicationTypeMap;
 
 #endif

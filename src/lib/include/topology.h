@@ -20,7 +20,7 @@
 namespace ns3lxc {
 
 // declarations
-class Topology : public Positionable, public IfaceProvider, public IfaceAccepter, public Nameable {
+class Topology : public Positionable, public IfaceProvider, public IfaceAcceptor, public Nameable {
 public:
 	int runTime = 60;
 	//std::string name = "";

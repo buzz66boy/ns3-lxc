@@ -67,6 +67,7 @@ void spawnTopology(ns3lxc::Topology *topology){
     }
     NodeSpawner::createNodes(topology);
     NodeSpawner::startNodes(topology);
+    NodeSpawner::installApplications(topology);
 }
 
 void despawnTopology(ns3lxc::Topology *topology){

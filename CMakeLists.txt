@@ -34,6 +34,7 @@ set(Link_Types
 set(Application_Types
         src/applications/include/applicationType.h
         src/applications/include/applicationTypeMap.h
+        src/applications/applicationTypeMap.cpp
         # Add your custom app files here
 )
 
@@ -58,6 +59,7 @@ set(Local_Libs
 		src/lib/link.cpp
         src/lib/topology.cpp
         src/lib/iface.cpp
+        src/lib/application.cpp
 )
 
 set(NS-3_LXC

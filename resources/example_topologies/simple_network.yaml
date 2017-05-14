@@ -1,18 +1,14 @@
 nodes:
-- node1:
-    ifaces:
-      - iface: 
-          name: eth0
-          ip: 10.0.0.1
-- node2:
-    ifaces:
-    - iface : 
-        name : eth0
-        ip : 10.0.0.2
+  - node1:
+      ifaces:
+        - eth0 10.0.0.1
+  - node2:
+      ifaces:
+        - eth0 10.0.0.2
 
-networks :
-- connection:
-    type : csma
-    nodes:
-    - node1
-    - node2
+links:
+  - connection:
+      type: csma
+      ifaces:
+        - node1 eth0
+        - node2 eth0

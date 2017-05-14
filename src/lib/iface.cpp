@@ -26,7 +26,7 @@ std::weak_ptr<ns3lxc::Iface> ns3lxc::IfaceProvider::getIface(std::string ifaceNa
     return std::weak_ptr<ns3lxc::Iface>();
 }
 
-int ns3lxc::IfaceAccepter::connectIface(std::string ifaceName, std::weak_ptr<ns3lxc::Iface> iface){
+int ns3lxc::IfaceAcceptor::connectIface(std::string ifaceName, std::weak_ptr<ns3lxc::Iface> iface){
     if(ifacesAccepted.count(ifaceName) > 0){
         return ifacesAccepted[ifaceName].lock()->connectIface( ifacesAcceptedSubNames[ifaceName], iface );
     }

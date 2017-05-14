@@ -30,6 +30,7 @@ static void parseLinks(YAML::Node links, ParsedTopology *parsedTop);
 static void parseSubTopologies(YAML::Node topologies, ParsedTopology *parsedTop);
 static void parseIfacesProvided(YAML::Node ifaces, ParsedTopology *parsedTop);
 static void parseIfacesAccepted(YAML::Node ifacesAccepted, ParsedTopology *parsedTop);
+static void parseApplications(YAML::Node apps, ParsedTopology *parsedTop);
 static ns3lxc::Iface parseInterface(YAML::Node interface);
 
 ns3lxc::Topology parseTopologyFile(std::string topPath){	
@@ -97,6 +98,12 @@ void parseTopology(YAML::Node topology, ParsedTopology *parsedTop){
 	if(topology[TAG_IFACES_ACCEPTED]){
 		parseIfacesAccepted(topology[TAG_IFACES_ACCEPTED], parsedTop);
 	}
+
+	if(topology[TAG_APPLICATION]){
+        parseApplications(topology[TAG_APPLICATION], parsedTop);
+    } else if (topology[pluralize(TAG_APPLICATION)]){
+        parseApplications(topology[pluralize(TAG_APPLICATION)], parsedTop);
+    }
 
 	cout << "DONE PARSING TOP " << parsedTop->topology.name << endl;
 
@@ -193,8 +200,55 @@ static void parseIfacesProvided(YAML::Node ifaces, ParsedTopology *parsedTop){
 
 static void parseIfacesAccepted(YAML::Node ifacesAccepted, ParsedTopology *parsedTop){
 	for(auto i = 0; i < ifacesAccepted.size(); ++i){
-		cout << "TURTLE" << ifacesAccepted[i] << endl;
+		vector<string> split = splitString(ifacesAccepted[i].begin()->second.as<string>());
+		parsedTop->topology.ifacesAcceptedSubNames[ifacesAccepted[i].begin()->first.as<string>()] = split[1];
+		std::weak_ptr<ns3lxc::IfaceAcceptor> accPtr;
+		if(parsedTop->topology.linkMap.count(split[0]) > 0){
+			accPtr = parsedTop->topology.linkMap[split[0]];
+		} else if(parsedTop->topology.topMap.count(split[0]) > 0){
+			accPtr = parsedTop->topology.topMap[split[0]];
+		} else {
+			cerr << "COULDNT FIND" << endl;
+		}
+		parsedTop->topology.ifacesAccepted[ifacesAccepted[i].begin()->first.as<string>()] = accPtr;
 	}
+}
+
+static void addAppToAllNodes(ns3lxc::Application *app, ns3lxc::Topology *top){
+	for(auto subTopPtr : top->subTopologies){
+		addAppToAllNodes(app, subTopPtr.get());
+	}
+	for(auto nodePtr : top->nodes){
+		nodePtr->applications.push_back(ns3lxc::Application(*app));
+	}
+}
+
+static void parseApplications(YAML::Node apps, ParsedTopology *parsedTop){
+	for(size_t i = 0; i < apps.size(); ++i){
+        string appName = apps[i].begin()->first.as<string>();
+        switch(apps[i].begin()->second.Type()){
+        	case YAML::NodeType::Scalar:
+        		if(apps[i].begin()->second.as<string>() == "all"){
+        			ns3lxc::Application app(appName);
+	        		addAppToAllNodes(&app, &parsedTop->topology);
+	        	} else {
+	        		vector<string> split = splitString(apps[i].begin()->second.as<string>());
+
+	        	}
+        		break;
+        	case(YAML::NodeType::Sequence):
+        		cout << "SEQ" << endl;
+        		break;
+        	case(YAML::NodeType::Map):
+        		cout << "MAP" << endl;
+        		break;
+        }
+        if(apps[i].begin()->second.IsScalar()){
+        	
+        } else if (apps[i].begin()->second.IsMap()){
+
+        }
+    }
 }
 
 void renameSubTopologies(ns3lxc::Topology *topology, std::string prefix){

@@ -25,7 +25,7 @@ ComplexNetwork:
           - secondHalf bottom 10.0.5.2
 
   applications:
-    - bird: all
+    - iperf3: all
     - udp:
       - firstHalf:
           args: -c ${secondHalf.node1_1.eth0.ip}

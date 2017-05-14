@@ -21,8 +21,10 @@ void NodeSpawner::startNodes(ns3lxc::Topology *top){
         containerTypeMap[Settings::container_type]->startContainer(nodePtr);
     }
 }
-void NodeSpawner::installApplications(ns3lxc::Topology *){
-
+void NodeSpawner::installApplications(ns3lxc::Topology *top){
+    for(shared_ptr<ns3lxc::Node> nodePtr : top->nodes){
+        containerTypeMap[Settings::container_type]->installApplications(nodePtr);
+    }
 }
 void NodeSpawner::runApplications(ns3lxc::Topology *){
 }

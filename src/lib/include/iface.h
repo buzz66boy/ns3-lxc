@@ -40,10 +40,10 @@ public:
     virtual std::weak_ptr<ns3lxc::Iface> getIface(std::string ifaceName);
 };
 
-class IfaceAccepter {
+class IfaceAcceptor {
 public:
     std::map<std::string, std::string> ifacesAcceptedSubNames; //maps this level's iface names to lower level's
-    std::map<std::string, std::weak_ptr<ns3lxc::IfaceAccepter> > ifacesAccepted; //keep a ref to who below us accepts ifaces
+    std::map<std::string, std::weak_ptr<ns3lxc::IfaceAcceptor> > ifacesAccepted; //keep a ref to who below us accepts ifaces
     virtual int connectIface(std::string ifaceName, std::weak_ptr<Iface> iface);
 };
 

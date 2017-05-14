@@ -11,6 +11,7 @@ ComplexNetworkHalf:
     - wifi:
         template: 1eth_1wlan
         num: 2
+        app: iperf3
     - end:
         template: 2eth
     - middle:

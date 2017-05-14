@@ -2,7 +2,11 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <thread>
 
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/wait.h>
 #include <lxc/lxccontainer.h>
 
 #include "settingsParser.h"
@@ -10,6 +14,45 @@
 #include "lxcContainerType.h"
 
 using namespace std;
+
+const std::map<std::string, std::map<std::string, std::string> >
+packmanMap = {
+    {"apt-get", {
+        {"install", "install -y"},
+        {"update", "update"},
+        {"upgrade", "upgrade -y"},
+        {"remove", "remove -y"}
+    }},
+    {"aptitude", {
+        {"install", "install -y"},
+        {"update", "update "},
+        {"upgrade", "upgrade -y"},
+        {"remove", "remove -y"}
+    }},
+    {"dnf", {
+        {"install", "install -y"},
+        {"update", "update"},
+        {"upgrade", "upgrade -y"},
+        {"remove", "remove -y"}
+    }}, 
+    {"pacman", {
+        {"install", "--noconfirm -S"},
+        {"update", "-Sy"},
+        {"upgrade", "--noconfirm -Su"},
+        {"remove", "--noconfirm -R"}
+    }},
+};
+
+const std::map<std::string, std::string> 
+distroPackMap = {
+    {"ubuntu", "apt-get"},
+    {"debian", "apt-get"},
+    {"centos", "dnf"},
+    {"fedora", "dnf"},
+    {"redhat", "dnf"},
+    {"arch", "pacman"},
+};
+
 
 void LxcContainerType::writeContainerConfig(std::shared_ptr<ns3lxc::Node> nodePtr, string configPath){
     std::ofstream ofs;
@@ -27,6 +70,12 @@ void LxcContainerType::writeContainerConfig(std::shared_ptr<ns3lxc::Node> nodePt
         ofs << "lxc.network.ipv4 = " << it.second->ip->str() << "/24 " << it.second->subnetMask->str() << endl;
         ofs << "lxc.network.hwaddr = xx:xx:xx:xx:xx:xx" << endl;
     }
+    // ofs << "lxc.network.type = veth" << endl;
+    // ofs << "lxc.network.name = extacc" << endl;
+    // ofs << "lxc.network.link = lxcbr0" << endl;
+    // ofs << "lxc.network.flags = up" << endl;
+    // ofs << "lxc.network.hwaddr = 00:16:3e:xx:xx:xx" << endl;
+    
     // file.write("lxc.network.type = veth\n")
     // file.write("lxc.network.flags = up\n")
     // file.write("lxc.network.link = " + interface[0] + "\n")
@@ -75,8 +124,48 @@ void LxcContainerType::startContainer(std::shared_ptr<ns3lxc::Node> nodePtr) {
         cerr << "Container " << nodePtr->name << " failed to start" << endl;
     }
 }
-void LxcContainerType::installApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {
 
+void LxcContainerType::prepForInstall(std::vector<std::shared_ptr<ns3lxc::Application> > appList){
+
+}
+
+static void installThread(std::shared_ptr<ns3lxc::Node> nodePtr, std::string packman, std::string installCmd){
+    string nullRedir = " 2>&1 > /dev/null";
+    string lxcDir = "/var/lib/lxc/" + nodePtr->name + "/rootfs";
+    //nav to root of container
+    chdir(lxcDir.c_str());
+    //chroot
+    chroot(lxcDir.c_str());
+    //install package based on local distro
+    for(auto app : nodePtr->applications){
+        //FIXME doesnt work
+        execl(("usr/bin/" + packman).c_str(), (installCmd + app.name).c_str());
+    }
+}
+
+void LxcContainerType::installApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {
+    string packman = distroPackMap.at(containerDistro);
+    string installCmd = packmanMap.at(packman).at("install") + " ";
+    pid_t parent = getpid();
+    pid_t pid = fork();
+
+    if (pid == -1)
+    {
+        // error, failed to fork()
+    } 
+    else if (pid > 0)
+    {
+        int status;
+        waitpid(pid, &status, 0);
+    }
+    else 
+    {
+        // we are the child
+        // execve(...);
+        // _exit(EXIT_FAILURE);   // exec never returns
+        installThread(nodePtr, packman, installCmd);
+        exit(0);
+    }
 }
 void LxcContainerType::runApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {
 

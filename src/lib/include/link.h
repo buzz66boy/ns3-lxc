@@ -15,7 +15,7 @@
 namespace ns3lxc {
 
 // declarations
-class Link : public IfaceAccepter, virtual public Nameable {
+class Link : public IfaceAcceptor, virtual public Nameable {
 private:
 	bool requiresReRef = false;
 	
