@@ -11,6 +11,7 @@
 
 #include "settingsParser.h"
 #include "node.h"
+#include "parserTags.h"
 #include "lxcContainerType.h"
 
 using namespace std;
@@ -137,9 +138,11 @@ static void installThread(std::shared_ptr<ns3lxc::Node> nodePtr, std::string pac
     //chroot
     chroot(lxcDir.c_str());
     //install package based on local distro
+    vector<string> st = splitString(installCmd);
     for(auto app : nodePtr->applications){
-        //FIXME doesnt work
-        execl(("usr/bin/" + packman).c_str(), (installCmd + app.name).c_str());
+        //FIXME bad idea (relying on set amt of args)
+        execl(("/usr/bin/" + packman).c_str(), ("/usr/bin/" + packman).c_str(),
+         st[0].c_str(), st[1].c_str(), app.name.c_str(), NULL);
     }
 }
 

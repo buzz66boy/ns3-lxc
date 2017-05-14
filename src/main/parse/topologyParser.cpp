@@ -243,11 +243,6 @@ static void parseApplications(YAML::Node apps, ParsedTopology *parsedTop){
         		cout << "MAP" << endl;
         		break;
         }
-        if(apps[i].begin()->second.IsScalar()){
-        	
-        } else if (apps[i].begin()->second.IsMap()){
-
-        }
     }
 }
 

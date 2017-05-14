@@ -8,6 +8,8 @@
 #include <map>
 #include <memory>
 
+#include "yaml-cpp/yaml.h"
+
 #include "topology.h"
 #include "node.h"
 #include "link.h"
