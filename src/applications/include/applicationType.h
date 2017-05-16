@@ -8,6 +8,8 @@
 #include "node.h"
 #include "topology.h"
 
+enum class InstallMethod {PACKMAN, BIN, FOLDER, SCRIPT};
+
 class ApplicationType {
 public:
     /**
@@ -15,6 +17,7 @@ public:
      *
      **/
     virtual bool isApplicationSynced() = 0;
+    virtual InstallMethod getInstallMethod() = 0;
     virtual std::string getConfigLocation(ns3lxc::Node, ns3lxc::Topology) = 0;
     virtual void writeConfig(ns3lxc::Node, ns3lxc::Topology, std::ostream) = 0;
     virtual void startExecution(ns3lxc::Node, ns3lxc::Topology, std::ostream) = 0;

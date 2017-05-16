@@ -3,6 +3,8 @@
 
 #include "position.h"
 
+#define PI 3.141592653
+
 using namespace ns3lxc;
 
 std::string Position::str(){
@@ -60,8 +62,9 @@ void Positionable::rotatePositions(double degrees){
         return;
     }
     for(auto position: positions){
-        position.x = std::cos(degrees) * position.x;
-        position.y = std::sin(degrees) * position.y;
+        position.x = std::cos((degrees * PI) / 180.0) * position.x;
+        std::cout << "NEW ROT:" << std::to_string(position.x) << std::endl;
+        position.y = std::sin((degrees * PI) / 180.0) * position.y;
     }
     if(parent != nullptr){
         centerPositionsAroundParent();

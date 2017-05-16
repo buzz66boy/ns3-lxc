@@ -14,6 +14,7 @@
 #include "settingsParser.h"
 #include "node.h"
 #include "parserTags.h"
+#include "applicationTypeMap.h"
 #include "lxcContainerType.h"
 
 using namespace std;
@@ -141,8 +142,10 @@ static void installThread(std::shared_ptr<ns3lxc::Node> nodePtr, std::string pac
     vector<string> st = splitString(installCmd);
     for(auto app : nodePtr->applications){
         //FIXME bad idea (relying on set amt of args)
-        execl(("/usr/bin/" + packman).c_str(), ("/usr/bin/" + packman).c_str(),
-         st[0].c_str(), st[1].c_str(), app.name.c_str(), NULL);
+        if(applicationTypeMap.count(app.name) < 1){
+            execl(("/usr/bin/" + packman).c_str(), ("/usr/bin/" + packman).c_str(),
+             st[0].c_str(), st[1].c_str(), app.name.c_str(), NULL);
+        }
     }
 }
 
@@ -177,12 +180,14 @@ void LxcContainerType::runApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {
     lxc_container *c = containerMap[nodePtr->name].get();
     lxc_attach_options_t opts = LXC_ATTACH_OPTIONS_DEFAULT;
     for(auto app : nodePtr->applications){
-        int pid;
-        char cmd[app.name.length() + 2 + app.args.length()];
-        strcpy(cmd, (app.name + " " + app.args).c_str());
-        int res = c->attach(c, ex, cmd, &opts, &pid);
-        pidMap[nodePtr->name].push_back(pid);
-        cout << "cmd : " + to_string(res) + ": " << endl;
+        if(applicationTypeMap.count(app.name) < 1){
+            int pid;
+            char cmd[app.name.length() + 2 + app.args.length()];
+            strcpy(cmd, (app.name + " " + app.args).c_str());
+            int res = c->attach(c, ex, cmd, &opts, &pid);
+            pidMap[nodePtr->name].push_back(pid);
+            cout << "cmd : " + to_string(res) + ": " << endl;
+        }
     }
 }
 void LxcContainerType::grabOutput(std::shared_ptr<ns3lxc::Node> nodePtr) {
@@ -195,6 +200,7 @@ void LxcContainerType::teardownContainer(std::shared_ptr<ns3lxc::Node> nodePtr){
         lxc_attach_options_t opts = LXC_ATTACH_OPTIONS_DEFAULT;
         for(int pid : pidMap.at(nodePtr->name)){
             int status;
+            kill(pid, SIGTERM);
             waitpid(pid, &status, 0);
         }
         pidMap.erase(nodePtr->name);
@@ -207,10 +213,7 @@ void LxcContainerType::teardownContainer(std::shared_ptr<ns3lxc::Node> nodePtr){
     }
     if(c->is_defined(c)){
         //container exists, destroy
-        if(!c->shutdown(c, 30)){
-            //didn't shutdown
-            c->stop(c);
-        }
+        c->stop(c);
         c->destroy(c);
     }
     c = nullptr;

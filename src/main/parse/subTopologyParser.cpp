@@ -75,6 +75,11 @@ std::vector<std::shared_ptr<ns3lxc::Topology> > parseSubTopology(YAML::Node node
                 parsePositions(node[pluralize(TAG_POSITION)], topPtr.get());
             }
         }
+        if(node[TAG_ROTATION]){
+            if(node[TAG_ROTATION].Type() == YAML::NodeType::Scalar){
+                applyRotation(node[TAG_ROTATION].as<int>(), topPtr.get());
+            }
+        }
         topList.push_back(topPtr);
     }
     for(auto topPtr : topList){

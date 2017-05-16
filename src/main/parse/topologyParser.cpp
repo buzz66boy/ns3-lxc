@@ -108,6 +108,7 @@ void parseTopology(YAML::Node topology, ParsedTopology *parsedTop){
 
     if(topology[TAG_ROTATION]){
         if(topology[TAG_ROTATION].Type() == YAML::NodeType::Scalar){
+            cout << "PARSING ROT" << endl;
             applyRotation(topology[TAG_ROTATION].as<int>(), &parsedTop->topology);
         }
     }
