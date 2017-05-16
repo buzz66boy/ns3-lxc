@@ -106,6 +106,12 @@ void parseTopology(YAML::Node topology, ParsedTopology *parsedTop){
         parsePositions(topology[pluralize(TAG_POSITION)], &parsedTop->topology);
     }
 
+    if(topology[TAG_ROTATION]){
+        if(topology[TAG_ROTATION].Type() == YAML::NodeType::Scalar){
+            applyRotation(topology[TAG_ROTATION].as<int>(), &parsedTop->topology);
+        }
+    }
+
 	if(topology[TAG_APPLICATION]){
         parseApplications(topology[TAG_APPLICATION], parsedTop);
     } else if (topology[pluralize(TAG_APPLICATION)]){

@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <cstring>
+#include <map>
 #include <unistd.h>
 
 #include "yaml-cpp/yaml.h"
@@ -39,6 +40,20 @@ static std::string compute_settings_path(){
 	return dir;
 }
 
+static map<string, string> parseArgs(int argc, char *argv[]){
+	map<string, string> argMap;
+	for(int i = 1; i < argc; ++i){
+		string arg(argv[i]);
+		if(arg.find('-') != string::npos){
+			argMap[arg] = "exists";
+		} else {
+			argMap["file"] = arg;
+			cout << arg << endl;
+		}
+	}
+	return argMap;
+}
+
 int main(int argc, char *argv[]){
 
 	if(geteuid()){
@@ -53,19 +68,25 @@ int main(int argc, char *argv[]){
 	if(result != 0){
 		return result;
 	}
-	
+	if(argc < 2) {
+		cerr << "Not Enough Arguments" << endl;
+		return 1;
+	}
+	map<string, string> argMap = parseArgs(argc, argv);
 	ns3lxc::Topology topology;
 
-	if(argc < 2) {
+	if(argMap.count("file") < 1) {
 		cerr << NO_FILE_PROVIDED << endl;
 		return 1;
 	}
 
-	topology = parseTopologyFile(argv[1]);
+	topology = parseTopologyFile(argMap.at("file"));
 	ns3lxc::Topology::reNumNodes(&topology);
-	if(argc > 2){
+	if(argMap.count("-n") > 0){
 		Settings::run_mode = Mode::NS3_GEN;
 		cout << "RUN mode ns3" << endl;
+	} else if(argMap.count("-c") > 0){
+		Settings::run_mode = Mode::CLEANUP;
 	}
 
 	generateTopology(&topology);

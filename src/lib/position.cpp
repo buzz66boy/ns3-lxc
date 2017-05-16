@@ -56,7 +56,16 @@ void Positionable::centerPositionsAroundParent(Positionable *par){
  * Rotates positions (and hence movement) around 0, 0, 0 counter-clockwise
  */
 void Positionable::rotatePositions(double degrees){
-
+    if(positions.size() < 1){
+        return;
+    }
+    for(auto position: positions){
+        position.x = std::cos(degrees) * position.x;
+        position.y = std::sin(degrees) * position.y;
+    }
+    if(parent != nullptr){
+        centerPositionsAroundParent();
+    }
 }
 
 static Position getPos(double time, std::vector<Position> &positions){

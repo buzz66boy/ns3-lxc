@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include <memory>
+#include <vector>
 
 #include <lxc/lxccontainer.h>
 
@@ -16,6 +17,7 @@ class LxcContainerType : public ContainerType {
 
     std::map<std::string, std::shared_ptr<lxc_container> > containerMap;
     std::map<std::string, std::string> configMap;
+    std::map<std::string, std::vector<int> > pidMap;
 
     void writeContainerConfig(std::shared_ptr<ns3lxc::Node> nodePtr, std::string configPath);
 public:

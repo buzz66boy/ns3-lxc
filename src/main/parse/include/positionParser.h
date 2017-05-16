@@ -10,6 +10,7 @@
 
 void parsePositions(YAML::Node posNode, std::shared_ptr<ns3lxc::Node> nodePtr);
 void parsePositions(YAML::Node posNode, ns3lxc::Topology *topPtr);
+void applyRotation(int rotation, ns3lxc::Topology *topPtr);
 void computeAbsolutePositions(ns3lxc::Topology *top);
 
 #endif

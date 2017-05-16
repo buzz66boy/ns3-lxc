@@ -31,9 +31,12 @@ int main( int argc, char *argv[]){
     writeInit(str, top);
     writeLinksForTopology(str, top);
     writePositions(str, top);
+
+    str << "AnimationInterface anim (\"animation.xml\");" << endl;
+    str << "anim.EnablePacketMetadata();" << endl;
     str << "for(uint64_t i = 0; i <= " + to_string(top->runTime) + "; i += 10){Simulator::Schedule(Seconds(i), &printTime);}" << endl;
-    str << "Simulator::Run ();" << endl;
-    str << "Simulator::Destroy ();" << endl;
+    str << "\tSimulator::Run ();" << endl;
+    str << "\tSimulator::Destroy ();" << endl;
     str << "}" << endl;
 
     str.close();
@@ -95,9 +98,7 @@ void printTime(){
 void Ns3Writer::writeInit(std::ostream& str, ns3lxc::Topology *top){
     str << "Simulator::Stop (Seconds (" + to_string(top->runTime) + ".));" << endl;
     str << "nodes.Create(" + to_string(top->curNodeNum) + ");" << endl;
-    //str << "AnimationInterface anim (\"animation.xml\");" << endl;
     for(auto it : linkTypeMap){
-        cout << "USED: " << it.second->isUsed() << endl;
         if(it.second->isUsed()){
             it.second->writeTypeInit(str);
         }
@@ -111,6 +112,11 @@ void Ns3Writer::writeLinksForTopology(std::ostream& str, ns3lxc::Topology *top){
     for(auto linkPtr : top->links){
         linkTypeMap.find(linkPtr->getType())->second->writeLinkInit(str, linkPtr);
         linkTypeMap.find(linkPtr->getType())->second->addIfacesToLink(str, linkPtr);
+    }
+    for(auto it : linkTypeMap){
+        if(it.second->isUsed()){
+            it.second->writeClosingRemarks(str);
+        }
     }
 }
 

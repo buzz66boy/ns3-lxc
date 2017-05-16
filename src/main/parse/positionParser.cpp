@@ -52,3 +52,13 @@ void computeAbsolutePositions(ns3lxc::Topology *top){
         nodePtr->centerPositionsAroundParent(top);
     }
 }
+
+void applyRotation(int rotation, ns3lxc::Topology *topPtr){
+    topPtr->rotatePositions(rotation);
+    for(auto nodePtr : topPtr->nodes){
+        nodePtr->rotatePositions(rotation);
+    }
+    for(auto subTopPtr : topPtr->subTopologies){
+        applyRotation(rotation, subTopPtr.get());
+    }
+}

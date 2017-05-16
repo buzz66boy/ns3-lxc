@@ -9,22 +9,7 @@
 
 #include "topology.h"
 
-// class GeneratedTopology {
-// public:
-//     ns3lxc::Topology *topPtr;
-
-//     std::map<std::string, std::shared_ptr<lxc_container> > containerMap;
-
-//     std::string tempDir;
-
-//     GeneratedTopology(ns3lxc::Topology *topology): topPtr(topology) {}
-// };
-
 void generateTopology(ns3lxc::Topology *topology);
-
-void spawnTopology(ns3lxc::Topology *topology);
-
-void despawnTopology(ns3lxc::Topology *topology);
 
 void findLinkTypesUsed(ns3lxc::Topology *topology);
 

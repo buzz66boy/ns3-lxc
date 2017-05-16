@@ -23,7 +23,6 @@ void CSMA::writeTypeInit(std::ostream& str){
     str << "csma.SetChannelAttribute(\"DataRate\",StringValue(\"10Mbps\"));" << endl;
     str << "TapBridgeHelper csmaTapBridge;" << endl;
     str << "csmaTapBridge.SetAttribute (\"Mode\", StringValue (\"UseLocal\"));" << endl;
-    str << "csma.EnablePcapAll(\"csma_pcap\",true);" << endl;
 }
 void CSMA::writeLinkInit(std::ostream& str, shared_ptr<ns3lxc::Link> linkPtr){
     string contName = linkPtr->name + "_container";
@@ -48,4 +47,8 @@ void CSMA::writeLinkInit(std::ostream& str, shared_ptr<ns3lxc::Link> linkPtr){
 }
 void CSMA::addIfacesToLink(std::ostream& str, shared_ptr<ns3lxc::Link> linkPtr){
 
+}
+
+void CSMA::writeClosingRemarks(std::ostream& str){
+    str << "csma.EnablePcapAll(\"csma_pcap\",true);" << endl;
 }

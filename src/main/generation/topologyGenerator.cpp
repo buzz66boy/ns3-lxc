@@ -20,7 +20,9 @@ void generateTopology(ns3lxc::Topology *topology){
     if(Settings::genContainers()){
         tearDownAllBridgesTaps(topology);
         buildAllBridgesTaps(topology);
-        spawnTopology(topology);
+        NodeSpawner::createNodes(topology);
+        NodeSpawner::startNodes(topology);
+        NodeSpawner::installApplications(topology);
     }
     if(Settings::genNS3()){
         string scriptLoc = Settings::script_dest + "/" + topology->name + ".cc";
@@ -38,6 +40,7 @@ void generateTopology(ns3lxc::Topology *topology){
     }
     if(Settings::runNS3()){
         chdir(Settings::ns3_path.c_str());
+        NodeSpawner::runApplications(topology);
         if(Settings::gdbNS3()){
             system(("./waf --run scratch/" + topology->name + " --command-template=\"gdb --args %s\"").c_str());
         } else {
@@ -47,7 +50,7 @@ void generateTopology(ns3lxc::Topology *topology){
     }
     if(Settings::teardownContainers()){
         cout << "Tearing Down Topology" << endl;
-        despawnTopology(topology);
+        NodeSpawner::teardownNodes(topology);
         tearDownAllBridgesTaps(topology);
     }
 }
@@ -59,20 +62,4 @@ void findLinkTypesUsed(ns3lxc::Topology *topology){
     for(auto subTopPtr : topology->subTopologies){
         findLinkTypesUsed(subTopPtr.get());
     }
-}
-
-void spawnTopology(ns3lxc::Topology *topology){
-    for(auto topPtr : topology->subTopologies){
-        spawnTopology(topPtr.get());
-    }
-    NodeSpawner::createNodes(topology);
-    NodeSpawner::startNodes(topology);
-    NodeSpawner::installApplications(topology);
-}
-
-void despawnTopology(ns3lxc::Topology *topology){
-    for(auto topPtr : topology->subTopologies){
-        despawnTopology(topPtr.get());
-    }
-    NodeSpawner::teardownNodes(topology);
 }

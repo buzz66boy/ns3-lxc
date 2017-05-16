@@ -3,9 +3,11 @@
 #include <fstream>
 #include <string>
 #include <thread>
+#include <cstring>
 
 #include <fcntl.h>
 #include <unistd.h>
+#include <signal.h>
 #include <sys/wait.h>
 #include <lxc/lxccontainer.h>
 
@@ -97,12 +99,9 @@ void LxcContainerType::createContainer(std::shared_ptr<ns3lxc::Node> nodePtr) {
         cerr << "PROBLEMS WITH CONTAINER" << endl;
     }
     if(c->is_defined(c)){
-        //container exists, destroy
-        if(!c->shutdown(c, 30)){
-            //didn't shutdown
-            c->stop(c);
-        }
-        c->destroy(c);
+        teardownContainer(nodePtr);
+        containerMap[nodePtr->name] = shared_ptr<lxc_container>(lxc_container_new(nodePtr->name.c_str(), NULL));
+        c = containerMap[nodePtr->name].get();
     }
     string configPath = Settings::container_config_dir + "/" + nodePtr->name + ".conf";
     writeContainerConfig(nodePtr, configPath);
@@ -120,6 +119,7 @@ void LxcContainerType::createContainer(std::shared_ptr<ns3lxc::Node> nodePtr) {
 }
 void LxcContainerType::startContainer(std::shared_ptr<ns3lxc::Node> nodePtr) {
     lxc_container *c = containerMap[nodePtr->name].get();
+    cout << "Starting container " + nodePtr->name << endl;
     if (!c->start(c, 0, NULL)) {
         //failed to start
         cerr << "Container " << nodePtr->name << " failed to start" << endl;
@@ -164,14 +164,26 @@ void LxcContainerType::installApplications(std::shared_ptr<ns3lxc::Node> nodePtr
     else 
     {
         // we are the child
-        // execve(...);
-        // _exit(EXIT_FAILURE);   // exec never returns
         installThread(nodePtr, packman, installCmd);
         exit(0);
     }
 }
-void LxcContainerType::runApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {
 
+static int ex(void *arg){
+    return system((char*)arg);
+}
+
+void LxcContainerType::runApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {
+    lxc_container *c = containerMap[nodePtr->name].get();
+    lxc_attach_options_t opts = LXC_ATTACH_OPTIONS_DEFAULT;
+    for(auto app : nodePtr->applications){
+        int pid;
+        char cmd[app.name.length() + 2 + app.args.length()];
+        strcpy(cmd, (app.name + " " + app.args).c_str());
+        int res = c->attach(c, ex, cmd, &opts, &pid);
+        pidMap[nodePtr->name].push_back(pid);
+        cout << "cmd : " + to_string(res) + ": " << endl;
+    }
 }
 void LxcContainerType::grabOutput(std::shared_ptr<ns3lxc::Node> nodePtr) {
 
@@ -179,6 +191,20 @@ void LxcContainerType::grabOutput(std::shared_ptr<ns3lxc::Node> nodePtr) {
 
 void LxcContainerType::teardownContainer(std::shared_ptr<ns3lxc::Node> nodePtr){
     lxc_container *c = containerMap[nodePtr->name].get();
+    if(pidMap.count(nodePtr->name) > 0){
+        lxc_attach_options_t opts = LXC_ATTACH_OPTIONS_DEFAULT;
+        for(int pid : pidMap.at(nodePtr->name)){
+            int status;
+            waitpid(pid, &status, 0);
+        }
+        pidMap.erase(nodePtr->name);
+    }
+    if(Settings::run_mode == Mode::CLEANUP && c == nullptr){
+        containerMap[nodePtr->name] = shared_ptr<lxc_container>(lxc_container_new(nodePtr->name.c_str(), NULL));
+        c = containerMap[nodePtr->name].get();
+    } else if (c == nullptr){
+        cerr << "nullptr for container " + nodePtr->name << endl;
+    }
     if(c->is_defined(c)){
         //container exists, destroy
         if(!c->shutdown(c, 30)){
