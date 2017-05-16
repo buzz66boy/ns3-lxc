@@ -7,9 +7,12 @@ ComplexNetwork:
     - firstHalf: 
         template: ComplexNetworkHalf
         offset: 0.0.0.0
+        position: 0 0 0
     - secondHalf: 
         template: ComplexNetworkHalf
         offset: 0.0.8.0
+        position: 100 0 0
+        rotation: 180
   links:
     - topConnect:
         type: wifi
@@ -25,12 +28,9 @@ ComplexNetwork:
           - secondHalf bottom 10.0.5.2
 
   applications:
-    - iperf3: all
-    - udp:
-      - firstHalf:
-          args: -c ${secondHalf.node1_1.eth0.ip}
-      - secondHalf:
-          args: -s
+    - iperf3:
+        firstHalf end: -c ${secondHalf end eth1 ip}
+        secondHalf end: -s
           
   ifacesProvided:
     - left: firstHalf left

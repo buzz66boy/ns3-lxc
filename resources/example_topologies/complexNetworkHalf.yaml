@@ -6,16 +6,22 @@ time: 60
 
 ComplexNetworkHalf:
   ip: 10.0.0.0/22
-
+  position: 0 0 0
   nodes:
     - wifi:
         template: 1eth_1wlan
         num: 2
-        app: iperf3
+        positions:
+          wifi_1:
+            0: 40 0 0
+          wifi_2:
+            0: 40 20 0
     - end:
         template: 2eth
+        position: 0 10 0
     - middle:
         template: 3eth
+        position: 20 10 0
 
   links:
     - network1:

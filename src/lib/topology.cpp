@@ -14,7 +14,7 @@ Topology::Topology(std::shared_ptr<Topology> temp, std::string newName): Topolog
     name = newName;
 }
 
-Topology::Topology(Topology *temp){
+Topology::Topology(Topology *temp) {
     name = temp->name;
 
     size_t i;
@@ -74,7 +74,7 @@ Topology::Topology(Topology *temp){
     curNodeNum = temp->curNodeNum;
 }
 
-Topology::Topology(const Topology& temp){
+Topology::Topology(const Topology& temp): Positionable(temp) {
     name = temp.name;
 
     size_t i;
@@ -88,6 +88,8 @@ Topology::Topology(const Topology& temp){
     linkMap = temp.linkMap;
     ifacesProvided = temp.ifacesProvided;
     ifacesProvidedSubNames = temp.ifacesProvidedSubNames;
+    ifacesAccepted = temp.ifacesAccepted;
+    ifacesAcceptedSubNames = temp.ifacesAcceptedSubNames;
     curNodeNum = temp.curNodeNum;
 }
 

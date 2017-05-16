@@ -12,6 +12,7 @@
 #include "iface.h"
 #include "parserTags.h"
 #include "topologyParser.h"
+#include "positionParser.h"
 #include "nodeParser.h"
 
 using namespace std;
@@ -29,7 +30,13 @@ static void parseNodeIfaces(YAML::Node ifaces, std::shared_ptr<ns3lxc::Node> nod
 
 void parseNodeApplications(YAML::Node apps, std::shared_ptr<ns3lxc::Node> node){
     for(size_t i = 0; i < apps.size(); ++i){
-        cout << "TEST " << apps[i] << endl;
+        string appName = apps[i].begin()->first.as<string>();
+        string args = "";
+        if(apps[i].begin()->second.Type() != YAML::NodeType::Null){
+            //add ${} parsing
+            args = apps[i].begin()->second.as<string>();
+        }
+        node->applications.push_back(ns3lxc::Application(appName, args));
     }
 }
 
@@ -67,6 +74,24 @@ std::vector<std::shared_ptr<ns3lxc::Node> > parseNode(YAML::Node node, ParsedTop
             parseNodeApplications(node[TAG_APPLICATION], nodePtr);
         } else if (node[pluralize(TAG_APPLICATION)]){
             parseNodeApplications(node[pluralize(TAG_APPLICATION)], nodePtr);
+        }
+        if(node[TAG_POSITION]){
+            if(iters > 1){
+                if(node[TAG_POSITION][name]){
+                    parsePositions(node[TAG_POSITION][name], nodePtr);
+                }
+            } else {
+                parsePositions(node[TAG_POSITION], nodePtr);
+            }
+        } else if (node[pluralize(TAG_POSITION)]){
+            if(iters > 1){
+                YAML::Node baseNode = node[pluralize(TAG_POSITION)];
+                if(baseNode[name]){
+                    parsePositions(baseNode[name], nodePtr);
+                }
+            } else {
+                parsePositions(node[pluralize(TAG_POSITION)], nodePtr);
+            }
         }
         nodeList.push_back(nodePtr);
     }

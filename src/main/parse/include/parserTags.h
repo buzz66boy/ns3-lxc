@@ -15,6 +15,8 @@
 #define TAG_IFACE "iface"
 #define TAG_TEMPLATE "template"
 #define TAG_NUM "num"
+#define TAG_ALL "all"
+#define TAG_INHERIT "inherit"
 
 #define TAG_IFACES_ACCEPTED "ifacesAccepted"
 #define TAG_IFACES_PROVIDED "ifacesProvided"

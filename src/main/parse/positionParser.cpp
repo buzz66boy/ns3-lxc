@@ -1,0 +1,54 @@
+#include <string>
+#include <vector>
+#include <iostream>
+
+#include "yaml-cpp/yaml.h"
+
+#include "position.h"
+#include "node.h"
+#include "topology.h"
+#include "parserTags.h"
+#include "positionParser.h"
+
+using namespace std;
+
+void parsePositions(YAML::Node posNode, std::shared_ptr<ns3lxc::Node> nodePtr){
+    cout << "Parsing pos for node " + nodePtr->name << endl;
+    if(posNode.Type() == YAML::NodeType::Scalar){
+        vector<string> xyz = splitString(posNode.as<string>());
+        nodePtr->positions.push_back(ns3lxc::Position(0, stod(xyz[0]), stod(xyz[1]), stod(xyz[2])));
+    } else if(posNode.begin()->second.Type() == YAML::NodeType::Scalar){
+        for(auto iter : posNode){
+            double time = iter.first.as<double>();
+            vector<string> xyz = splitString(iter.second.as<string>());
+            nodePtr->positions.push_back(ns3lxc::Position(time, stod(xyz[0]), stod(xyz[1]), stod(xyz[2])));
+        }
+    }
+}
+
+void parsePositions(YAML::Node posNode, ns3lxc::Topology *topPtr){
+    cout << "Parsing pos for top " + topPtr->name << endl;
+    if(posNode.Type() == YAML::NodeType::Scalar){
+        vector<string> xyz = splitString(posNode.as<string>());
+        topPtr->positions.push_back(ns3lxc::Position(0, stod(xyz[0]), stod(xyz[1]), stod(xyz[2])));
+        cout << "\tAdded " + posNode.as<string>() << endl;
+    } else if(posNode.begin()->second.Type() == YAML::NodeType::Scalar){
+        for(auto iter : posNode){
+            double time = iter.first.as<double>();
+            vector<string> xyz = splitString(iter.second.as<string>());
+            topPtr->positions.push_back(ns3lxc::Position(time, stod(xyz[0]), stod(xyz[1]), stod(xyz[2])));
+            cout << "\tAdded " + iter.second.as<string>() << endl;
+        }
+    }
+    computeAbsolutePositions(topPtr);
+}
+
+void computeAbsolutePositions(ns3lxc::Topology *top){
+    for(auto topPtr : top->subTopologies){
+        topPtr->centerPositionsAroundParent(top);
+        computeAbsolutePositions(topPtr.get());
+    }
+    for(auto nodePtr : top->nodes){
+        nodePtr->centerPositionsAroundParent(top);
+    }
+}

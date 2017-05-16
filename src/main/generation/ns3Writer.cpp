@@ -116,7 +116,21 @@ void Ns3Writer::writeLinksForTopology(std::ostream& str, ns3lxc::Topology *top){
 
 static void allocNodePos(std::ostream& str, ns3lxc::Topology *top){
     for(auto nodePtr : top->nodes){
-        str << "positionAlloc->Add (Vector (0,0,0));" << endl;
+        if(nodePtr->absPositions.size() < 1 && nodePtr->positions.size() < 1){
+            str << "positionAlloc->Add (Vector (0,0,0));" << endl;
+        } else if(nodePtr->absPositions.size() == 1){
+            double x,y,z;
+            x = nodePtr->absPositions[0].x;
+            y = nodePtr->absPositions[0].y;
+            z = nodePtr->absPositions[0].z;
+            str << "positionAlloc->Add (Vector (" + to_string(x) +"," + to_string(y) + "," + to_string(z) + "));" << endl;
+        } else if(nodePtr->positions.size() == 1){
+            double x,y,z;
+            x = nodePtr->positions[0].x;
+            y = nodePtr->positions[0].y;
+            z = nodePtr->positions[0].z;
+            str << "positionAlloc->Add (Vector (" + to_string(x) +"," + to_string(y) + "," + to_string(z) + "));" << endl;
+        }
     }
     for(auto topPtr : top->subTopologies){
         allocNodePos(str, topPtr.get());
@@ -125,7 +139,21 @@ static void allocNodePos(std::ostream& str, ns3lxc::Topology *top){
 
 static void writeNodePos(std::ostream& str, ns3lxc::Topology *top){
     for(auto nodePtr : top->nodes){
-        str << "mobility.Install (nodes.Get(" + to_string(nodePtr->nodeNum) + "));" << endl;
+        if(nodePtr->absPositions.size() > 1){
+            str << "waymobility.Install(nodes.Get(" + to_string(nodePtr->nodeNum) + "));" << endl;
+            str << "mob = nodes.Get(" + to_string(nodePtr->nodeNum) + ")->GetObject<WaypointMobilityModel>();" << endl;
+            for(auto position : nodePtr->absPositions){
+                str << "mob->AddWaypoint(Waypoint(" + position.ns3Str() + "));" << endl;
+            }
+        } else if(nodePtr->positions.size() > 1){
+            str << "waymobility.Install(nodes.Get(" + to_string(nodePtr->nodeNum) + "));" << endl;
+            str << "mob = nodes.Get(" + to_string(nodePtr->nodeNum) + ")->GetObject<WaypointMobilityModel>();" << endl;
+            for(auto position : nodePtr->positions){
+                str << "mob->AddWaypoint(Waypoint(" + position.ns3Str() + "));" << endl;
+            }
+        } else {
+            str << "mobility.Install (nodes.Get(" + to_string(nodePtr->nodeNum) + "));" << endl;
+        }
     }
     for(auto topPtr : top->subTopologies){
         writeNodePos(str, topPtr.get());

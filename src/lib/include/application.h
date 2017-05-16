@@ -17,9 +17,10 @@ namespace ns3lxc {
 class Application: public Nameable {
 public:
 	std::string path;
-	std::map<std::string, std::string> argMap;
+	std::string args;
 
     Application(std::string name): Nameable(name) {};
+    Application(std::string name, std::string args): Nameable(name), args(args) {};
     Application(const Application& temp);
 };
 

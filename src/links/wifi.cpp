@@ -53,7 +53,7 @@ void Wifi::writeLinkInit(std::ostream& str, shared_ptr<ns3lxc::Link> linkPtr){
         str << "wifiTapBridge.SetAttribute (\"DeviceName\", StringValue (\"" + linkPtr->ifaces[i]->tapName + "\"));" << endl;
         str << "wifiTapBridge.Install(nodes.Get(" + to_string(linkPtr->ifaces[i]->node->nodeNum) + "), " + devName + ".Get(" + to_string(i) + "));" << endl;
     }
-    str << phyName + ".EnablePcapAll(\"WorstBaselineEarlyHandover\",true);" << endl;
+    str << phyName + ".EnablePcapAll(\"wifi_" + linkPtr->name + "\",true);" << endl;
     
 }
 
