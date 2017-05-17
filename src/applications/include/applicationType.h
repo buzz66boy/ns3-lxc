@@ -4,6 +4,8 @@
 #include <map>
 #include <string>
 #include <ostream>
+#include <memory>
+#include <vector>
 
 #include "node.h"
 #include "topology.h"
@@ -18,10 +20,12 @@ public:
      **/
     virtual bool isApplicationSynced() = 0;
     virtual InstallMethod getInstallMethod() = 0;
-    virtual std::string getConfigLocation(ns3lxc::Node, ns3lxc::Topology) = 0;
-    virtual void writeConfig(ns3lxc::Node, ns3lxc::Topology, std::ostream) = 0;
-    virtual void startExecution(ns3lxc::Node, ns3lxc::Topology, std::ostream) = 0;
-    virtual void cleanup(ns3lxc::Node, ns3lxc::Topology, std::ostream) = 0;
+    virtual std::string getLocation() = 0;
+    virtual std::string getConfigFilename(std::string args, std::shared_ptr<ns3lxc::Node> nodePtr, std::shared_ptr<ns3lxc::Topology>) = 0;
+    virtual std::string writeConfig(std::string args, std::shared_ptr<ns3lxc::Node> nodePtr, std::shared_ptr<ns3lxc::Topology>, std::ostream) = 0;
+    virtual std::vector<std::string> getExecutionCommands(std::string args, std::shared_ptr<ns3lxc::Node> nodePtr) = 0;
+    virtual std::vector<std::string> getCleanupLocations(std::string args, std::shared_ptr<ns3lxc::Node> nodePtr) = 0;
+    virtual std::vector<std::string> getCleanupCommands(std::string args, std::shared_ptr<ns3lxc::Node> nodePtr) = 0;
 };
 
 #endif

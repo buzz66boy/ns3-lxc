@@ -34,6 +34,9 @@ int main( int argc, char *argv[]){
 
     str << "AnimationInterface anim (\"animation.xml\");" << endl;
     str << "anim.EnablePacketMetadata();" << endl;
+
+    writeAnimDescriptions(str, top);
+
     str << "for(uint64_t i = 0; i <= " + to_string(top->runTime) + "; i += 10){Simulator::Schedule(Seconds(i), &printTime);}" << endl;
     str << "\tSimulator::Run ();" << endl;
     str << "\tSimulator::Destroy ();" << endl;
@@ -130,7 +133,7 @@ static void allocNodePos(std::ostream& str, ns3lxc::Topology *top){
             y = nodePtr->absPositions[0].y;
             z = nodePtr->absPositions[0].z;
             str << "positionAlloc->Add (Vector (" + to_string(x) +"," + to_string(y) + "," + to_string(z) + "));" << endl;
-        } else if(nodePtr->positions.size() == 1){
+        } else if(nodePtr->positions.size() == 1 && nodePtr->absPositions.size() < 1){
             double x,y,z;
             x = nodePtr->positions[0].x;
             y = nodePtr->positions[0].y;
@@ -148,14 +151,46 @@ static void writeNodePos(std::ostream& str, ns3lxc::Topology *top){
         if(nodePtr->absPositions.size() > 1){
             str << "waymobility.Install(nodes.Get(" + to_string(nodePtr->nodeNum) + "));" << endl;
             str << "mob = nodes.Get(" + to_string(nodePtr->nodeNum) + ")->GetObject<WaypointMobilityModel>();" << endl;
-            for(auto position : nodePtr->absPositions){
-                str << "mob->AddWaypoint(Waypoint(" + position.ns3Str() + "));" << endl;
+            int i = 0;
+            double curTime = -1.0;
+            while(i < nodePtr->absPositions.size()){
+                double lowestTime = 100000000.0;
+                ns3lxc::Position *pos = nullptr;
+                for(int j = 0; j < nodePtr->absPositions.size(); ++j){
+                    if(nodePtr->absPositions[j].time < lowestTime && nodePtr->absPositions[j].time > curTime){
+                        lowestTime = nodePtr->absPositions[j].time;
+                        pos = &nodePtr->absPositions[j];
+                    }
+                }
+                curTime = lowestTime;
+                i++;
+                if(pos != nullptr){
+                    str << "mob->AddWaypoint(Waypoint(" + pos->ns3Str() + "));" << endl;
+                } else {
+                    cerr << "Error in Position waypoint writing " << endl;
+                }
             }
         } else if(nodePtr->positions.size() > 1){
             str << "waymobility.Install(nodes.Get(" + to_string(nodePtr->nodeNum) + "));" << endl;
             str << "mob = nodes.Get(" + to_string(nodePtr->nodeNum) + ")->GetObject<WaypointMobilityModel>();" << endl;
-            for(auto position : nodePtr->positions){
-                str << "mob->AddWaypoint(Waypoint(" + position.ns3Str() + "));" << endl;
+            int i = 0;
+            double curTime = -1.0;
+            while(i < nodePtr->positions.size()){
+                double lowestTime = 100000000.0;
+                ns3lxc::Position *pos = nullptr;
+                for(int j = 0; j < nodePtr->positions.size(); ++j){
+                    if(nodePtr->positions[j].time < lowestTime && nodePtr->positions[j].time > curTime){
+                        lowestTime = nodePtr->positions[j].time;
+                        pos = &nodePtr->positions[j];
+                    }
+                }
+                curTime = lowestTime;
+                i++;
+                if(pos != nullptr){
+                    str << "mob->AddWaypoint(Waypoint(" + pos->ns3Str() + "));" << endl;
+                } else {
+                    cerr << "Error in Position waypoint writing" << endl;
+                }
             }
         } else {
             str << "mobility.Install (nodes.Get(" + to_string(nodePtr->nodeNum) + "));" << endl;
@@ -181,4 +216,13 @@ Ptr<ListPositionAllocator> positionAlloc = CreateObject<ListPositionAllocator> (
     str << "mobility.SetMobilityModel (\"ns3::ConstantPositionMobilityModel\");" << endl;
 
     writeNodePos(str, top);
+}
+
+void Ns3Writer::writeAnimDescriptions(std::ostream& str, ns3lxc::Topology *top){
+    for(auto nodePtr : top->nodes){
+        str << "anim.UpdateNodeDescription(" << nodePtr->nodeNum << ",\"" << nodePtr->name << "\");" << endl;
+    }
+    for(auto topPtr : top->subTopologies){
+        writeAnimDescriptions(str, topPtr.get());
+    }
 }

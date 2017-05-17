@@ -128,7 +128,11 @@ void LxcContainerType::startContainer(std::shared_ptr<ns3lxc::Node> nodePtr) {
 }
 
 void LxcContainerType::prepForInstall(std::vector<std::shared_ptr<ns3lxc::Application> > appList){
+    for(auto appPtr : appList){
+        if(applicationTypeMap.count(appPtr->name) > 0){
 
+        }
+    }
 }
 
 static void installThread(std::shared_ptr<ns3lxc::Node> nodePtr, std::string packman, std::string installCmd){
@@ -142,7 +146,7 @@ static void installThread(std::shared_ptr<ns3lxc::Node> nodePtr, std::string pac
     vector<string> st = splitString(installCmd);
     for(auto app : nodePtr->applications){
         //FIXME bad idea (relying on set amt of args)
-        if(applicationTypeMap.count(app.name) < 1){
+        if(applicationTypeMap.count(app.name) < 1 || applicationTypeMap.at(app.name)->getInstallMethod() == InstallMethod::PACKMAN){
             execl(("/usr/bin/" + packman).c_str(), ("/usr/bin/" + packman).c_str(),
              st[0].c_str(), st[1].c_str(), app.name.c_str(), NULL);
         }
@@ -181,12 +185,26 @@ void LxcContainerType::runApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {
     lxc_attach_options_t opts = LXC_ATTACH_OPTIONS_DEFAULT;
     for(auto app : nodePtr->applications){
         if(applicationTypeMap.count(app.name) < 1){
+            cout << "HEHEHEHE " + app.name  + to_string(applicationTypeMap.count(app.name)) << endl;
             int pid;
             char cmd[app.name.length() + 2 + app.args.length()];
             strcpy(cmd, (app.name + " " + app.args).c_str());
             int res = c->attach(c, ex, cmd, &opts, &pid);
             pidMap[nodePtr->name].push_back(pid);
-            cout << "cmd : " + to_string(res) + ": " << endl;
+        } else {
+            switch(applicationTypeMap.at(app.name)->getInstallMethod()){
+                default:
+                case(InstallMethod::PACKMAN):
+                    for(string command : applicationTypeMap.at(app.name)->getExecutionCommands(app.args, nodePtr)){
+                        cout << "CMD: " + command << endl;
+                        char cmd[command.length() + 1];
+                        strcpy(cmd, command.c_str());
+                        int pid;
+                        int res = c->attach(c, ex, cmd, &opts, &pid);
+                        pidMap[nodePtr->name].push_back(pid);
+                    }
+                    break;
+            }
         }
     }
 }

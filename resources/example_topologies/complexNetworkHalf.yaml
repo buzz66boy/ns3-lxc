@@ -13,15 +13,21 @@ ComplexNetworkHalf:
         num: 2
         positions:
           wifi_1:
-            0: 40 0 0
+            0: 40 -10 0
+            10: 40 -20 0
+            20: 50 -20 0
+            30: 60 -30 0
           wifi_2:
-            0: 40 20 0
+            0: 40 10 0
+            10: 40 20 0
+            20: 50 20 0
+            30: 60 30 0
     - end:
         template: 2eth
-        position: 0 10 0
+        position: 0 0 0
     - middle:
         template: 3eth
-        position: 20 10 0
+        position: 20 0 0
 
   links:
     - network1:

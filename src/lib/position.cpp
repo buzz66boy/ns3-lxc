@@ -1,5 +1,6 @@
 #include <cmath>
 #include <iostream>
+#include <map>
 
 #include "position.h"
 
@@ -40,14 +41,32 @@ void Positionable::centerPositionsAroundParent(Positionable *par){
         } else if(parent->positions.size() > 0){
             posit = &parent->positions;
         }
+        std::map<double, bool> times;
+        for(auto position: positions){
+            times[position.time] = false;
+        }
         for(auto position: *posit){
             Position absPos;
             Position myRelPos = getPosition(position.time);
             absPos.time = position.time;
+            times[position.time] = true;
             absPos.x = position.x + myRelPos.x;
             absPos.y = position.y + myRelPos.y;
             absPos.z = position.z + myRelPos.z;
             absPositions.push_back(absPos);
+        }
+        for(auto pos: positions){
+            if(!times.at(pos.time)){
+                Position absPos;
+                Position myRelPos = getPosition(pos.time);
+                Position parentPos = parent->getAbsPosition(pos.time);
+                absPos.time = parentPos.time;
+                times[parentPos.time] = true;
+                absPos.x = parentPos.x + myRelPos.x;
+                absPos.y = parentPos.y + myRelPos.y;
+                absPos.z = parentPos.z + myRelPos.z;
+                absPositions.push_back(absPos);
+            }
         }
     } else {
         absPositions = positions;
@@ -61,39 +80,47 @@ void Positionable::rotatePositions(double degrees){
     if(positions.size() < 1){
         return;
     }
-    for(auto position: positions){
-        position.x = std::cos((degrees * PI) / 180.0) * position.x;
-        std::cout << "NEW ROT:" << std::to_string(position.x) << std::endl;
-        position.y = std::sin((degrees * PI) / 180.0) * position.y;
+    for(int i = 0; i < positions.size(); ++i){
+        double x = positions[i].x;
+        double y = positions[i].y;
+        double curAngle = 0.0;
+        double hypotenus = std::sqrt(x*x + y*y);
+        if(x != 0){
+            curAngle = std::atan(y/x);
+        }
+        positions[i].x = std::cos(curAngle + (PI * degrees) / 180.0) * hypotenus;
+        positions[i].y = std::sin(curAngle + (PI * degrees) / 180.0) * hypotenus;
     }
     if(parent != nullptr){
         centerPositionsAroundParent();
     }
 }
 
-static Position getPos(double time, std::vector<Position> &positions){
+static Position getPos(double time, std::vector<Position> positions){
     if(positions.size() < 1){
-        return Position(0,0,0,0);
+        return Position(time,0,0,0);
     }
     Position *low = nullptr, *high = nullptr;
-    double closeLow = 1000.0, closeHigh = 1000.0;
-    for(auto pos : positions){
-        if(time == pos.time){
-            return pos;
+    double closeLow = 10000.0, closeHigh = 10000.0;
+    for(int i=0; i<positions.size(); ++i){
+        if(time == positions[i].time){
+            return positions[i];
         }
-        if(pos.time < time && time - pos.time < closeLow){
-            low = &pos;
-            closeLow = time - pos.time;
-        } else if(pos.time > time && pos.time - time < closeHigh){
-            high = &pos;
-            closeHigh = pos.time - time;
+        if(positions[i].time < time && time - positions[i].time < closeLow){
+            low = &positions[i];
+            closeLow = time - positions[i].time;
+        } else if(positions[i].time > time && positions[i].time - time < closeHigh){
+            high = &positions[i];
+            closeHigh = positions[i].time - time;
         }
     }
     if(low != nullptr && high == nullptr){
-        return *low;
+        Position ret(*low);
+        ret.time = time;
+        return ret;
     } else if (low != nullptr && high != nullptr){
         Position position;
-        double multTime = time - high->time;
+        double multTime = time - low->time;
         double travelTime = high->time - low->time;
         double travelX = high->x - low->x;
         double travelY = high->y - low->y;
@@ -101,12 +128,12 @@ static Position getPos(double time, std::vector<Position> &positions){
 
         position.x = low->x + travelX * (multTime / travelTime);
         position.y = low->y + travelY * (multTime / travelTime);
-        position.x = low->z + travelZ * (multTime / travelTime);
+        position.z = low->z + travelZ * (multTime / travelTime);
         position.time = time;
         return position;
-    } else {
-        std::cerr << "Error in positionable" << std::endl;
     }
+
+    std::cerr << "Error in positionable" << std::endl;
     return Position();
 
 }

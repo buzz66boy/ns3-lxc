@@ -38,7 +38,13 @@ std::shared_ptr<ns3lxc::Link> parseLink(YAML::Node node, ParsedTopology *top){
         //err
         cerr << "No Type specified for link " << name << endl;
     }
-
+    ns3lxc::IpAddr subnetIp(AF_INET, "255.255.255.0");
+    if(node[TAG_CIDR]){
+        int cidr = node[TAG_CIDR].as<int>();
+        subnetIp = ns3lxc::IpAddr(AF_INET, cidr);
+    } else if(node[TAG_SUBNET]){
+        subnetIp = ns3lxc::IpAddr(AF_INET, node[TAG_SUBNET].as<string>());
+    }
     int numIfaces = 0;
     YAML::Node ifaceNode;
 

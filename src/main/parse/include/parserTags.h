@@ -24,7 +24,8 @@
 #define TAG_NAME "name"
 
 #define TAG_IP "ip"
-
+#define TAG_CIDR "cidr"
+#define TAG_SUBNET "subnet"
 #define TAG_TYPE "type"
 #define TAG_OFFSET "offset"
 

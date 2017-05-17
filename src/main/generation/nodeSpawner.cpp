@@ -14,7 +14,7 @@ void NodeSpawner::createNodes(ns3lxc::Topology *top){
     }
     for(shared_ptr<ns3lxc::Node> nodePtr : top->nodes){
         cout << "Creating Container " << nodePtr->name << endl;
-        containerTypeMap[Settings::container_type]->createContainer(nodePtr);
+        containerTypeMap.at(Settings::container_type)->createContainer(nodePtr);
     }
 }
 void NodeSpawner::startNodes(ns3lxc::Topology *top){
@@ -22,7 +22,7 @@ void NodeSpawner::startNodes(ns3lxc::Topology *top){
         startNodes(subTopPtr.get());
     }
     for(shared_ptr<ns3lxc::Node> nodePtr : top->nodes){
-        containerTypeMap[Settings::container_type]->startContainer(nodePtr);
+        containerTypeMap.at(Settings::container_type)->startContainer(nodePtr);
     }
 }
 void NodeSpawner::installApplications(ns3lxc::Topology *top){
@@ -30,7 +30,7 @@ void NodeSpawner::installApplications(ns3lxc::Topology *top){
         installApplications(subTopPtr.get());
     }
     for(shared_ptr<ns3lxc::Node> nodePtr : top->nodes){
-        containerTypeMap[Settings::container_type]->installApplications(nodePtr);
+        containerTypeMap.at(Settings::container_type)->installApplications(nodePtr);
     }
 }
 void NodeSpawner::runApplications(ns3lxc::Topology *top){
@@ -38,7 +38,7 @@ void NodeSpawner::runApplications(ns3lxc::Topology *top){
         runApplications(subTopPtr.get());
     }
     for(shared_ptr<ns3lxc::Node> nodePtr : top->nodes){
-        containerTypeMap[Settings::container_type]->runApplications(nodePtr);
+        containerTypeMap.at(Settings::container_type)->runApplications(nodePtr);
     }
 }
 void NodeSpawner::grabOutput(ns3lxc::Topology *top){
@@ -53,6 +53,6 @@ void NodeSpawner::teardownNodes(ns3lxc::Topology *top){
         teardownNodes(subTopPtr.get());
     }
     for(shared_ptr<ns3lxc::Node> nodePtr : top->nodes){
-        containerTypeMap[Settings::container_type]->teardownContainer(nodePtr);
+        containerTypeMap.at(Settings::container_type)->teardownContainer(nodePtr);
     }
 }

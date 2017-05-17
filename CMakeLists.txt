@@ -17,7 +17,7 @@ include_directories(
         src/lib/include
         src/links/include
         src/applications/include
-        src/containers/includes
+        src/containers/include
 )
 
 set(Link_Types
@@ -34,13 +34,19 @@ set(Link_Types
 set(Application_Types
         src/applications/include/applicationType.h
         src/applications/include/applicationTypeMap.h
+        src/applications/include/genericPackman.h
+        src/applications/include/quagga.h
         src/applications/applicationTypeMap.cpp
+        src/applications/genericPackman.cpp
+        src/applications/quagga.cpp
         # Add your custom app files here
 )
 
 set(Container_Types
-        src/containers/includes/containerType.h
-        src/containers/includes/lxcContainerType.h
+        src/containers/include/containerType.h
+        src/containers/include/containerTypeMap.h
+        src/containers/include/lxcContainerType.h
+        src/containers/containerTypeMap.cpp
         src/containers/lxcContainerType.cpp
         # Add custom container handlers here
 )

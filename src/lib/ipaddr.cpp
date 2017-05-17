@@ -46,6 +46,42 @@ IpAddr::IpAddr(int af, std::string addr){
     }
 }
 
+IpAddr::IpAddr(int af, int cidr){
+    switch(af){
+        default:
+        case(AF_INET):
+            ipv4_address = UINT32_MAX << cidr;
+            ipv4 = true;
+            break;
+        case(AF_INET6):
+            if(cidr > 96){
+                ipv6_address_32[0] = UINT32_MAX << (cidr - 96);
+                ipv6_address_32[1] = 0;
+                ipv6_address_32[2] = 0;
+                ipv6_address_32[3] = 0;
+            }
+            else if(cidr > 64){
+                ipv6_address_32[0] = UINT32_MAX;
+                ipv6_address_32[1] = UINT32_MAX << (cidr - 64);
+                ipv6_address_32[2] = 0;
+                ipv6_address_32[3] = 0;
+            }
+            else if(cidr > 32){
+                ipv6_address_32[0] = UINT32_MAX;
+                ipv6_address_32[1] = UINT32_MAX;
+                ipv6_address_32[2] = UINT32_MAX << (cidr - 32);
+                ipv6_address_32[3] = 0;
+            } else {
+                ipv6_address_32[0] = UINT32_MAX;
+                ipv6_address_32[1] = UINT32_MAX;
+                ipv6_address_32[2] = UINT32_MAX;
+                ipv6_address_32[3] = UINT32_MAX << cidr;
+            }
+            ipv4 = false;
+            break;
+    }
+}
+
 std::string IpAddr::str(){
     char buf[INET6_ADDRSTRLEN];
     uint32_t temp;
@@ -58,6 +94,35 @@ std::string IpAddr::str(){
     }
 
     return std::string(buf);
+}
+
+int IpAddr::getCidr(){
+    int cidr = 0;
+    if(ipv4) {
+        uint32_t tempIp = ipv4_address;
+        for(int i = 0; i <= 32; ++i){
+            if(!tempIp && 0x10000000){
+                break;
+            }
+            tempIp <<= 1;
+            ++cidr;
+        }
+    } else {
+        for(int j = 0; j < 4; ++j){
+            uint32_t tempIp = ipv6_address_32[j];
+            for(int i = 0; i <= 32; ++i){
+                if(!tempIp && 0x10000000){
+                    break;
+                }
+                tempIp <<= 1;
+                ++cidr;
+            }
+            if(!tempIp && 0x10000000){
+                break;
+            }
+        }
+    }
+    return cidr;
 }
 
 void IpAddr::applyOffset(std::string offset){

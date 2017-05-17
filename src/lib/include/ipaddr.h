@@ -28,10 +28,12 @@ public:
     IpAddr(uint32_t *ipv6_addr) { IpAddr((uint8_t *)ipv6_addr); }
 
     IpAddr(int af, std::string addr);
+    IpAddr(int af, int cidr);
 
     bool is_ipv4() { return ipv4; }
 
 	std::string str();
+    int getCidr();
     void applyOffset(std::string);
 };
 

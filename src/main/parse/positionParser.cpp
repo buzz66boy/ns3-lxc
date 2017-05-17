@@ -13,7 +13,6 @@
 using namespace std;
 
 void parsePositions(YAML::Node posNode, std::shared_ptr<ns3lxc::Node> nodePtr){
-    cout << "Parsing pos for node " + nodePtr->name << endl;
     if(posNode.Type() == YAML::NodeType::Scalar){
         vector<string> xyz = splitString(posNode.as<string>());
         nodePtr->positions.push_back(ns3lxc::Position(0, stod(xyz[0]), stod(xyz[1]), stod(xyz[2])));
@@ -27,17 +26,16 @@ void parsePositions(YAML::Node posNode, std::shared_ptr<ns3lxc::Node> nodePtr){
 }
 
 void parsePositions(YAML::Node posNode, ns3lxc::Topology *topPtr){
-    cout << "Parsing pos for top " + topPtr->name << endl;
     if(posNode.Type() == YAML::NodeType::Scalar){
         vector<string> xyz = splitString(posNode.as<string>());
         topPtr->positions.push_back(ns3lxc::Position(0, stod(xyz[0]), stod(xyz[1]), stod(xyz[2])));
-        cout << "\tAdded " + posNode.as<string>() << endl;
+        // cout << "\tAdded " + posNode.as<string>() << endl;
     } else if(posNode.begin()->second.Type() == YAML::NodeType::Scalar){
         for(auto iter : posNode){
             double time = iter.first.as<double>();
             vector<string> xyz = splitString(iter.second.as<string>());
             topPtr->positions.push_back(ns3lxc::Position(time, stod(xyz[0]), stod(xyz[1]), stod(xyz[2])));
-            cout << "\tAdded " + iter.second.as<string>() << endl;
+            // cout << "\tAdded " + iter.second.as<string>() << endl;
         }
     }
     computeAbsolutePositions(topPtr);
@@ -53,12 +51,21 @@ void computeAbsolutePositions(ns3lxc::Topology *top){
     }
 }
 
-void applyRotation(int rotation, ns3lxc::Topology *topPtr){
+static void applyRotation2(int rotation,  ns3lxc::Topology *topPtr){
     topPtr->rotatePositions(rotation);
     for(auto nodePtr : topPtr->nodes){
         nodePtr->rotatePositions(rotation);
     }
     for(auto subTopPtr : topPtr->subTopologies){
-        applyRotation(rotation, subTopPtr.get());
+        applyRotation2(rotation, subTopPtr.get());
+    }
+}
+
+void applyRotation(int rotation, ns3lxc::Topology *topPtr){
+    for(auto nodePtr : topPtr->nodes){
+        nodePtr->rotatePositions(rotation);
+    }
+    for(auto subTopPtr : topPtr->subTopologies){
+        applyRotation2(rotation, subTopPtr.get());
     }
 }
