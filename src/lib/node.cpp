@@ -17,7 +17,7 @@ void ns3lxc::Node::reRefIfaces(ns3lxc::Node *node){
 
 ns3lxc::Node::Node(ns3lxc::Node& temp, std::string nodeName): Positionable(temp), Nameable(nodeName), IfaceProvider() {
     for(auto it = temp.ifaces.begin(); it != temp.ifaces.end(); it++){
-        ifaces[it->first] = std::shared_ptr<Iface>(new Iface(*it->second));
+        ifaces[it->first] = std::make_shared<Iface>(*it->second);
     }
     requiresReRef = true;
     applications = temp.applications;

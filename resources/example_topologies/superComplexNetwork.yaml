@@ -24,8 +24,8 @@ SuperComplexNetwork:
     - complexConnector:
         type: csma
         ifaces:
-          - complexNet1 right
-          - complexNet2 left
+          - complexNet1 right 10.1.0.1
+          - complexNet2 left 10.1.0.2
     # - halfConnect1:
     #     type: csma
     #     ifaces:

@@ -31,6 +31,7 @@ public:
     Iface(const Iface&);
     Iface(std::string name): Nameable(name) {};
     Iface(std::string name, ns3lxc::Node *node): Nameable(name), node(node) {};
+    ~Iface();
 };
 
 class IfaceProvider {

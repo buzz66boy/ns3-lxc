@@ -10,7 +10,7 @@ ComplexNetwork:
         position: 0 0 0
     - secondHalf: 
         template: ComplexNetworkHalf
-        offset: 0.0.8.0
+        offset: 0.0.6.0
         #position: 100 0 0
         positions:
           0: 100 0 0

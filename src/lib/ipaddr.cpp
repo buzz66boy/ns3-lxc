@@ -82,6 +82,10 @@ IpAddr::IpAddr(int af, int cidr){
     }
 }
 
+IpAddr::~IpAddr(){
+    
+}
+
 std::string IpAddr::str(){
     char buf[INET6_ADDRSTRLEN];
     uint32_t temp;

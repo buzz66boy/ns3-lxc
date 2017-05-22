@@ -16,6 +16,7 @@ static void applyIpOffset(string offset, ns3lxc::Topology *topology){
     for(auto linkPtr : topology->links){
         for(auto ifacePtr : linkPtr->ifaces){
             ifacePtr->ip->applyOffset(offset);
+            cout << "offset ip to: " + ifacePtr->ip->str() << endl;
         }
     }
     for(auto topPtr : topology->subTopologies){

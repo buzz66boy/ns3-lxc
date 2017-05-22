@@ -27,13 +27,14 @@ public:
 
 	std::vector<std::shared_ptr<Iface> > ifaces;
 
-	IpAddr *ip;
-	IpAddr *subnetMask;
+	IpAddr *ip = nullptr;
+	IpAddr *subnetMask = nullptr;
 	
 	Link(std::string name, std::string type, int numIfaces): Nameable(name), type(type), numIfaces(numIfaces) {};
 	Link(std::string name, Link& link);
 	Link(std::string name): Nameable(name) {}
 	Link(const Link&);
+	~Link();
 
 	std::string getType() { return type; }
 	void setType(std::string typ) { type = typ; }

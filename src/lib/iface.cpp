@@ -4,19 +4,33 @@
 #include <memory>
 #include <iostream>
 
+#include "ipaddr.h"
 #include "iface.h"
 
 using namespace ns3lxc;
 
-ns3lxc::Iface::Iface(const Iface& ifa){
+Iface::Iface(const Iface& ifa){
     name = ifa.name;
     node = ifa.node;
     link = ifa.link;
-    ip = ifa.ip;
-    subnetMask = ifa.subnetMask;
+    if(ifa.ip){
+        ip = new IpAddr(*ifa.ip);
+    }
+    if(ifa.subnetMask){
+        subnetMask = new IpAddr(*ifa.subnetMask);
+    }
     tapName = ifa.tapName;
     bridgeName = ifa.bridgeName;
     macAddr = ifa.macAddr;
+}
+
+Iface::~Iface(){
+    if(ip){
+        delete ip;
+    }
+    if(subnetMask){
+        delete subnetMask;
+    }
 }
 
 std::weak_ptr<ns3lxc::Iface> ns3lxc::IfaceProvider::getIface(std::string ifaceName){

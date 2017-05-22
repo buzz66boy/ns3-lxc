@@ -29,6 +29,7 @@ public:
 
     IpAddr(int af, std::string addr);
     IpAddr(int af, int cidr);
+    ~IpAddr();
 
     bool is_ipv4() { return ipv4; }
 

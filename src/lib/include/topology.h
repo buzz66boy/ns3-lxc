@@ -26,8 +26,8 @@ public:
 	//std::string name = "";
 	int curNodeNum = 0;
 
-	IpAddr *ip;
-	IpAddr *subnetMask;
+	IpAddr *ip = nullptr;
+	IpAddr *subnetMask = nullptr;
 
 	std::vector<std::shared_ptr<Topology> > subTopologies;
 	std::vector<std::shared_ptr<Node> > nodes;
@@ -43,6 +43,7 @@ public:
 	Topology(Topology *temp);
 	Topology(std::shared_ptr<Topology> temp, std::string newName);
 	Topology(const Topology&);
+	~Topology();
 
 	static void reNumNodes(Topology*);
 };
