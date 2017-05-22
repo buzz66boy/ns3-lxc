@@ -65,7 +65,7 @@ std::shared_ptr<ns3lxc::Link> parseLink(YAML::Node node, ParsedTopology *top){
                     cout << "NO NODE" << endl;
                     //err
                 }
-                shared_ptr<ns3lxc::Iface> ifacePtr = nodePtr->getIface(split[1]).lock();
+                ns3lxc::Iface *ifacePtr = nodePtr->getIface(split[1]);
                 if(!ifacePtr){
                     cout << "NO IFACE" << endl;
                     //err
@@ -88,7 +88,7 @@ std::shared_ptr<ns3lxc::Link> parseLink(YAML::Node node, ParsedTopology *top){
                     cout << "NO TOP" << endl;
                     //err
                 }
-                shared_ptr<ns3lxc::Iface> ifacePtr = topPtr->getIface(split[1]).lock();
+                ns3lxc::Iface *ifacePtr = topPtr->getIface(split[1]);
                 if(!ifacePtr){
                     cout << "NO IFACE " << split[1] << " "<< topPtr->ifacesProvidedSubNames.size() << endl;
                     //err
@@ -103,7 +103,7 @@ std::shared_ptr<ns3lxc::Link> parseLink(YAML::Node node, ParsedTopology *top){
                         delete ifacePtr->ip;
                     }
                     if(ifacePtr->subnetMask == nullptr){
-                        delete ifacePtr->ip;
+                        delete ifacePtr->subnetMask;
                     }
                     ifacePtr->ip = new ns3lxc::IpAddr(AF_INET, split[2]);
                     ifacePtr->subnetMask = new ns3lxc::IpAddr(AF_INET, "255.255.255.0");

@@ -23,14 +23,14 @@ private:
 public:
     int nodeNum = 0; //For ns-3 writing, keep track of what # the node is (for ref)
 
-	std::map<std::string, std::shared_ptr<Iface> > ifaces;
+	std::map<std::string, Iface> ifaces;
 	std::vector<Application> applications;
     std::vector<std::string> bridges;
     std::vector<std::string> taps;
 	
-	std::weak_ptr<ns3lxc::Iface> getIface(std::string ifaceName) override; // OVERRIDE IfaceProvider
+	ns3lxc::Iface *getIface(std::string ifaceName) override; // OVERRIDE IfaceProvider
 
-    Node(): Positionable(), IfaceProvider() {};
+    Node(): Nameable(), Positionable(), IfaceProvider() {};
     Node(std::string name):  Nameable(name), Positionable(), IfaceProvider() {};
     Node(ns3lxc::Node& temp, std::string nodeName);
     Node(const ns3lxc::Node &temp);

@@ -35,14 +35,14 @@ Link::~Link(){
     }
 }
 
-int Link::connectIface(std::string ifaceName, std::weak_ptr<ns3lxc::Iface> iface){
+int Link::connectIface(std::string ifaceName, ns3lxc::Iface *iface){
 	connectIface(iface);
 }
 
-int Link::connectIface(std::weak_ptr<ns3lxc::Iface> iface){
+int Link::connectIface(ns3lxc::Iface *iface){
     if(numIfaces == 0 || ifaces.size() < numIfaces){
-        ifaces.push_back(iface.lock());
-        iface.lock()->link = this;
+        ifaces.push_back(iface);
+        iface->link = this;
         return 1;
     }
     return 0; //none added

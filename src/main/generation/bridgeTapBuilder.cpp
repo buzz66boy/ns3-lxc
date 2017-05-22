@@ -13,8 +13,8 @@ using namespace std;
 int assignBridgesTaps(ns3lxc::Topology *top, int curNum){
     for(auto nodePtr : top->nodes){
         for(auto it : nodePtr->ifaces){
-            it.second->bridgeName = to_string(curNum) + "_b";
-            it.second->tapName = to_string(curNum) + "_t";
+            it.second.bridgeName = to_string(curNum) + "_b";
+            it.second.tapName = to_string(curNum) + "_t";
             curNum++;
         }
     }
@@ -31,16 +31,15 @@ void buildAllBridgesTaps(ns3lxc::Topology *top){
     for(auto nodePtr : top->nodes){
         int i = 0;
         for(auto it : nodePtr->ifaces){
-            
-            if(it.second->ip != nullptr && it.second->subnetMask != nullptr){
-                buildBridgeTap(it.second);
+            if(it.second.ip != nullptr && it.second.subnetMask != nullptr){
+                buildBridgeTap(&it.second);
                 i++;
             }
         }
     }
 }
 
-void buildBridgeTap(std::shared_ptr<ns3lxc::Iface> ifacePtr){
+void buildBridgeTap(ns3lxc::Iface *ifacePtr){
     int err;
     string tap = ifacePtr->tapName;
     string bridge = ifacePtr->bridgeName;
@@ -82,14 +81,14 @@ void tearDownAllBridgesTaps(ns3lxc::Topology *top){
     }
     for(auto nodePtr : top->nodes){
         for(auto it : nodePtr->ifaces){
-            if(it.second->ip != nullptr && it.second->subnetMask != nullptr){
-                tearDownBridgeTap(it.second);
+            if(it.second.ip != nullptr && it.second.subnetMask != nullptr){
+                tearDownBridgeTap(&it.second);
             }
         }
     }
 }
 
-void tearDownBridgeTap(std::shared_ptr<ns3lxc::Iface> ifacePtr){
+void tearDownBridgeTap(ns3lxc::Iface *ifacePtr){
     int err;
     string tap = ifacePtr->tapName;
     string bridge = ifacePtr->bridgeName;

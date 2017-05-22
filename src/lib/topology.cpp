@@ -2,6 +2,7 @@
 #include <memory>
 #include <iostream>
 
+#include "node.h"
 #include "topology.h"
 
 using namespace ns3lxc;
@@ -19,10 +20,34 @@ static Link *findLink(Topology *top, std::string linkName){
     if(top->linkMap.count(linkName) > 0){
         return top->linkMap.at(linkName).get();
     } else {
+        for(auto linkPtr : top->links){
+            if(linkPtr->name == linkName){
+                return linkPtr.get();
+            }
+        }
         for(auto topPtr : top->subTopologies){
             Link *ln = findLink(topPtr.get(), linkName);
             if(ln != nullptr){
                 return ln;
+            }
+        }
+        return nullptr;
+    }
+}
+
+static ns3lxc::Node *findNode(Topology *top, std::string nodeName){
+    if(top->nodeMap.count(nodeName) > 0){
+        return top->nodeMap.at(nodeName).get();
+    } else {
+        for(auto nodePtr : top->nodes){
+            if(nodePtr->name == nodeName){
+                return nodePtr.get();
+            }
+        }
+        for(auto topPtr : top->subTopologies){
+            ns3lxc::Node *n = findNode(topPtr.get(), nodeName);
+            if(n != nullptr){
+                return n;
             }
         }
         return nullptr;
@@ -36,38 +61,71 @@ Topology::Topology(Topology *temp): Nameable(*temp), Positionable(*temp) {
         subTopologies.push_back(ptr);
         topMap[ptr->origName] = ptr;
     }
-    for(i = 0; i < temp->links.size(); ++i){
-        std::shared_ptr<Link> ptr = std::make_shared<Link>(*temp->links[i]);
-        // if(ptr->ip != nullptr){
-        //     ptr->ip = new ns3lxc::IpAddr(*ptr->ip);
-        // }
-        // if(ptr->subnetMask != nullptr){
-        //     ptr->subnetMask = new ns3lxc::IpAddr(*ptr->subnetMask);
-        // }
-        //FIXME!!! store names read in originally in link (map to iface?)
-        ptr->ifaces = std::vector<std::shared_ptr<Iface> >();
-        links.push_back(ptr);
-        std::cout << "Copy link: " << ptr->name << std::endl;
-        linkMap[ptr->origName] = ptr;
-    }
     for(i = 0; i < temp->nodes.size(); ++i){
         std::shared_ptr<Node> ptr = std::make_shared<Node>(*temp->nodes[i], temp->nodes[i]->origName);
         nodes.push_back(ptr);
         nodeMap[ptr->origName] = ptr;
         Node::reRefIfaces(ptr.get());
         for(auto ifacePair : ptr->ifaces){
-            if(ifacePair.second->ip != nullptr){
-                ifacePair.second->ip = new ns3lxc::IpAddr(*ifacePair.second->ip);
+            if(ifacePair.second.ip != nullptr){
+                ifacePair.second.ip = new ns3lxc::IpAddr(*ifacePair.second.ip);
             }
-            if(ifacePair.second->link != nullptr){
-                std::string name = ifacePair.second->link->origName;
-                if(linkMap.count(name) > 0){
-                    ifacePair.second->link = linkMap.at(name).get();
-                    ifacePair.second->link->connectIface(ifacePair.second);
-                    Link::reRefIfaces(ifacePair.second->link);
+            if(ifacePair.second.subnetMask != nullptr){
+                ifacePair.second.subnetMask = new ns3lxc::IpAddr(*ifacePair.second.subnetMask);
+            }
+            // if(ifacePair.second->link != nullptr){
+            //     std::string origName = ifacePair.second->link->origName;
+            //     if(linkMap.count(origName) > 0){
+            //         ifacePair.second->link = linkMap.at(origName).get();
+            //         Link *l = linkMap.at(origName).get();
+            //         bool eraseOccured = false;
+            //         for(int j = 0; j < l->ifaces.size(); ++j){
+            //             if(l->ifaces[j]->name == ifacePair.second->name){
+            //                 l->ifaces.erase(l->ifaces.begin() + j);
+            //                 eraseOccured = true;
+            //                 break;
+            //             }
+            //         }
+            //         if(!eraseOccured){
+            //             std::cerr << "No Erase Occured for link " + l->name<< std::endl;
+            //         }
+
+            //         ifacePair.second->link->connectIface(ifacePair.second);
+            //         Link::reRefIfaces(ifacePair.second->link);
+            //     }
+            // }
+        }
+    }
+    for(i = 0; i < temp->links.size(); ++i){
+        std::shared_ptr<Link> ptr = std::make_shared<Link>(*temp->links[i]);
+        if(ptr->ip != nullptr){
+            ptr->ip = new ns3lxc::IpAddr(*ptr->ip);
+        }
+        if(ptr->subnetMask != nullptr){
+            ptr->subnetMask = new ns3lxc::IpAddr(*ptr->subnetMask);
+        }
+        //FIXME!!! store names read in originally in link (map to iface?)
+        for(int n = 0; n < ptr->ifaces.size(); n++){
+            ns3lxc::Node *no = ptr->ifaces[n]->node;
+            std::cout << "N " << ptr->ifaces[n]->name << std::endl;
+            std::string nodeName = ptr->ifaces[n]->node->name;
+            ns3lxc::Node *nodePtr = findNode(this, nodeName);
+            if(!nodePtr){
+                std::cerr << "Node not found " + nodeName << std::endl;
+            }
+            //replace current iface with the correct one (from copied top)
+            for(auto ifacePair : nodePtr->ifaces){
+                if(ifacePair.second.name == ptr->ifaces[n]->name && ifacePair.second.link->name == ptr->name){
+                    ptr->ifaces[n] = &ifacePair.second;
+                    ifacePair.second.link = ptr.get();
+                    std::cout << "NOOO " + (&ifacePair.second)->ip->str() << std::endl;
+                    break;
                 }
             }
         }
+        ptr->reRefIfaces(ptr.get());
+        links.push_back(ptr);
+        linkMap[ptr->origName] = ptr;
     }
     for(i = 0; i < temp->applications.size(); ++i){
         std::shared_ptr<Application> ptr = std::make_shared<Application>(*temp->applications[i]);

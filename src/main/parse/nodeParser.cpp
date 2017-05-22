@@ -22,9 +22,9 @@ static void parseNodeIfaces(YAML::Node ifaces, std::shared_ptr<ns3lxc::Node> nod
     for(size_t i = 0; i < ifaces.size(); ++i){
         std::string name = ifaces[i].as<std::string>();
         cout << "\t\t- " << name << endl;
-        node->ifaces[name] = std::shared_ptr<ns3lxc::Iface>(new ns3lxc::Iface(name, node.get()));
+        node->ifaces[name] = ns3lxc::Iface(name, node.get());
         //FIXME
-        node->ifaces[name]->subnetMask = new ns3lxc::IpAddr(AF_INET, "255.255.255.0");
+        node->ifaces[name].subnetMask = new ns3lxc::IpAddr(AF_INET, "255.255.255.0");
     }
 }
 

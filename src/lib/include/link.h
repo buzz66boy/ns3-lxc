@@ -25,7 +25,7 @@ private:
 	
 public:
 
-	std::vector<std::shared_ptr<Iface> > ifaces;
+	std::vector<Iface *> ifaces;
 
 	IpAddr *ip = nullptr;
 	IpAddr *subnetMask = nullptr;
@@ -42,10 +42,10 @@ public:
 	int getNumIface() { return numIfaces; }
 	void setNumIface(int num) { numIfaces = num; }
 
-	const std::vector<std::shared_ptr<Iface> >& getIfaces() const { return ifaces; } 
+	const std::vector<Iface*>& getIfaces() const { return ifaces; } 
 	
-	int connectIface(std::weak_ptr<ns3lxc::Iface> iface); 
-	int connectIface(std::string ifaceName, std::weak_ptr<ns3lxc::Iface> iface); // OVERRIDES IfaceAccepter
+	int connectIface(ns3lxc::Iface *iface); 
+	int connectIface(std::string ifaceName, ns3lxc::Iface *iface) override; // OVERRIDES IfaceAccepter
 
 	static void reRefIfaces(Link *linkPtr);
 };

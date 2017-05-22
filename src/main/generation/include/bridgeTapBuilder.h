@@ -14,10 +14,10 @@ int assignBridgesTaps(ns3lxc::Topology *top, int curNum = 0);
 
 void buildAllBridgesTaps(ns3lxc::Topology *top);
 
-void buildBridgeTap(std::shared_ptr<ns3lxc::Iface>);
+void buildBridgeTap(ns3lxc::Iface*);
 
 void tearDownAllBridgesTaps(ns3lxc::Topology *top);
 
-void tearDownBridgeTap(std::shared_ptr<ns3lxc::Iface>);
+void tearDownBridgeTap(ns3lxc::Iface*);
 
 #endif

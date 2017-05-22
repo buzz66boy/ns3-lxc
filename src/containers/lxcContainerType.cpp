@@ -63,15 +63,15 @@ void LxcContainerType::writeContainerConfig(std::shared_ptr<ns3lxc::Node> nodePt
     ofs.open(configPath);
 
     for(auto it : nodePtr->ifaces){
-        if(it.second->ip == nullptr || it.second->subnetMask == nullptr){
+        if(it.second.ip == nullptr || it.second.subnetMask == nullptr){
             continue;
         }
         ofs << "lxc.network.type = veth" << endl;
         ofs << "lxc.network.name = " << it.first << endl;
         ofs << "lxc.network.flags = up" << endl;
-        ofs << "lxc.network.link = " << it.second->bridgeName << endl;
+        ofs << "lxc.network.link = " << it.second.bridgeName << endl;
         //FIXME: change to using right subnet
-        ofs << "lxc.network.ipv4 = " << it.second->ip->str() << "/24 " << it.second->subnetMask->str() << endl;
+        ofs << "lxc.network.ipv4 = " << it.second.ip->str() << "/" << to_string(it.second.subnetMask->getCidr()) + " " << it.second.subnetMask->str() << endl;
         ofs << "lxc.network.hwaddr = xx:xx:xx:xx:xx:xx" << endl;
     }
     // ofs << "lxc.network.type = veth" << endl;
