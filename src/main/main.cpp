@@ -88,6 +88,9 @@ int main(int argc, char *argv[]){
 	} else if(argMap.count("-c") > 0){
 		Settings::run_mode = Mode::CLEANUP;
 	}
+	if(argMap.count("-g") > 0){
+		Settings::gdb = true;
+	}
 
 	generateTopology(&topology);
 

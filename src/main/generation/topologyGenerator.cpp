@@ -40,6 +40,7 @@ void generateTopology(ns3lxc::Topology *topology){
     }
     if(Settings::runNS3()){
         chdir(Settings::ns3_path.c_str());
+        system("./waf"); //Makes more consistent run when everything's build first
         NodeSpawner::runApplications(topology);
         if(Settings::gdbNS3()){
             system(("./waf --run scratch/" + topology->name + " --command-template=\"gdb --args %s\"").c_str());
@@ -48,7 +49,7 @@ void generateTopology(ns3lxc::Topology *topology){
         }
         cout << endl;
     }
-    if(Settings::teardownContainers()){
+    if(Settings::teardown()){
         cout << "Tearing Down Topology" << endl;
         NodeSpawner::teardownNodes(topology);
         tearDownAllBridgesTaps(topology);

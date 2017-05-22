@@ -45,7 +45,6 @@ void NodeSpawner::grabOutput(ns3lxc::Topology *top){
     for(auto subTopPtr : top->subTopologies){
         grabOutput(subTopPtr.get());
     }
-
 }
 
 void NodeSpawner::teardownNodes(ns3lxc::Topology *top){

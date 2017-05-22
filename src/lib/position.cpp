@@ -54,6 +54,10 @@ void Positionable::centerPositionsAroundParent(Positionable *par){
             absPos.y = position.y + myRelPos.y;
             absPos.z = position.z + myRelPos.z;
             absPositions.push_back(absPos);
+            // if(position.time == 0.0){
+            //     std::cout << "pos " << position.str() << std::endl;
+            //     std::cout << "absPos " << absPos.str() << std::endl;
+            // }
         }
         for(auto pos: positions){
             if(!times.at(pos.time)){
@@ -102,7 +106,7 @@ static Position getPos(double time, std::vector<Position> positions){
     }
     Position *low = nullptr, *high = nullptr;
     double closeLow = 10000.0, closeHigh = 10000.0;
-    for(int i=0; i<positions.size(); ++i){
+    for(int i = 0; i < positions.size(); ++i){
         if(time == positions[i].time){
             return positions[i];
         }

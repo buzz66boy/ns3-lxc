@@ -1,15 +1,14 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <memory>
+#include <iostream>
 
 #include "link.h"
 
 using namespace ns3lxc;
 
-ns3lxc::Link::Link(const Link& ln){
+ns3lxc::Link::Link(const Link& ln): Nameable(ln){
     type = ln.type;
-    name = ln.name;
     numIfaces = ln.numIfaces;
     ip = ln.ip;
     subnetMask = ln.subnetMask;
@@ -19,7 +18,7 @@ ns3lxc::Link::Link(const Link& ln){
     }
 }
 
-ns3lxc::Link::Link(std::string name, ns3lxc::Link& link): name(name) {
+ns3lxc::Link::Link(std::string name, ns3lxc::Link& link): Nameable(name) {
     type = link.type;
 }
 

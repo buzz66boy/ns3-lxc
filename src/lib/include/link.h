@@ -15,7 +15,7 @@
 namespace ns3lxc {
 
 // declarations
-class Link : public IfaceAcceptor, virtual public Nameable {
+class Link : public IfaceAcceptor, public Nameable {
 private:
 	bool requiresReRef = false;
 	
@@ -26,15 +26,13 @@ private:
 public:
 
 	std::vector<std::shared_ptr<Iface> > ifaces;
-	
-	std::string name;
 
 	IpAddr *ip;
 	IpAddr *subnetMask;
 	
-	Link(std::string name, std::string type, int numIfaces): name(name), type(type), numIfaces(numIfaces) {};
+	Link(std::string name, std::string type, int numIfaces): Nameable(name), type(type), numIfaces(numIfaces) {};
 	Link(std::string name, Link& link);
-	Link(std::string name): name(name) {}
+	Link(std::string name): Nameable(name) {}
 	Link(const Link&);
 
 	std::string getType() { return type; }

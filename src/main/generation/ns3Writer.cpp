@@ -162,12 +162,16 @@ static void writeNodePos(std::ostream& str, ns3lxc::Topology *top){
                         pos = &nodePtr->absPositions[j];
                     }
                 }
-                curTime = lowestTime;
                 i++;
                 if(pos != nullptr){
+                    curTime = lowestTime;
                     str << "mob->AddWaypoint(Waypoint(" + pos->ns3Str() + "));" << endl;
                 } else {
-                    cerr << "Error in Position waypoint writing " << endl;
+                    cerr << "Error in Position waypoint writing " + to_string(lowestTime) + to_string(curTime) << endl;
+                    cerr << "T: " << to_string(nodePtr->absPositions.size()) << endl;
+                    for(auto it: nodePtr->absPositions){
+                        cerr << it.str() << endl;
+                    }
                 }
             }
         } else if(nodePtr->positions.size() > 1){
@@ -184,12 +188,12 @@ static void writeNodePos(std::ostream& str, ns3lxc::Topology *top){
                         pos = &nodePtr->positions[j];
                     }
                 }
-                curTime = lowestTime;
                 i++;
                 if(pos != nullptr){
+                    curTime = lowestTime;
                     str << "mob->AddWaypoint(Waypoint(" + pos->ns3Str() + "));" << endl;
                 } else {
-                    cerr << "Error in Position waypoint writing" << endl;
+                    cerr << "Error in Position waypoint writing " << endl;
                 }
             }
         } else {

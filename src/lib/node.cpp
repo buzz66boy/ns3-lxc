@@ -15,8 +15,7 @@ void ns3lxc::Node::reRefIfaces(ns3lxc::Node *node){
     }
 }
 
-ns3lxc::Node::Node(ns3lxc::Node& temp, std::string nodeName): Positionable(temp), IfaceProvider() {
-    name = nodeName;
+ns3lxc::Node::Node(ns3lxc::Node& temp, std::string nodeName): Positionable(temp), Nameable(nodeName), IfaceProvider() {
     for(auto it = temp.ifaces.begin(); it != temp.ifaces.end(); it++){
         ifaces[it->first] = std::shared_ptr<Iface>(new Iface(*it->second));
     }
@@ -25,8 +24,7 @@ ns3lxc::Node::Node(ns3lxc::Node& temp, std::string nodeName): Positionable(temp)
     nodeNum = temp.nodeNum;
 }
 
-ns3lxc::Node::Node(const ns3lxc::Node &temp): Positionable(temp), IfaceProvider() {
-    name = temp.name;
+ns3lxc::Node::Node(const ns3lxc::Node &temp): Positionable(temp), Nameable(temp), IfaceProvider() {
     ifaces = temp.ifaces;
     for(auto ifacePair : ifaces){
         ifacePair.second->node = this;

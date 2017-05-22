@@ -36,7 +36,7 @@ public:
     static bool genNS3() { return (run_mode == Mode::NORMAL || run_mode == Mode::NS3_GEN); }
     static bool runNS3() { return (run_mode == Mode::NORMAL || run_mode == Mode::NS3_RUN); }
     static bool gdbNS3() { return gdb; }
-    static bool teardownContainers() { return (run_mode == Mode::NORMAL || run_mode == Mode::CLEANUP); }
+    static bool teardown() { return (run_mode == Mode::NORMAL || run_mode == Mode::CLEANUP); }
 };
 
 #endif

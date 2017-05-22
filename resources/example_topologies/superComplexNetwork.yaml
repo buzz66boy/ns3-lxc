@@ -1,0 +1,44 @@
+include:
+  - complexNetwork
+  # - complexNetworkHalf
+
+time: 60
+
+SuperComplexNetwork:
+  topologies:
+    - complexNet1:
+        template: ComplexNetwork
+        position: 0 0 0
+    - complexNet2:
+        template: ComplexNetwork
+        position: 0 100 0
+        offset: 0.0.10.0
+    # - half:
+    #     template: ComplexNetworkHalf
+    #     rotation: 90
+    #     offset: 0.0.20.0
+    #     positions:
+    #       0: 200 0 0
+    #       60: 300 0 0
+  links:
+    - complexConnector:
+        type: csma
+        ifaces:
+          - complexNet1 right
+          - complexNet2 left
+    # - halfConnect1:
+    #     type: csma
+    #     ifaces:
+    #       - half top
+    #       - complexNet1 left
+    # - halfConnect2:
+    #     type: csma
+    #     ifaces:
+    #       - half bottom
+    #       - complexNet2 right
+
+  # applications:
+    # - quagga: all
+  
+  # ifacesProvided:
+  #   - bottomConnect: half end

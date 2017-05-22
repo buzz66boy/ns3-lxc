@@ -67,6 +67,7 @@ ns3lxc::Topology parseTopologyFile(std::string topPath){
 		}
 	}
 	parsedTop.topology.name = topName;
+    parsedTop.topology.origName = topName;
 	parseTopology(topology, &parsedTop);
 	return parsedTop.topology;
 }
@@ -316,21 +317,27 @@ static void parseApplications(YAML::Node apps, ParsedTopology *parsedTop){
     }
 }
 
+static void renameSubTopologies1(ns3lxc::Topology *topology, std::string prefix){
+    if(prefix == ""){
+        prefix = topology->origName + "_";
+    } else {
+        prefix = prefix + topology->origName + "_";
+    }
+    for(auto topPtr : topology->subTopologies){
+        renameSubTopologies1(topPtr.get(), prefix);
+    }
+
+    for(auto nodePtr : topology->nodes){
+        nodePtr->name = prefix + nodePtr->origName;
+    }
+
+    for(auto linkPtr : topology->links){
+        linkPtr->name = prefix + linkPtr->origName;
+    }
+}
+
 void renameSubTopologies(ns3lxc::Topology *topology, std::string prefix){
-	if(prefix == ""){
-		prefix = topology->name + "_";
-	} else {
-		prefix = prefix + topology->name + "_";
-	}
-	for(auto topPtr : topology->subTopologies){
-		renameSubTopologies(topPtr.get(), prefix);
-	}
-
-	for(auto nodePtr : topology->nodes){
-		nodePtr->name = prefix + nodePtr->name;
-	}
-
-	for(auto linkPtr : topology->links){
-		linkPtr->name = prefix + linkPtr->name;
-	}
+	for(auto subTopPtr : topology->subTopologies){
+        renameSubTopologies1(subTopPtr.get(), prefix);
+    }
 }

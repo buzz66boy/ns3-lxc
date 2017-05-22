@@ -32,8 +32,8 @@ ComplexNetwork:
 
   applications:
     - iperf3:
-        firstHalf end: -c -u 10.0.8.1 #${secondHalf end eth1 ip}
-        secondHalf end: -s
+        firstHalf middle: -s
+        firstHalf end: -c -u 10.0.0.2 #${secondHalf end eth1 ip}
     # - quagga: all
           
   ifacesProvided:
