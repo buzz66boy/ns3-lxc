@@ -68,8 +68,9 @@ void buildBridgeTap(std::shared_ptr<ns3lxc::Iface> ifacePtr){
     //ifconfig 'bridge' 'ipAddr' netmask 'subnetAddr' up  ### adds two to IPADDR??? 
     string sub = ifacePtr->ip->str();
     sub = sub.substr(0, sub.find_last_of(".")) + '2';
-    err = system(("ifconfig " + bridge + " " + sub + \
-        " netmask " + ifacePtr->subnetMask->str() + " up").c_str());
+    err = system(("ifconfig " + bridge + " up ").c_str());
+    // err = system(("ifconfig " + bridge + " " + sub + \
+    //     " netmask " + ifacePtr->subnetMask->str() + " up").c_str());
     if(err){
         cerr << "BAD5" << endl;
     }
