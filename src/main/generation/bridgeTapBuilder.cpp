@@ -11,10 +11,10 @@
 using namespace std;
 
 int assignBridgesTaps(ns3lxc::Topology *top, int curNum){
-    for(auto nodePtr : top->nodes){
-        for(auto it : nodePtr->ifaces){
-            it.second.bridgeName = to_string(curNum) + "_b";
-            it.second.tapName = to_string(curNum) + "_t";
+    for(auto linkPtr : top->links){
+        for(ns3lxc::Iface *ifacePtr : linkPtr->ifaces){
+            ifacePtr->bridgeName = to_string(curNum) + "_b";
+            ifacePtr->tapName = to_string(curNum) + "_t";
             curNum++;
         }
     }

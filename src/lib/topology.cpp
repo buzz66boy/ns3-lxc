@@ -17,52 +17,45 @@ Topology::Topology(std::shared_ptr<Topology> temp, std::string newName): Topolog
 }
 
 static Link *findLink(Topology *top, std::string linkName){
-    if(top->linkMap.count(linkName) > 0){
-        return top->linkMap.at(linkName).get();
-    } else {
-        for(auto linkPtr : top->links){
-            if(linkPtr->name == linkName){
-                return linkPtr.get();
-            }
+    for(auto linkPtr : top->links){
+        if(linkPtr->name == linkName){
+            return linkPtr.get();
         }
-        for(auto topPtr : top->subTopologies){
-            Link *ln = findLink(topPtr.get(), linkName);
-            if(ln != nullptr){
-                return ln;
-            }
-        }
-        return nullptr;
     }
+    for(auto topPtr : top->subTopologies){
+        Link *ln = findLink(topPtr.get(), linkName);
+        if(ln != nullptr){
+            return ln;
+        }
+    }
+    return nullptr;
 }
 
 static ns3lxc::Node *findNode(Topology *top, std::string nodeName){
-    if(top->nodeMap.count(nodeName) > 0){
-        return top->nodeMap.at(nodeName).get();
-    } else {
-        for(auto nodePtr : top->nodes){
-            if(nodePtr->name == nodeName){
-                return nodePtr.get();
-            }
+    for(auto nodePtr : top->nodes){
+        if(nodePtr->name == nodeName){
+            return nodePtr.get();
         }
-        for(auto topPtr : top->subTopologies){
-            ns3lxc::Node *n = findNode(topPtr.get(), nodeName);
-            if(n != nullptr){
-                return n;
-            }
-        }
-        return nullptr;
     }
+    for(auto topPtr : top->subTopologies){
+        ns3lxc::Node *n = findNode(topPtr.get(), nodeName);
+        if(n != nullptr){
+            return n;
+        }
+    }
+    return nullptr;
 }
 
 Topology::Topology(Topology *temp): Nameable(*temp), Positionable(*temp) {
     size_t i;
+    std::cout << "COPYING " << temp->name << std::endl;
     for(i = 0; i < temp->subTopologies.size(); ++i){
         std::shared_ptr<Topology> ptr = std::make_shared<Topology>(temp->subTopologies[i].get());
         subTopologies.push_back(ptr);
         topMap[ptr->origName] = ptr;
     }
     for(i = 0; i < temp->nodes.size(); ++i){
-        std::shared_ptr<Node> ptr = std::make_shared<Node>(*temp->nodes[i], temp->nodes[i]->origName);
+        std::shared_ptr<Node> ptr = std::make_shared<Node>(*temp->nodes[i], temp->nodes[i]->name, temp->nodes[i]->origName);
         nodes.push_back(ptr);
         nodeMap[ptr->origName] = ptr;
         Node::reRefIfaces(ptr.get());
@@ -105,27 +98,29 @@ Topology::Topology(Topology *temp): Nameable(*temp), Positionable(*temp) {
             ptr->subnetMask = new ns3lxc::IpAddr(*ptr->subnetMask);
         }
         //FIXME!!! store names read in originally in link (map to iface?)
-        for(int n = 0; n < ptr->ifaces.size(); n++){
-            ns3lxc::Node *no = ptr->ifaces[n]->node;
-            std::cout << "N " << ptr->ifaces[n]->name << std::endl;
-            std::string nodeName = ptr->ifaces[n]->node->name;
-            ns3lxc::Node *nodePtr = findNode(this, nodeName);
-            if(!nodePtr){
-                std::cerr << "Node not found " + nodeName << std::endl;
-            }
-            //replace current iface with the correct one (from copied top)
-            for(auto ifacePair : nodePtr->ifaces){
-                if(ifacePair.second.name == ptr->ifaces[n]->name && ifacePair.second.link->name == ptr->name){
-                    ptr->ifaces[n] = &ifacePair.second;
-                    ifacePair.second.link = ptr.get();
-                    std::cout << "NOOO " + (&ifacePair.second)->ip->str() << std::endl;
-                    break;
-                }
-            }
-        }
-        ptr->reRefIfaces(ptr.get());
         links.push_back(ptr);
         linkMap[ptr->origName] = ptr;
+
+    }
+    for(auto linkPtr : links){
+        // std::cout << "processing link: " + linkPtr->name << std::endl;
+        for(i = 0; i < linkPtr->ifaces.size(); ++i){
+            // std::cout << std::to_string(i) << std::endl;
+            Iface *ifacePtr = linkPtr->ifaces[i];
+            // if(ifaceBoolMap.count(ifacePtr.get())){
+            //     continue;
+            // }
+            Node *foundNode = findNode(this, ifacePtr->node->name);
+            if(!foundNode){
+                std::cerr << "NODE NOT FOUND!! " + ifacePtr->node->name << std::endl;
+            }
+            if(foundNode->ifaces.count(ifacePtr->name)){
+                linkPtr->ifaces[i] = &foundNode->ifaces.at(ifacePtr->name);
+            } else {
+                std::cerr << "Can't find iface " << ifacePtr->name << std::endl;
+            }
+        }
+        Link::reRefIfaces(linkPtr.get());
     }
     for(i = 0; i < temp->applications.size(); ++i){
         std::shared_ptr<Application> ptr = std::make_shared<Application>(*temp->applications[i]);

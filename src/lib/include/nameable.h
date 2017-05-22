@@ -15,6 +15,7 @@ public:
     std::string origName;
     Nameable() {}
     Nameable(std::string name): origName(name), name(name) {}
+    Nameable(std::string name, std::string origName): name(name), origName(origName) {}
     Nameable(const Nameable& temp): origName(temp.origName), name(temp.name) {}
 
 };

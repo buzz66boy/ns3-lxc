@@ -32,7 +32,7 @@ public:
 
     Node(): Nameable(), Positionable(), IfaceProvider() {};
     Node(std::string name):  Nameable(name), Positionable(), IfaceProvider() {};
-    Node(ns3lxc::Node& temp, std::string nodeName);
+    Node(ns3lxc::Node& temp, std::string nodeName, std::string origName);
     Node(const ns3lxc::Node &temp);
 
     static void reRefIfaces(ns3lxc::Node*);
