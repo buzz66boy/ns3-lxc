@@ -7,19 +7,23 @@ Settings may be set in the settings.conf file.
 
 Resources including example topology files can be found in the resources folder.
 
-Setup
-	YAML:
-		Download yaml-cpp
-		Follow the install instructions
-		You may have to download and install Boost as well
-	NS-3:
-		Download the latest NS-3 release to a directory
-		run `./build.py`
-		cd into the built directory (usually "ns-3.26" or appropriate version)
-		run `CXXFLAGS="-std=c++11" ./waf -d debug --enable-examples --enable-tests configure`
-			this configures NS-3 for C++11
-	LXC:
-		Install LXC via package manager
-			`sudo apt install lxc`
-		Install LXC Dev for the headers
-			`sudo apt install lxc-dev`
+# Setup
+## YAML:
+Download yaml-cpp (libyaml-cpp-dev)
+Follow the install instructions
+You may have to download and install Boost as well (libboost-dev)
+
+
+## NS-3:
+Download the latest NS-3 release to a directory
+run `./build.py`
+cd into the built directory (usually "ns-3.26" or appropriate version)
+run `CXXFLAGS="-std=c++11" ./waf -d debug --enable-examples --enable-tests configure`
+this configures NS-3 for C++11
+
+
+## LXC:
+Install LXC via package manager
+`sudo apt install lxc`
+Install LXC Dev for the headers
+`sudo apt install lxc-dev`
