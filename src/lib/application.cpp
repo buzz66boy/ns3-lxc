@@ -3,7 +3,7 @@
 
 using namespace ns3lxc;
 
-Application::Application(const Application& temp): Nameable(temp.name) {
+Application::Application(const Application& temp): Nameable(temp) {
     path = temp.path;
     args = temp.args;
 }

@@ -70,7 +70,6 @@ void LxcContainerType::writeContainerConfig(std::shared_ptr<ns3lxc::Node> nodePt
         ofs << "lxc.network.name = " << it.first << endl;
         ofs << "lxc.network.flags = up" << endl;
         ofs << "lxc.network.link = " << it.second.bridgeName << endl;
-        //FIXME: change to using right subnet
         ofs << "lxc.network.ipv4 = " << it.second.ip->str() << "/" << to_string(it.second.subnetMask->getCidr()) + " " << it.second.subnetMask->str() << endl;
         ofs << "lxc.network.hwaddr = xx:xx:xx:xx:xx:xx" << endl;
     }

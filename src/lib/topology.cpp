@@ -48,7 +48,7 @@ static ns3lxc::Node *findNode(Topology *top, std::string nodeName){
 
 Topology::Topology(Topology *temp): Nameable(*temp), Positionable(*temp) {
     size_t i;
-    std::cout << "COPYING " << temp->name << std::endl;
+    // std::cout << "COPYING " << temp->name << std::endl;
     for(i = 0; i < temp->subTopologies.size(); ++i){
         std::shared_ptr<Topology> ptr = std::make_shared<Topology>(temp->subTopologies[i].get());
         subTopologies.push_back(ptr);
@@ -66,27 +66,6 @@ Topology::Topology(Topology *temp): Nameable(*temp), Positionable(*temp) {
             if(ifacePair.second.subnetMask != nullptr){
                 ifacePair.second.subnetMask = new ns3lxc::IpAddr(*ifacePair.second.subnetMask);
             }
-            // if(ifacePair.second->link != nullptr){
-            //     std::string origName = ifacePair.second->link->origName;
-            //     if(linkMap.count(origName) > 0){
-            //         ifacePair.second->link = linkMap.at(origName).get();
-            //         Link *l = linkMap.at(origName).get();
-            //         bool eraseOccured = false;
-            //         for(int j = 0; j < l->ifaces.size(); ++j){
-            //             if(l->ifaces[j]->name == ifacePair.second->name){
-            //                 l->ifaces.erase(l->ifaces.begin() + j);
-            //                 eraseOccured = true;
-            //                 break;
-            //             }
-            //         }
-            //         if(!eraseOccured){
-            //             std::cerr << "No Erase Occured for link " + l->name<< std::endl;
-            //         }
-
-            //         ifacePair.second->link->connectIface(ifacePair.second);
-            //         Link::reRefIfaces(ifacePair.second->link);
-            //     }
-            // }
         }
     }
     for(i = 0; i < temp->links.size(); ++i){
@@ -97,7 +76,6 @@ Topology::Topology(Topology *temp): Nameable(*temp), Positionable(*temp) {
         if(ptr->subnetMask != nullptr){
             ptr->subnetMask = new ns3lxc::IpAddr(*ptr->subnetMask);
         }
-        //FIXME!!! store names read in originally in link (map to iface?)
         links.push_back(ptr);
         linkMap[ptr->origName] = ptr;
 
@@ -107,9 +85,6 @@ Topology::Topology(Topology *temp): Nameable(*temp), Positionable(*temp) {
         for(i = 0; i < linkPtr->ifaces.size(); ++i){
             // std::cout << std::to_string(i) << std::endl;
             Iface *ifacePtr = linkPtr->ifaces[i];
-            // if(ifaceBoolMap.count(ifacePtr.get())){
-            //     continue;
-            // }
             Node *foundNode = findNode(this, ifacePtr->node->name);
             if(!foundNode){
                 std::cerr << "NODE NOT FOUND!! " + ifacePtr->node->name << std::endl;

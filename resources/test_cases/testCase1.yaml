@@ -1,0 +1,8 @@
+TestCase1:
+  nodes:
+    - node1:
+        ifaces:
+          - eth0
+
+  ifacesProvided:
+    - singleton: node1 eth0

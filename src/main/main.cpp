@@ -1,8 +1,10 @@
 #include <string>
 #include <iostream>
+#include <fstream>
 #include <cstring>
 #include <map>
 #include <unistd.h>
+#include <sys/stat.h>
 
 #include "yaml-cpp/yaml.h"
 #include "settingsParser.h"
@@ -14,7 +16,7 @@
 
 #define MAXPATHLEN 1024
 
-#define PROJ_ROOT_DIR "NS-3_LXC"
+#define PROJ_ROOT_DIR "ns3-lxc"
 #define SETTINGS_FILE "settings.yaml"
 #define NO_FILE_PROVIDED "Exiting, no file provided"
 
@@ -79,6 +81,14 @@ int main(int argc, char *argv[]){
 		cerr << NO_FILE_PROVIDED << endl;
 		return 1;
 	}
+
+	std::ifstream infile(argMap.at("file"));
+	infile.seekg(0, ios::end);
+    if(!infile.good()){
+    	cerr << "File does not exist!" << endl;
+    	return 1;
+    }
+    infile.close();
 
 	topology = parseTopologyFile(argMap.at("file"));
 	ns3lxc::Topology::reNumNodes(&topology);

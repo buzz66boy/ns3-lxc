@@ -1,7 +1,7 @@
 # Author: Michael Albert
 
 cmake_minimum_required(VERSION 3.3)
-project(NS-3_LXC)
+project(ns3-lxc)
 
 message(Building Executables.)
 

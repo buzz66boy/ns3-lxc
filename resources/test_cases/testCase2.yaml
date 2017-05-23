@@ -1,0 +1,17 @@
+TestCase2:
+  nodes:
+    - node1:
+        iface: eth0
+    - node2:
+        ifaces:
+          - eth0
+          - eth1
+
+  links:
+    - csmaSimple:
+        type: csma
+        ifaces:
+          - node1 eth0 10.0.0.1
+          - node2 eth0 10.0.0.2
+  ifacesProvided:
+    - outEth: node2 eth1

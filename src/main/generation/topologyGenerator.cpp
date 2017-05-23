@@ -29,8 +29,7 @@ void generateTopology(ns3lxc::Topology *topology){
         Ns3Writer::writeScript(topology, scriptLoc);
         cout << "Waiting to continue (enter): ";
         cout.flush();
-        string test;
-        cin >> test;
+        cin.ignore();
         cout << "Continuing..." << endl;
         std::ifstream src(scriptLoc, std::ios::binary);
         std::ofstream dst(Settings::ns3_path + "/scratch/" + topology->name + ".cc",   std::ios::binary);

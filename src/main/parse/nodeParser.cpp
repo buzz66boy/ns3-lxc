@@ -19,11 +19,18 @@ using namespace std;
 
 static void parseNodeIfaces(YAML::Node ifaces, std::shared_ptr<ns3lxc::Node> node){
     cout << "\tifaces:" << endl;
-    for(size_t i = 0; i < ifaces.size(); ++i){
-        std::string name = ifaces[i].as<std::string>();
+    if(ifaces.size() > 0){
+        for(size_t i = 0; i < ifaces.size(); ++i){
+            std::string name = ifaces[i].as<std::string>();
+            cout << "\t\t- " << name << endl;
+            node->ifaces[name] = ns3lxc::Iface(name, node.get());
+            //FIXME
+            node->ifaces[name].subnetMask = new ns3lxc::IpAddr(AF_INET, "255.255.255.0");
+        }
+    } else {
+        std::string name = ifaces.as<std::string>();
         cout << "\t\t- " << name << endl;
         node->ifaces[name] = ns3lxc::Iface(name, node.get());
-        //FIXME
         node->ifaces[name].subnetMask = new ns3lxc::IpAddr(AF_INET, "255.255.255.0");
     }
 }
