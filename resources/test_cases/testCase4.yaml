@@ -1,0 +1,11 @@
+# tests application installation
+
+time: 10
+
+TestCase4:
+  nodes:
+    - node1:
+        iface: eth0
+
+  applications:
+    - htop: all

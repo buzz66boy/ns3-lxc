@@ -54,13 +54,26 @@ distroPackMap = {
     {"centos", "dnf"},
     {"fedora", "dnf"},
     {"redhat", "dnf"},
-    {"arch", "pacman"},
+    {"archlinux", "pacman"},
 };
 
 
 void LxcContainerType::writeContainerConfig(std::shared_ptr<ns3lxc::Node> nodePtr, string configPath){
     std::ofstream ofs;
     ofs.open(configPath);
+
+
+    // ofs << "lxc.network.type = macvlan" << endl;
+    // ofs << "lxc.network.name = extacc" << endl;
+    // ofs << "lxc.network.macvlan.mode = bridge" << endl;
+    // ofs << "lxc.network.flags = up" << endl;
+    // ofs << "lxc.network.link = mac0" << endl;
+
+    // ofs << "lxc.network.type = veth" << endl;
+    // ofs << "lxc.network.name = extacc" << endl;
+    // ofs << "lxc.network.link = lxcbr0" << endl;
+    // ofs << "lxc.network.hwaddr = 00:16:3e:xx:xx:xx" << endl;
+    // ofs << "lxc.network.flags = up" << endl;
 
     for(auto it : nodePtr->ifaces){
         if(it.second.ip == nullptr || it.second.subnetMask == nullptr){
@@ -73,17 +86,7 @@ void LxcContainerType::writeContainerConfig(std::shared_ptr<ns3lxc::Node> nodePt
         ofs << "lxc.network.ipv4 = " << it.second.ip->str() << "/" << to_string(it.second.subnetMask->getCidr()) + " " << it.second.subnetMask->str() << endl;
         ofs << "lxc.network.hwaddr = xx:xx:xx:xx:xx:xx" << endl;
     }
-    // ofs << "lxc.network.type = veth" << endl;
-    // ofs << "lxc.network.name = extacc" << endl;
-    // ofs << "lxc.network.link = lxcbr0" << endl;
-    // ofs << "lxc.network.flags = up" << endl;
-    // ofs << "lxc.network.hwaddr = 00:16:3e:xx:xx:xx" << endl;
-    
-    // file.write("lxc.network.type = veth\n")
-    // file.write("lxc.network.flags = up\n")
-    // file.write("lxc.network.link = " + interface[0] + "\n")
-    // file.write("lxc.network.ipv4 = " + interface[2] + " " + inf + "\n")
-    // file.write("lxc.network.hwaddr = " + HWADDR_PREFIX + ":xx:xx:xx\n")
+
     ofs.close();
     configMap[nodePtr->name] = configPath;
 }
@@ -134,54 +137,32 @@ void LxcContainerType::prepForInstall(std::vector<std::shared_ptr<ns3lxc::Applic
     }
 }
 
-static void installThread(std::shared_ptr<ns3lxc::Node> nodePtr, std::string packman, std::string installCmd){
-    string nullRedir = " 2>&1 > /dev/null";
-    string lxcDir = "/var/lib/lxc/" + nodePtr->name + "/rootfs";
-    //nav to root of container
-    chdir(lxcDir.c_str());
-    //chroot
-    chroot(lxcDir.c_str());
-    //install package based on local distro
-    vector<string> st = splitString(installCmd);
-    for(auto app : nodePtr->applications){
-        //FIXME bad idea (relying on set amt of args)
-        if(applicationTypeMap.count(app.name) < 1 || applicationTypeMap.at(app.name)->getInstallMethod() == InstallMethod::PACKMAN){
-            execl(("/usr/bin/" + packman).c_str(), ("/usr/bin/" + packman).c_str(),
-             st[0].c_str(), st[1].c_str(), app.name.c_str(), NULL);
-        }
-    }
+static int ex(void *arg){
+    return system((char*)arg);
 }
 
 void LxcContainerType::installApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {
+    lxc_container *c = containerMap[nodePtr->name].get();
+    lxc_attach_options_t opts = LXC_ATTACH_OPTIONS_DEFAULT;
+    opts.namespaces = CLONE_NEWNS;
     for(auto app : nodePtr->applications){
         if(applicationTypeMap.count(app.name) > 0){
             string configName = applicationTypeMap.at(app.name)->getConfigFilename(app.args, nodePtr);
         }
     }
     string packman = distroPackMap.at(containerDistro);
-    string installCmd = packmanMap.at(packman).at("install") + " ";
-    pid_t parent = getpid();
-    pid_t pid = fork();
-
-    if (pid == -1)
-    {
-        // error, failed to fork()
-    } 
-    else if (pid > 0)
-    {
-        int status;
-        waitpid(pid, &status, 0);
+    string installCmd = packman + " " + packmanMap.at(packman).at("install") + " ";
+    for(auto app : nodePtr->applications){
+        //FIXME bad idea (relying on set amt of args)
+        if(applicationTypeMap.count(app.name) < 1 || applicationTypeMap.at(app.name)->getInstallMethod() == InstallMethod::PACKMAN){
+            string command = installCmd + app.name;
+            char cmd[command.length() + 1];
+            strcpy(cmd, command.c_str());
+            int pid, status;
+            c->attach(c, ex, cmd, &opts, &pid);
+            waitpid(pid, &status, 0);
+        }
     }
-    else 
-    {
-        // we are the child
-        installThread(nodePtr, packman, installCmd);
-        exit(0);
-    }
-}
-
-static int ex(void *arg){
-    return system((char*)arg);
 }
 
 void LxcContainerType::runApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {

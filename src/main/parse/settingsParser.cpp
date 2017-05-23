@@ -82,6 +82,18 @@ int Settings::parse_settings_file(std::string settings_file){
 		return 3;
 	}
 
+	if(settings[TEMP_DEST_STR]){
+		Settings::temp_dir = settings[TEMP_DEST_STR].as<string>();
+	} else {
+		cerr << "No temp directory specified in settings.yaml" << endl;
+		return 4;
+	}
+
+	if(!check_make_dir(Settings::temp_dir.c_str())){
+		cerr << "Cannot make default output destination, aborting" << endl;
+		return 5;
+	}
+
 	if(settings[SCRIPT_DEST_STR]){
 		Settings::script_dest = settings[SCRIPT_DEST_STR].as<std::string>();
 	} else {
@@ -90,7 +102,7 @@ int Settings::parse_settings_file(std::string settings_file){
 
 	if(!check_make_dir(Settings::script_dest.c_str())){
 		cerr << "Cannot make default script destination, aborting" << endl;
-		return 4;
+		return 6;
 	}
 
 	if(settings[OUTPUT_DEST_STR]){
@@ -101,20 +113,9 @@ int Settings::parse_settings_file(std::string settings_file){
 
 	if(!check_make_dir(Settings::output_dest.c_str())){
 		cerr << "Cannot make default output destination, aborting" << endl;
-		return 5;
-	}
-
-	if(settings[TEMP_DEST_STR]){
-		Settings::temp_dir = settings[TEMP_DEST_STR].as<string>();
-	} else {
-		cerr << "No temp directory specified in settings.yaml" << endl;
-		return 6;
-	}
-
-	if(!check_make_dir(Settings::temp_dir.c_str())){
-		cerr << "Cannot make default output destination, aborting" << endl;
 		return 7;
 	}
+
 	Settings::container_config_dir = Settings::temp_dir + CONTAINER_CONFIG;
 	if(!check_make_dir(Settings::container_config_dir.c_str())){
 		cerr << "Cannot make container config destination, aborting" << endl;
