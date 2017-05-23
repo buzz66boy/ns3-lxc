@@ -144,7 +144,7 @@ static int ex(void *arg){
 void LxcContainerType::installApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {
     lxc_container *c = containerMap[nodePtr->name].get();
     lxc_attach_options_t opts = LXC_ATTACH_OPTIONS_DEFAULT;
-    opts.namespaces = CLONE_NEWNS;
+    opts.namespaces = CLONE_NEWNS | CLONE_NEWPID;
     for(auto app : nodePtr->applications){
         if(applicationTypeMap.count(app.name) > 0){
             string configName = applicationTypeMap.at(app.name)->getConfigFilename(app.args, nodePtr);
