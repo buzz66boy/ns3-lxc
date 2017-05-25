@@ -33,6 +33,27 @@ Iface::~Iface(){
     }
 }
 
+void Iface::assignIp(int af, std::string ipAddr){
+    if(ip){
+        delete ip;
+    }
+    ip = new IpAddr(af, ipAddr);
+}
+
+void Iface::assignSubnetMask(int af, std::string subnetMaskStr){
+    if(subnetMask){
+        delete subnetMask;
+    }
+    subnetMask = new IpAddr(af, subnetMaskStr);
+}
+
+void Iface::assignSubnetMask(int af, int cidr){
+    if(subnetMask){
+        delete subnetMask;
+    }
+    subnetMask = new IpAddr(af, cidr);
+}
+
 ns3lxc::Iface *ns3lxc::IfaceProvider::getIface(std::string ifaceName){
     if(ifacesProvided.count(ifaceName) > 0){
         return ifacesProvided[ifaceName].lock()->getIface( ifacesProvidedSubNames[ifaceName] );

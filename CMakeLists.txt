@@ -76,6 +76,7 @@ set(NS-3_LXC
         src/main/parse/include/subTopologyParser.h
         src/main/parse/include/nodeParser.h
         src/main/parse/include/linkParser.h
+        src/main/parse/include/ifaceParser.h
         src/main/parse/include/positionParser.h
         src/main/parse/parserTags.cpp
     	src/main/parse/topologyParser.cpp
@@ -83,6 +84,7 @@ set(NS-3_LXC
         src/main/parse/settingsParser.cpp
         src/main/parse/nodeParser.cpp
         src/main/parse/linkParser.cpp
+        src/main/parse/ifaceParser.cpp
         src/main/parse/positionParser.cpp
         src/main/generation/include/bridgeTapBuilder.h
         src/main/generation/include/nodeSpawner.h

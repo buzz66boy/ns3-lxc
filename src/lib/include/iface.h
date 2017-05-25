@@ -16,6 +16,7 @@ class Node;
 class Link;
 // declarations
 class Iface : public Nameable {
+
 public:
     ns3lxc::Node *node = nullptr;
     ns3lxc::Link *link = nullptr;
@@ -32,6 +33,10 @@ public:
     Iface(std::string name): Nameable(name) {};
     Iface(std::string name, ns3lxc::Node *node): Nameable(name), node(node) {};
     ~Iface();
+
+    void assignIp(int af, std::string ipAddr);
+    void assignSubnetMask(int af, std::string subnetMaskStr);
+    void assignSubnetMask(int af, int cidr);
 };
 
 class IfaceProvider {

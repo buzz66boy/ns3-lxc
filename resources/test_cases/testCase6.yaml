@@ -1,0 +1,7 @@
+TestCase6:
+  links:
+    - onlyLink:
+        type: csma
+  ifacesAccepted:
+    - first: onlyLink
+    - second: onlyLink

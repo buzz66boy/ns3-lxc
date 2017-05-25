@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <map>
+#include <sys/socket.h>
 
 #include "yaml-cpp/yaml.h"
 
@@ -19,7 +20,6 @@ bool doesLinkExist(YAML::Node node, ParsedTopology *top){
 }
 
 std::shared_ptr<ns3lxc::Link> parseLink(YAML::Node node, ParsedTopology *top){
-    
     std::string name = node.begin()->first.as<std::string>();
     node = node[name];
 

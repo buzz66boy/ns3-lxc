@@ -123,6 +123,28 @@ Topology::Topology(Topology *temp): Nameable(*temp), Positionable(*temp) {
             }
         }
     }
+    ifacesAcceptedSubNames.insert(temp->ifacesAcceptedSubNames.begin(), temp->ifacesAcceptedSubNames.end());
+    for(auto it: temp->ifacesAccepted){
+        try {
+            Link linkCast = dynamic_cast<Link&>(*it.second.lock());
+            if(linkMap.count(linkCast.origName) > 0){
+                ifacesAccepted[it.first] = linkMap[linkCast.origName];
+            } else {
+                std::cerr << "ISSUES 1 " << linkCast.origName << std::endl;
+            }
+        } catch (std::bad_cast e){
+            try{
+                Topology topCast = dynamic_cast<Topology&>(*it.second.lock());
+                if (topMap.count(topCast.origName) > 0){
+                    ifacesAccepted[it.first] = topMap[topCast.origName];
+                } else {
+                    std::cerr << "ISSUES 2" << std::endl;
+                }
+            } catch (std::bad_cast e){
+                std::cerr << "BAD CAST 2" << std::endl;
+            }
+        }
+    }
     curNodeNum = temp->curNodeNum;
 }
 

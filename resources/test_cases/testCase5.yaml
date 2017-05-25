@@ -1,0 +1,14 @@
+includes:
+  - testCase1
+
+TestCase5:
+  topologies:
+    - subTop:
+        num: 2
+        template: TestCase1
+  links:
+    - connect1:
+        type: csma
+        ifaces:
+          - subTop_1 singleton 10.0.0.1
+          - subTop_2 singleton 10.0.0.2

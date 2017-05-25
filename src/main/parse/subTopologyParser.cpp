@@ -35,8 +35,9 @@ std::vector<std::shared_ptr<ns3lxc::Topology> > parseSubTopology(YAML::Node node
         iters = node[TAG_NUM].as<int>();
     }
 
-    vector<shared_ptr<ns3lxc::Topology> > topList;
 
+    vector<shared_ptr<ns3lxc::Topology> > topList;
+    cout << "Creating " + to_string(iters) + "tops" << endl;
     for(size_t i = 0; i < iters; ++i){
         std::string name = origName;
         std::shared_ptr<ns3lxc::Topology> topPtr = nullptr;
