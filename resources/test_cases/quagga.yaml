@@ -1,0 +1,25 @@
+time: 120
+
+Quagga:
+  nodes:
+    - nodeGeneric:
+        iface: eth0
+        num: 2
+    - middleNode:
+        ifaces:
+          - eth0
+          - eth1
+  links:
+    - first:
+        type: csma
+        ifaces:
+          - nodeGeneric_1 eth0 10.0.0.1
+          - middleNode eth0 10.0.0.2
+    - second:
+        type: csma
+        ifaces:
+          - middleNode eth1 10.0.1.1
+          - nodeGeneric_2 eth0 10.0.1.2
+
+  applications:
+    - quagga: all

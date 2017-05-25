@@ -29,13 +29,16 @@ public:
 
     IpAddr(int af, std::string addr);
     IpAddr(int af, int cidr);
-    ~IpAddr();
+    ~IpAddr() {}
 
-    bool is_ipv4() { return ipv4; }
+    bool isIpv4() { return ipv4; }
+    uint32_t getIpv4Addr() { return ipv4_address; }
+    std::vector<uint32_t> getIpv6Addr();
 
 	std::string str();
     int getCidr();
     void applyOffset(std::string);
+    std::string getSubnet(IpAddr *subnetMask);
 };
 
 }

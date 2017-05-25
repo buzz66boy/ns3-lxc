@@ -82,8 +82,12 @@ IpAddr::IpAddr(int af, int cidr){
     }
 }
 
-IpAddr::~IpAddr(){
-    
+std::vector<uint32_t> IpAddr::getIpv6Addr(){
+    std::vector<uint32_t> ret;
+    for(int i = 0; i < 4; ++i){
+        ret.push_back(ipv6_address_32[i]);   
+    }
+    return ret;
 }
 
 std::string IpAddr::str(){
@@ -138,5 +142,23 @@ void IpAddr::applyOffset(std::string offset){
     } else {
         //Probably backwards
         // inet_ntop(AF_INET6, ipv6_address_8, buf, INET6_ADDRSTRLEN);
+    }
+}
+
+std::string IpAddr::getSubnet(IpAddr *subnetMask){
+    if(ipv4 != subnetMask->isIpv4()){
+        return "";
+    }
+    if(ipv4){
+        IpAddr temp(ipv4_address & subnetMask->getIpv4Addr());
+        return temp.str();
+    } else {
+        uint32_t ipv6[4];
+        std::vector<uint32_t> ipv6Temp = subnetMask->getIpv6Addr();
+        for(int i = 0; i < 4; ++i){
+            ipv6[i] = ipv6Temp[i] & ipv6_address_32[i];
+        }
+        IpAddr temp(ipv6);
+        return temp.str();
     }
 }
