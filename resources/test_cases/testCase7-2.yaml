@@ -1,0 +1,18 @@
+includes:
+  - testCase6-2
+
+time: 10
+
+TestCase7-2:
+  nodes:
+    - tc7Node:
+        num: 2
+        iface: eth0
+
+  topologies:
+    - tc6:
+        template: TestCase6-2
+
+  acceptIfaces:
+    - tc6 first: tc7Node_1 eth0 10.0.0.1
+    - tc6 second: tc7Node_2 eth0 10.0.0.2

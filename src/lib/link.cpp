@@ -42,6 +42,9 @@ int Link::connectIface(std::string ifaceName, ns3lxc::Iface *iface){
 int Link::connectIface(ns3lxc::Iface *iface){
     if(numIfaces == 0 || ifaces.size() < numIfaces){
         ifaces.push_back(iface);
+        if(subnetMask){
+            iface->assignSubnetMask(subnetMask);
+        }
         iface->link = this;
         return 1;
     }

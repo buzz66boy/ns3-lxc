@@ -46,7 +46,7 @@ static map<string, string> parseArgs(int argc, char *argv[]){
 	map<string, string> argMap;
 	for(int i = 1; i < argc; ++i){
 		string arg(argv[i]);
-		if(arg.find('-') != string::npos){
+		if(arg.find('-') == 0){
 			argMap[arg] = "exists";
 		} else {
 			argMap["file"] = arg;

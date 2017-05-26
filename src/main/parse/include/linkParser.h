@@ -8,7 +8,7 @@
 
 bool doesLinkExist(YAML::Node node, ParsedTopology *top);
 
-std::shared_ptr<ns3lxc::Link> parseLink(YAML::Node link, ParsedTopology *top);
+void parseLink(YAML::Node link, ParsedTopology *top);
 
 void overrideLink(YAML::Node link, ParsedTopology *top);
 

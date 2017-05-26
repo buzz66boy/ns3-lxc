@@ -189,13 +189,7 @@ static void parseNodes(YAML::Node nodes, ParsedTopology *parsedTop){
 
 static void parseLinks(YAML::Node links, ParsedTopology *parsedTop){
 	for(auto i = 0; i < links.size(); ++i){
-		shared_ptr<ns3lxc::Link> curLink = parseLink(links[i], parsedTop);
-		if(parsedTop->topology.linkMap.count(curLink->name) > 0){
-			cout << "LINK EXISTS" << curLink->name << endl;
-		} else {
-			parsedTop->topology.links.push_back(curLink);
-			parsedTop->topology.linkMap[curLink->name] = curLink;
-		}
+		parseLink(links[i], parsedTop);
 	}
 }
 

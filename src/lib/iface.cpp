@@ -33,11 +33,25 @@ Iface::~Iface(){
     }
 }
 
+void Iface::assignIp(IpAddr *ipAddr){
+    if(ip){
+        delete ip;
+    }
+    ip = new IpAddr(*ipAddr);
+}
+
 void Iface::assignIp(int af, std::string ipAddr){
     if(ip){
         delete ip;
     }
     ip = new IpAddr(af, ipAddr);
+}
+
+void Iface::assignSubnetMask(IpAddr *subnetMaskAddr){
+    if(subnetMask){
+        delete subnetMask;
+    }
+    subnetMask = new IpAddr(*subnetMaskAddr);
 }
 
 void Iface::assignSubnetMask(int af, std::string subnetMaskStr){

@@ -34,7 +34,10 @@ public:
     Iface(std::string name, ns3lxc::Node *node): Nameable(name), node(node) {};
     ~Iface();
 
+    void assignIp(IpAddr *ipAddr);
     void assignIp(int af, std::string ipAddr);
+
+    void assignSubnetMask(IpAddr *subnetMaskAddr);
     void assignSubnetMask(int af, std::string subnetMaskStr);
     void assignSubnetMask(int af, int cidr);
 };

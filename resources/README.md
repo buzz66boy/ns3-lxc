@@ -9,16 +9,6 @@ Let's now look at how to declare simple links and nodes.
 
 ## Simple Declarations
 
-A simple, unconnected CSMA link (comments denoted by '#'):
-```yaml
-link:
-    - simpleCsma:           # Name of link I am creating
-        type: csma          # type of link (relates to a type of NS-3 link)
-        ifacesAccepted:     # declaring that there are unconnected
-            - first         # naming the interface acceptors to reference
-            - second
-```
-
 A simple, unconnected Node with 2 interfaces:
 ```yaml
 node:
@@ -26,6 +16,16 @@ node:
         ifaces:             # Declaring interfaces
             - eth0          # Naming interfaces
             - eth1
+```
+
+A simple, unconnected CSMA link (comments denoted by '#'):
+```yaml
+link:
+    - simpleCsma:           # Name of link I am creating
+        type: csma          # type of link (relates to a type of NS-3 link)
+        ifacesAccepted:     # declaring that there are unconnected 
+            - first         # naming the interface acceptors to reference
+            - second
 ```
 
 Now, let's connect two nodes via a link:
@@ -41,8 +41,8 @@ link:                           # Declare links
     - nodeLinker:               # Name of link
         type: csma
         ifaces:                 # Connect interfaces to link
-            - 1ethNode1 eth0    # Connect 1st node's eth0
-            - 1ethNode2 eth0    # Connect 2nd node's eth0
+            - 1ethNode1 eth0 10.0.0.1   # Connect 1st node's eth0 and assign ip
+            - 1ethNode2 eth0 10.0.0.2   # Connect 2nd node's eth0 and assign ip
 ```
 
 ## Templating and Inclusion (Includes)
@@ -58,8 +58,8 @@ link:
     - nodeLinker:
         type: csma
         ifaces:                 # Connect interfaces to link
-            - 1ethNode_1 eth0   # Reference the instantiated node of a template via '_#', indexing starts at 1
-            - 1ethNode_2 eth0   # Connect 2nd node's eth0
+            - 1ethNode_1 eth0 10.0.0.1  # Reference the instantiated node of a template via '_#', indexing starts at 1
+            - 1ethNode_2 eth0 10.0.0.2  # Connect 2nd node's eth0
 ```
 The previous topology is an example of an anonymous template. Anonymous templates are instantiated within a topology, and cannot be instantiated in another topology directly.
 
@@ -89,8 +89,8 @@ link:
     - nodeLinker:
         type: csma
         ifaces:                 # Connect interfaces to link
-            - myNode_1 eth0     # Reference the instantiated node of a template via '_#', indexing starts at 1
-            - myNode_2 eth0     # Connect 2nd node's eth0
+            - myNode_1 eth0 10.0.0.1    # Reference the instantiated node of a template via '_#', indexing starts at 1
+            - myNode_2 eth0 10.0.0.2    # Connect 2nd node's eth0
 ```
 
 The same templating can be done with links.
@@ -122,8 +122,8 @@ myTopology:
         - nodeLinker:
             template: csmaLink
             ifaces:                     # Connect interfaces to link
-                - first: myNode_1 eth0  # Connect 1st node's eth0 to first ifaceAccepted
-                - second: myNode_2 eth0 # Connect 2nd node's eth0 to second ifaceAccepted
+                - first: myNode_1 eth0 10.0.0.1  # Connect 1st node's eth0 to first ifaceAccepted
+                - second: myNode_2 eth0 10.0.0.2 # Connect 2nd node's eth0 to second ifaceAccepted
 ```
 Notice, this time we explicitly named the topology 'myTopology', this is useful when including topologies in another topology.
 Below is a simple topology that will be instantiated/included in another topology:
@@ -143,8 +143,8 @@ simpleTop:                          # Name of topology
         - nodeLinker:
             type: csma
             ifaces:
-                - 1ethNode eth0
-                - 2ethNode eth0
+                - 1ethNode eth0 10.0.0.1
+                - 2ethNode eth0 10.0.0.2
     ifacesProvided:                 # Declare there are unconnected interfaces
         - looseIface:               # Name the unconnected interface
             2ethNode eth1           # Map the name to the actual interface
@@ -165,8 +165,8 @@ twoSimpleTops:
         - linkThem:
             type: csma
             ifaces:
-                - simpleTopology_1 looseIface    #Reference the ifaces by what they were named in the ifacesProvided of the subTopology
-                - simpleTopology_2 looseIface
+                - simpleTopology_1 looseIface 11.0.0.1   #Reference the ifaces by what they were named in the ifacesProvided of the subTopology
+                - simpleTopology_2 looseIface 11.0.0.2
 ```
 
 ## Inheritance
@@ -174,8 +174,11 @@ twoSimpleTops:
 When using templates for nodes, links, or topologies, an important factor to understand is the use of inheritance and how it applies to those structures.
 
 In the scope of this project, inheritance refers to the sharing of attributes between a template and it's child element. In much the same way as Object-Oriented
-Programming, child element's declared attributes override the attributes of the template. 
+Programming, child element's declared attributes should override the attributes of the template (NOTE: the ability to override attributes is only partially supported as of 25 May '17). 
 
 ## IP/MAC Address Assignment
 
-## Positions
+IPs are assigned to interfaces when they are connected to an IfaceAcceptor/Link
+
+
+## Positions and Rotations
