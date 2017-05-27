@@ -13,6 +13,7 @@
 #define TAG_LINK "link"
 #define TAG_POSITION "position"
 #define TAG_IFACE "iface"
+#define TAG_INTERFACE "interface"
 #define TAG_TEMPLATE "template"
 #define TAG_NUM "num"
 #define TAG_ALL "all"
@@ -21,9 +22,7 @@
 #define TAG_ACCEPT_IFACE "acceptIface"
 #define TAG_IFACES_ACCEPTED "ifacesAccepted"
 #define TAG_IFACES_PROVIDED "ifacesProvided"
-
 #define TAG_NAME "name"
-
 #define TAG_IP "ip"
 #define TAG_CIDR "cidr"
 #define TAG_SUBNET "subnet"

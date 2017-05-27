@@ -76,6 +76,10 @@ std::vector<std::shared_ptr<ns3lxc::Node> > parseNode(YAML::Node node, ParsedTop
             parseNodeIfaces(node[TAG_IFACE], nodePtr);
         } else if (node[pluralize(TAG_IFACE)]){
             parseNodeIfaces(node[pluralize(TAG_IFACE)], nodePtr);
+        } else if (node[TAG_INTERFACE]){
+            parseNodeIfaces(node[TAG_INTERFACE], nodePtr);
+        } else if (node[pluralize(TAG_INTERFACE)]){
+            parseNodeIfaces(node[pluralize(TAG_INTERFACE)], nodePtr);
         }
         if(node[TAG_APPLICATION]){
             parseNodeApplications(node[TAG_APPLICATION], nodePtr);

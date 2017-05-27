@@ -65,6 +65,10 @@ void parseLink(YAML::Node node, ParsedTopology *top){
         ifaceNode = node[TAG_IFACE];
     } else if(node[pluralize(TAG_IFACE)]){
         ifaceNode = node[pluralize(TAG_IFACE)];
+    }  else if (node[TAG_INTERFACE]){
+        ifaceNode = node[TAG_INTERFACE];
+    } else if (node[pluralize(TAG_INTERFACE)]){
+        ifaceNode = node[pluralize(TAG_INTERFACE)];
     }
     if(ifaceNode.Type() == YAML::NodeType::Scalar){
         link->setNumIface(ifaceNode.as<int>());

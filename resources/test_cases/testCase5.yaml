@@ -9,6 +9,6 @@ TestCase5:
   links:
     - connect1:
         type: csma
-        ifaces:
+        interfaces:
           - subTop_1 singleton 10.0.0.1
           - subTop_2 singleton 10.0.0.2

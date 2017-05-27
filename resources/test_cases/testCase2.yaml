@@ -7,7 +7,7 @@ TestCase2:
     - node1:
         iface: eth0
     - node2:
-        ifaces:
+        interfaces:
           - eth0
           - eth1
 
