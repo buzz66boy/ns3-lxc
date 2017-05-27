@@ -75,7 +75,7 @@ public:
     virtual std::vector<std::string> getCleanupLocations(std::string args, std::shared_ptr<ns3lxc::Node> nodePtr) = 0;
 
     /**
-     * Returns a list of commands to be run sequentially to run any cleanup actions (usually actions effecting the host)
+     * Returns a list of commands to be run sequentially on a node to run any cleanup actions (usually actions effecting the host)
      **/
     virtual std::vector<std::string> getCleanupCommands(std::string args, std::shared_ptr<ns3lxc::Node> nodePtr) = 0;
 };

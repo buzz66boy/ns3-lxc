@@ -45,6 +45,9 @@ void NodeSpawner::grabOutput(ns3lxc::Topology *top){
     for(auto subTopPtr : top->subTopologies){
         grabOutput(subTopPtr.get());
     }
+    for(shared_ptr<ns3lxc::Node> nodePtr : top->nodes){
+        containerTypeMap.at(Settings::container_type)->grabOutput(nodePtr);
+    }
 }
 
 void NodeSpawner::teardownNodes(ns3lxc::Topology *top){

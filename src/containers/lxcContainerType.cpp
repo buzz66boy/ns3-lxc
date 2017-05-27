@@ -57,6 +57,32 @@ distroPackMap = {
     {"archlinux", "pacman"},
 };
 
+/**
+ * Helper Function for runCommandOnContainer
+ **/
+static int ex(void *arg){
+    return system((char*)arg);
+}
+
+/**
+ * Runs a command on the container using attach. Wait designates to wait for command completion before return
+ * Returns: 
+ *      wait==false: pid of process
+ *      wait==true: exit status of process
+ **/
+static int runCommandOnContainer(string command, lxc_container *c, lxc_attach_options_t *opts, bool wait){
+
+    char cmd[command.length() + 1];
+    strcpy(cmd, command.c_str());
+    int pid;
+    c->attach(c, ex, cmd, opts, &pid);
+    if(!wait){
+        return pid;
+    }
+    int status;
+    waitpid(pid, &status, 0);
+    return status;
+}
 
 void LxcContainerType::writeContainerConfig(std::shared_ptr<ns3lxc::Node> nodePtr, string configPath){
     std::ofstream ofs;
@@ -124,10 +150,6 @@ void LxcContainerType::prepForInstall(std::vector<std::shared_ptr<ns3lxc::Applic
     }
 }
 
-static int ex(void *arg){
-    return system((char*)arg);
-}
-
 void LxcContainerType::installApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {
     lxc_container *c = containerMap[nodePtr->name].get();
     lxc_attach_options_t opts = LXC_ATTACH_OPTIONS_DEFAULT;
@@ -137,11 +159,7 @@ void LxcContainerType::installApplications(std::shared_ptr<ns3lxc::Node> nodePtr
     for(auto app : nodePtr->applications){
         if(applicationTypeMap.count(app.name) < 1 || applicationTypeMap.at(app.name)->getInstallMethod() == InstallMethod::PACKMAN){
             string command = installCmd + app.name;
-            char cmd[command.length() + 1];
-            strcpy(cmd, command.c_str());
-            int pid, status;
-            c->attach(c, ex, cmd, &opts, &pid);
-            waitpid(pid, &status, 0);
+            runCommandOnContainer(command, c, &opts, true);
         }
         if(applicationTypeMap.count(app.name) > 0){
             string lxcDir = "/var/lib/lxc/" + nodePtr->name + "/rootfs";
@@ -194,11 +212,10 @@ void LxcContainerType::runApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {
     lxc_container *c = containerMap[nodePtr->name].get();
     lxc_attach_options_t opts = LXC_ATTACH_OPTIONS_DEFAULT;
     for(auto app : nodePtr->applications){
-        if(applicationTypeMap.count(app.name) < 1){
-            int pid;
-            char cmd[app.name.length() + 2 + app.args.length()];
-            strcpy(cmd, (app.name + " " + app.args).c_str());
-            int res = c->attach(c, ex, cmd, &opts, &pid);
+        //Only run non-mapped app if args are present
+        if(applicationTypeMap.count(app.name) < 1 && app.args != ""){
+            string command = app.name + " " + app.args;
+            int pid = runCommandOnContainer(command, c, &opts, false);
             pidMap[nodePtr->name].push_back(pid);
         } else if(applicationTypeMap.at(app.name)->isApplicationSynced()) {
             switch(applicationTypeMap.at(app.name)->getInstallMethod()){
@@ -206,16 +223,9 @@ void LxcContainerType::runApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {
                 case(InstallMethod::PACKMAN):
                     for(pair<string, bool> cmdPair : applicationTypeMap.at(app.name)->getExecutionCommands(app.args, nodePtr)){
                         string command = cmdPair.first;
-                        // cout << "Running cmd: " + command << endl;
-                        char cmd[command.length() + 1];
-                        strcpy(cmd, command.c_str());
-                        int pid;
-                        int res = c->attach(c, ex, cmd, &opts, &pid);
-                        if(cmdPair.second){
-                            int status;
-                            waitpid(pid, &status, 0);
-                        } else {
-                            pidMap[nodePtr->name].push_back(pid);
+                        int res = runCommandOnContainer(command, c, &opts, cmdPair.second);
+                        if(!cmdPair.second){
+                            pidMap[nodePtr->name].push_back(res);
                         }
                     }
                     break;
@@ -224,13 +234,28 @@ void LxcContainerType::runApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {
     }
 }
 void LxcContainerType::grabOutput(std::shared_ptr<ns3lxc::Node> nodePtr) {
-
+    for(auto app : nodePtr->applications){
+        string lxcDir = "/var/lib/lxc/" + nodePtr->name + "/rootfs";
+        if(applicationTypeMap.count(app.name) > 0){
+            for(string path : applicationTypeMap.at(app.name)->getCleanupLocations(app.args, nodePtr)){
+                if(path[0] != '/'){
+                    path = '/' + path;
+                }
+                string outputLoc = Settings::output_dest;
+                if(outputLoc[outputLoc.length() - 1] != '/'){
+                    outputLoc = outputLoc + '/';
+                }
+                std::string filename = path.substr(path.find_last_of("\\/") + 1);
+                filename = nodePtr->name + "_" + filename;
+                system(("cp -r " + lxcDir + path + " " + outputLoc + filename).c_str());
+            }
+        }
+    }
 }
 
 void LxcContainerType::teardownContainer(std::shared_ptr<ns3lxc::Node> nodePtr){
     lxc_container *c = containerMap[nodePtr->name].get();
     if(pidMap.count(nodePtr->name) > 0){
-        lxc_attach_options_t opts = LXC_ATTACH_OPTIONS_DEFAULT;
         for(int pid : pidMap.at(nodePtr->name)){
             int status;
             kill(pid, SIGTERM);
@@ -238,11 +263,19 @@ void LxcContainerType::teardownContainer(std::shared_ptr<ns3lxc::Node> nodePtr){
         }
         pidMap.erase(nodePtr->name);
     }
-    if(Settings::run_mode == Mode::CLEANUP && c == nullptr){
+    if(c == nullptr){
         containerMap[nodePtr->name] = shared_ptr<lxc_container>(lxc_container_new(nodePtr->name.c_str(), NULL));
         c = containerMap[nodePtr->name].get();
     } else if (c == nullptr){
         cerr << "nullptr for container " + nodePtr->name << endl;
+    }
+    lxc_attach_options_t opts = LXC_ATTACH_OPTIONS_DEFAULT;
+    for(auto app: nodePtr->applications){
+        if(applicationTypeMap.count(app.name) > 0){
+            for(string command : applicationTypeMap.at(app.name)->getCleanupCommands(app.args, nodePtr)){
+                runCommandOnContainer(command, c, &opts, true);
+            }
+        }
     }
     if(c->is_defined(c)){
         //container exists, destroy

@@ -34,7 +34,7 @@ std::vector<std::pair<std::string, bool> > Quagga::getExecutionCommands(std::str
     return commands;
 }
 std::vector<std::string> Quagga::getCleanupLocations(std::string args, std::shared_ptr<ns3lxc::Node>){
-    return vector<string>();
+    return vector<string>({"/etc/quagga/Quagga.conf", "/etc/quagga/daemons"});
 }
 std::vector<std::string> Quagga::getCleanupCommands(std::string args, std::shared_ptr<ns3lxc::Node>){
     return vector<string>();

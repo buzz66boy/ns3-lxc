@@ -38,6 +38,8 @@ void generateTopology(ns3lxc::Topology *topology){
         dst.close();
     }
     if(Settings::runNS3()){
+        char cwd[PATH_MAX];
+        getcwd(cwd,  PATH_MAX + 1);
         chdir(Settings::ns3_path.c_str());
         system("./waf"); //Makes more consistent run when everything's build first
         NodeSpawner::runApplications(topology);
@@ -47,6 +49,8 @@ void generateTopology(ns3lxc::Topology *topology){
             system(("./waf --run scratch/" + topology->name).c_str());
         }
         cout << endl;
+        chdir(cwd);
+        NodeSpawner::grabOutput(topology);
     }
     if(Settings::teardown()){
         cout << "Tearing Down Topology" << endl;
