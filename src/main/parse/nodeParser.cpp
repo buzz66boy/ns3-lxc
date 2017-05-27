@@ -8,9 +8,11 @@
 
 #include "yaml-cpp/yaml.h"
 
+#include "containerTypeMap.h"
 #include "node.h"
 #include "iface.h"
 #include "parserTags.h"
+#include "settingsParser.h"
 #include "topologyParser.h"
 #include "positionParser.h"
 #include "nodeParser.h"
@@ -86,6 +88,17 @@ std::vector<std::shared_ptr<ns3lxc::Node> > parseNode(YAML::Node node, ParsedTop
         } else if (node[pluralize(TAG_APPLICATION)]){
             parseNodeApplications(node[pluralize(TAG_APPLICATION)], nodePtr);
         }
+
+        if(node[TAG_TYPE]){
+            nodePtr->type = node[TAG_TYPE].as<string>();
+            if(containerTypeMap.count(nodePtr->type) < 0){
+                cerr << "There is no Node Type " + nodePtr->type << endl;
+                exit(23);
+            }
+        } else {
+            nodePtr->type = Settings::container_type;
+        }
+
         if(node[TAG_POSITION]){
             if(iters > 1){
                 if(node[TAG_POSITION][name]){

@@ -1,0 +1,9 @@
+time: 10
+
+nodes:
+  - archNode:
+      type: archlinux current
+  - fedoraNode:
+      type: fedora 25
+  - defNode:
+      type: ubuntu xenial

@@ -22,7 +22,7 @@ private:
     bool requiresReRef = false;
 public:
     int nodeNum = 0; //For ns-3 writing, keep track of what # the node is (for ref)
-
+    std::string type;
 	std::map<std::string, Iface> ifaces;
 	std::vector<Application> applications;
     std::vector<std::string> bridges;
