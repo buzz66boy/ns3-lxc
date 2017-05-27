@@ -230,3 +230,8 @@ void Ns3Writer::writeAnimDescriptions(std::ostream& str, ns3lxc::Topology *top){
         writeAnimDescriptions(str, topPtr.get());
     }
 }
+
+void Ns3Writer::grabOutput(std::string outputPath){
+    system(("cp *.pcap " + outputPath).c_str());
+    system(("cp animation.xml " + outputPath).c_str());
+}

@@ -23,7 +23,7 @@ public:
     virtual std::vector<std::pair<std::string, std::string> > getExistingRequiredFiles(std::string args, std::shared_ptr<ns3lxc::Node> nodePtr) override {return std::vector<std::pair<std::string, std::string> >();};
     virtual std::vector<std::pair<std::string, std::string> > getRequiredFiles(std::string args, std::shared_ptr<ns3lxc::Node> nodePtr) override {return std::vector<std::pair<std::string, std::string> >();};
     virtual std::vector<std::pair<std::string, bool> > getExecutionCommands(std::string args, std::shared_ptr<ns3lxc::Node>) override;
-    virtual std::vector<std::string> getCleanupLocations(std::string args, std::shared_ptr<ns3lxc::Node>) override;
+    virtual std::vector<std::string> getCleanupLocations(std::string args, std::shared_ptr<ns3lxc::Node>) override {return std::vector<std::string>();};
     virtual std::vector<std::string> getCleanupCommands(std::string args, std::shared_ptr<ns3lxc::Node>) override {return std::vector<std::string>();};
 };
 

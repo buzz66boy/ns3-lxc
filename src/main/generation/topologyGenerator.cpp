@@ -49,6 +49,7 @@ void generateTopology(ns3lxc::Topology *topology){
             system(("./waf --run scratch/" + topology->name).c_str());
         }
         cout << endl;
+        Ns3Writer::grabOutput(string(cwd) + '/' + Settings::top_output_dest);
         chdir(cwd);
         NodeSpawner::grabOutput(topology);
     }

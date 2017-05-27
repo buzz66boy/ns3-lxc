@@ -14,6 +14,3 @@ std::vector<std::pair<std::string, bool> > GenericPackman::getExecutionCommands(
     build = build + name + " " + args + " &> " + nodePtr->name + "_" + name;
     return vector<pair<string, bool> >({pair<string, bool>(build, false)});
 }
-std::vector<std::string> GenericPackman::getCleanupLocations(std::string args, std::shared_ptr<ns3lxc::Node> nodePtr){
-    return std::vector<string> ({nodePtr->name + "_" + name});
-}

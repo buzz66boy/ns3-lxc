@@ -16,6 +16,8 @@ public:
     static void writeLinksForTopology(std::ostream& str, ns3lxc::Topology *top);
     static void writePositions(std::ostream& str, ns3lxc::Topology *top);
     static void writeAnimDescriptions(std::ostream& str, ns3lxc::Topology *top);
+
+    static void grabOutput(std::string outputPath);
 };
 
 #endif
