@@ -38,11 +38,12 @@ bool Settings::gdb = false;
 string Settings::ns3_path;
 string Settings::script_dest;
 string Settings::temp_dir;
+string Settings::top_output_dest;
 string Settings::output_dest;
 string Settings::container_config_dir;
 string Settings::container_type;
 
-static bool check_make_dir(const char *path){
+bool check_make_dir(const char *path){
 	struct stat buffer;
 	int stat_result = stat(path, &buffer);
 	if(stat_result != 0 || !S_ISDIR(buffer.st_mode)){

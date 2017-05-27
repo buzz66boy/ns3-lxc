@@ -56,6 +56,18 @@ static map<string, string> parseArgs(int argc, char *argv[]){
 	return argMap;
 }
 
+static void setOutputDest(string topologyName){
+	Settings::top_output_dest = Settings::output_dest;
+	if(Settings::top_output_dest[Settings::top_output_dest.length() - 1] != '/'){
+		Settings::top_output_dest = Settings::top_output_dest + '/';
+	}
+	Settings::top_output_dest = Settings::top_output_dest + topologyName;
+	check_make_dir(Settings::top_output_dest.c_str());
+	if(Settings::top_output_dest[Settings::top_output_dest.length() - 1] != '/'){
+		Settings::top_output_dest = Settings::top_output_dest + '/';
+	}
+}
+
 int main(int argc, char *argv[]){
 
 	if(geteuid()){
@@ -91,6 +103,8 @@ int main(int argc, char *argv[]){
     infile.close();
 
 	topology = parseTopologyFile(argMap.at("file"));
+	
+	setOutputDest(topology.name);
 	ns3lxc::Topology::reNumNodes(&topology);
 	if(argMap.count("-n") > 0){
 		Settings::run_mode = Mode::NS3_GEN;

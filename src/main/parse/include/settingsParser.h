@@ -17,6 +17,7 @@ enum class Mode {
 };
 
 void create_template_settings_file(std::string settings_file);
+bool check_make_dir(const char *path);
 
 class Settings {
 public:
@@ -24,6 +25,8 @@ public:
     static bool gdb;
 	static std::string ns3_path;
 	static std::string output_dest;
+    //Location output for the topology should be saved
+    static std::string top_output_dest;
     static std::string temp_dir;
     static std::string container_config_dir;
 	static std::string script_dest;

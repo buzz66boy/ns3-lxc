@@ -99,7 +99,6 @@ void LxcContainerType::writeContainerConfig(std::shared_ptr<ns3lxc::Node> nodePt
         ofs << "lxc.network.ipv4 = " << it.second.ip->str() << "/" << to_string(it.second.subnetMask->getCidr()) + " " << it.second.subnetMask->str() << endl;
         ofs << "lxc.network.hwaddr = xx:xx:xx:xx:xx:xx" << endl;
     }
-
     ofs.close();
     configMap[nodePtr->name] = configPath;
 }
@@ -241,7 +240,7 @@ void LxcContainerType::grabOutput(std::shared_ptr<ns3lxc::Node> nodePtr) {
                 if(path[0] != '/'){
                     path = '/' + path;
                 }
-                string outputLoc = Settings::output_dest;
+                string outputLoc = Settings::top_output_dest;
                 if(outputLoc[outputLoc.length() - 1] != '/'){
                     outputLoc = outputLoc + '/';
                 }
@@ -263,12 +262,13 @@ void LxcContainerType::teardownContainer(std::shared_ptr<ns3lxc::Node> nodePtr){
         }
         pidMap.erase(nodePtr->name);
     }
-    if(c == nullptr){
+    if(Settings::run_mode == Mode::CLEANUP && c == nullptr){
         containerMap[nodePtr->name] = shared_ptr<lxc_container>(lxc_container_new(nodePtr->name.c_str(), NULL));
         c = containerMap[nodePtr->name].get();
     } else if (c == nullptr){
         cerr << "nullptr for container " + nodePtr->name << endl;
     }
+
     lxc_attach_options_t opts = LXC_ATTACH_OPTIONS_DEFAULT;
     for(auto app: nodePtr->applications){
         if(applicationTypeMap.count(app.name) > 0){
