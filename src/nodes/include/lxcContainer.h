@@ -1,5 +1,5 @@
-#ifndef __LXC_CONTAINER_TYPE_H_INCLUDED__
-#define __LXC_CONTAINER_TYPE_H_INCLUDED__
+#ifndef __LXC_CONTAINER_H_INCLUDED__
+#define __LXC_CONTAINER_H_INCLUDED__
 
 #include <string>
 #include <map>
@@ -9,9 +9,9 @@
 #include <lxc/lxccontainer.h>
 
 #include "node.h"
-#include "containerType.h"
+#include "nodeType.h"
 
-class LxcContainerType : public ContainerType {
+class LxcContainer : public NodeType {
     std::string containerDistro;
     std::string containerRelease;
 
@@ -21,15 +21,16 @@ class LxcContainerType : public ContainerType {
 
     void writeContainerConfig(std::shared_ptr<ns3lxc::Node> nodePtr, std::string configPath);
 public:
-    LxcContainerType(std::string distro, std::string release): containerDistro(distro), containerRelease(release) {};
+    LxcContainer(std::string distro, std::string release): containerDistro(distro), containerRelease(release) {};
 
-    void createContainer(std::shared_ptr<ns3lxc::Node>) override;
-    void startContainer(std::shared_ptr<ns3lxc::Node>) override;
+    bool createBridgesTaps() override { return true; }
+    void createNode(std::shared_ptr<ns3lxc::Node>) override;
+    void startNode(std::shared_ptr<ns3lxc::Node>) override;
     void prepForInstall(std::vector<std::shared_ptr<ns3lxc::Application> > appList) override;
     void installApplications(std::shared_ptr<ns3lxc::Node>) override;
     void runApplications(std::shared_ptr<ns3lxc::Node>) override;
     void grabOutput(std::shared_ptr<ns3lxc::Node>) override;
-    void teardownContainer(std::shared_ptr<ns3lxc::Node>) override;
+    void teardownNode(std::shared_ptr<ns3lxc::Node>) override;
 };
 
 #endif

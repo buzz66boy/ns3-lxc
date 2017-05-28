@@ -6,6 +6,7 @@
 
 #include "node.h"
 #include "iface.h"
+#include "nodeTypeMap.h"
 #include "bridgeTapBuilder.h"
 
 using namespace std;
@@ -13,9 +14,11 @@ using namespace std;
 int assignBridgesTaps(ns3lxc::Topology *top, int curNum){
     for(auto linkPtr : top->links){
         for(ns3lxc::Iface *ifacePtr : linkPtr->ifaces){
-            ifacePtr->bridgeName = to_string(curNum) + "_b";
-            ifacePtr->tapName = to_string(curNum) + "_t";
-            curNum++;
+            if(nodeTypeMap.at(ifacePtr->node->type)->createBridgesTaps()){
+                ifacePtr->bridgeName = to_string(curNum) + "_b";
+                ifacePtr->tapName = to_string(curNum) + "_t";
+                curNum++;
+            }
         }
     }
     for(auto topPtr : top->subTopologies){
@@ -29,11 +32,12 @@ void buildAllBridgesTaps(ns3lxc::Topology *top){
         buildAllBridgesTaps(topPtr.get());
     }
     for(auto nodePtr : top->nodes){
-        int i = 0;
+        if(!nodeTypeMap.at(nodePtr->type)->createBridgesTaps()){
+            continue;
+        }
         for(auto it : nodePtr->ifaces){
             if(it.second.ip != nullptr && it.second.subnetMask != nullptr){
                 buildBridgeTap(&it.second);
-                i++;
             }
         }
     }
@@ -80,6 +84,9 @@ void tearDownAllBridgesTaps(ns3lxc::Topology *top){
         tearDownAllBridgesTaps(topPtr.get());
     }
     for(auto nodePtr : top->nodes){
+        if(!nodeTypeMap.at(nodePtr->type)->createBridgesTaps()){
+            continue;
+        }
         for(auto it : nodePtr->ifaces){
             if(it.second.ip != nullptr && it.second.subnetMask != nullptr){
                 tearDownBridgeTap(&it.second);

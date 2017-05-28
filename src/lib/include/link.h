@@ -29,6 +29,9 @@ public:
 
 	IpAddr *ip = nullptr;
 	IpAddr *subnetMask = nullptr;
+
+	std::string bandwidth;
+	std::string latency;
 	
 	Link(std::string name, std::string type, int numIfaces): Nameable(name), type(type), numIfaces(numIfaces) {};
 	Link(std::string name, Link& link);

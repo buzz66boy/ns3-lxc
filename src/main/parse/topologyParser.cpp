@@ -50,20 +50,28 @@ ns3lxc::Topology parseTopologyFile(std::string topPath){
 	}
 
 	std::string topName = topPath.substr(topPath.find_last_of("\\/") + 1, topPath.find_last_of(".yaml") - topPath.find_last_of("\\/") - 5);
-
+    bool topFound = false;
 	if(topology[topName]){
 		topology = topology[topName];
+        topFound = true;
 	} else if ('a' <= topName[0] <= 'z'){
 		topName[0] = toupper(topName[0]);
 		if(topology[topName]){
 			topology = topology[topName];
+            topFound = true;
 		}
 	} else if ('A' <= topName[0] <= 'Z'){
 		topName[0] = tolower(topName[0]);
 		if(topology[topName]){
 			topology = topology[topName];
+            topFound = true;
 		}
 	}
+
+    if(!topFound){
+        cout << "WARNING: Topology name declaration not found in " + topName + ", ignore this warning if using anonymous topology" << endl;
+    }
+
 	parsedTop.topology.name = topName;
     parsedTop.topology.origName = topName;
 	parseTopology(topology, &parsedTop);
@@ -134,28 +142,50 @@ static void parseIncludes(YAML::Node includes, std::string topPath, ParsedTopolo
 	std::string searchPath;
 	std::string topDir = topPath.substr(0, topPath.find_last_of("\\/"));
 
-	for(auto i = 0; i < includes.size(); ++i){
+    if(includes.Type() == YAML::NodeType::Scalar){
+        curInclude = includes.as<std::string>();
+        searchPath = topDir + "/" + curInclude + ".yaml";
 
-		curInclude = includes[i].as<std::string>();
-		searchPath = topDir + "/" + curInclude + ".yaml";
+        struct stat buffer;
+        if(stat(searchPath.c_str(), &buffer) == 0 && !S_ISDIR(buffer.st_mode)){
+            includedTop = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(parseTopologyFile(searchPath)));
+        } else {
+            searchPath = searchPath = topDir + "/include/" + curInclude + ".yaml";
+            if(stat(searchPath.c_str(), &buffer) == 0 && !S_ISDIR(buffer.st_mode)){
+                includedTop = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(parseTopologyFile(searchPath)));
+            } else {
+                cerr << "Couldn't find included file " << curInclude << " while parsing " << topPath << endl;
+                exit(10);
+            }
+        }
 
-		struct stat buffer;
-		if(stat(searchPath.c_str(), &buffer) == 0 && !S_ISDIR(buffer.st_mode)){
-			includedTop = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(parseTopologyFile(searchPath)));
-		} else {
-			searchPath = searchPath = topDir + "/include/" + curInclude + ".yaml";
-			if(stat(searchPath.c_str(), &buffer) == 0 && !S_ISDIR(buffer.st_mode)){
-				includedTop = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(parseTopologyFile(searchPath)));
-			} else {
-				cerr << "Couldn't find included file " << curInclude << " while parsing " << topPath << endl;
-				exit(10);
-			}
-		}
+        parsedTop->nodes.insert(includedTop->nodeMap.begin(), includedTop->nodeMap.end());
+        parsedTop->links.insert(includedTop->linkMap.begin(), includedTop->linkMap.end());
+        parsedTop->includedTopologies[includedTop->name] = includedTop;
+    } else {
+    	for(auto i = 0; i < includes.size(); ++i){
 
-		parsedTop->nodes.insert(includedTop->nodeMap.begin(), includedTop->nodeMap.end());
-		parsedTop->links.insert(includedTop->linkMap.begin(), includedTop->linkMap.end());
-		parsedTop->includedTopologies[includedTop->name] = includedTop;
-	}
+    		curInclude = includes[i].as<std::string>();
+    		searchPath = topDir + "/" + curInclude + ".yaml";
+
+    		struct stat buffer;
+    		if(stat(searchPath.c_str(), &buffer) == 0 && !S_ISDIR(buffer.st_mode)){
+    			includedTop = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(parseTopologyFile(searchPath)));
+    		} else {
+    			searchPath = searchPath = topDir + "/include/" + curInclude + ".yaml";
+    			if(stat(searchPath.c_str(), &buffer) == 0 && !S_ISDIR(buffer.st_mode)){
+    				includedTop = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(parseTopologyFile(searchPath)));
+    			} else {
+    				cerr << "Couldn't find included file " << curInclude << " while parsing " << topPath << endl;
+    				exit(10);
+    			}
+    		}
+
+    		parsedTop->nodes.insert(includedTop->nodeMap.begin(), includedTop->nodeMap.end());
+    		parsedTop->links.insert(includedTop->linkMap.begin(), includedTop->linkMap.end());
+    		parsedTop->includedTopologies[includedTop->name] = includedTop;
+    	}
+    }
 }
 
 static void parseSubTopologies(YAML::Node topologies, ParsedTopology *parsedTop){

@@ -19,6 +19,7 @@ ns3lxc::Node::Node(ns3lxc::Node& temp, std::string nodeName, std::string origNam
     ifaces = temp.ifaces;
     reRefIfaces(this);
     requiresReRef = true;
+    type = temp.type;
     applications = temp.applications;
     nodeNum = temp.nodeNum;
 }
@@ -27,6 +28,7 @@ ns3lxc::Node::Node(const ns3lxc::Node &temp): Positionable(temp), Nameable(temp)
     ifaces = temp.ifaces;
     reRefIfaces(this);
     requiresReRef = true;
+    type = temp.type;
     applications = temp.applications;
     bridges = temp.bridges;
     taps = temp.taps;

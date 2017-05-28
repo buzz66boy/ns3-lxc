@@ -11,6 +11,8 @@
 #define TAG_TOPOLOGY "topology"
 #define TAG_APPLICATION "application"
 #define TAG_LINK "link"
+#define TAG_BANDWIDTH "bandwidth"
+#define TAG_LATENCY "latency"
 #define TAG_POSITION "position"
 #define TAG_IFACE "iface"
 #define TAG_INTERFACE "interface"

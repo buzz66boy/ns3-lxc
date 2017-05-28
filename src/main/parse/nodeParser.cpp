@@ -8,7 +8,7 @@
 
 #include "yaml-cpp/yaml.h"
 
-#include "containerTypeMap.h"
+#include "nodeTypeMap.h"
 #include "node.h"
 #include "iface.h"
 #include "parserTags.h"
@@ -91,7 +91,7 @@ std::vector<std::shared_ptr<ns3lxc::Node> > parseNode(YAML::Node node, ParsedTop
 
         if(node[TAG_TYPE]){
             nodePtr->type = node[TAG_TYPE].as<string>();
-            if(containerTypeMap.count(nodePtr->type) < 0){
+            if(nodeTypeMap.count(nodePtr->type) < 0){
                 cerr << "There is no Node Type " + nodePtr->type << endl;
                 exit(23);
             }

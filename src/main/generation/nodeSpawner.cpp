@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "settingsParser.h"
-#include "containerTypeMap.h"
+#include "nodeTypeMap.h"
 #include "nodeSpawner.h"
 
 using namespace std;
@@ -14,7 +14,7 @@ void NodeSpawner::createNodes(ns3lxc::Topology *top){
     }
     for(shared_ptr<ns3lxc::Node> nodePtr : top->nodes){
         cout << "Creating Container " << nodePtr->name << endl;
-        containerTypeMap.at(nodePtr->type)->createContainer(nodePtr);
+        nodeTypeMap.at(nodePtr->type)->createNode(nodePtr);
     }
 }
 void NodeSpawner::startNodes(ns3lxc::Topology *top){
@@ -22,7 +22,7 @@ void NodeSpawner::startNodes(ns3lxc::Topology *top){
         startNodes(subTopPtr.get());
     }
     for(shared_ptr<ns3lxc::Node> nodePtr : top->nodes){
-        containerTypeMap.at(nodePtr->type)->startContainer(nodePtr);
+        nodeTypeMap.at(nodePtr->type)->startNode(nodePtr);
     }
 }
 void NodeSpawner::installApplications(ns3lxc::Topology *top){
@@ -30,7 +30,7 @@ void NodeSpawner::installApplications(ns3lxc::Topology *top){
         installApplications(subTopPtr.get());
     }
     for(shared_ptr<ns3lxc::Node> nodePtr : top->nodes){
-        containerTypeMap.at(nodePtr->type)->installApplications(nodePtr);
+        nodeTypeMap.at(nodePtr->type)->installApplications(nodePtr);
     }
 }
 void NodeSpawner::runApplications(ns3lxc::Topology *top){
@@ -38,7 +38,7 @@ void NodeSpawner::runApplications(ns3lxc::Topology *top){
         runApplications(subTopPtr.get());
     }
     for(shared_ptr<ns3lxc::Node> nodePtr : top->nodes){
-        containerTypeMap.at(nodePtr->type)->runApplications(nodePtr);
+        nodeTypeMap.at(nodePtr->type)->runApplications(nodePtr);
     }
 }
 void NodeSpawner::grabOutput(ns3lxc::Topology *top){
@@ -46,7 +46,7 @@ void NodeSpawner::grabOutput(ns3lxc::Topology *top){
         grabOutput(subTopPtr.get());
     }
     for(shared_ptr<ns3lxc::Node> nodePtr : top->nodes){
-        containerTypeMap.at(nodePtr->type)->grabOutput(nodePtr);
+        nodeTypeMap.at(nodePtr->type)->grabOutput(nodePtr);
     }
 }
 
@@ -55,6 +55,6 @@ void NodeSpawner::teardownNodes(ns3lxc::Topology *top){
         teardownNodes(subTopPtr.get());
     }
     for(shared_ptr<ns3lxc::Node> nodePtr : top->nodes){
-        containerTypeMap.at(nodePtr->type)->teardownContainer(nodePtr);
+        nodeTypeMap.at(nodePtr->type)->teardownNode(nodePtr);
     }
 }

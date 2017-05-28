@@ -16,6 +16,8 @@ Link::Link(const Link& ln): Nameable(ln){
     if(ln.subnetMask){
         subnetMask = new IpAddr(*ln.subnetMask);
     }
+    bandwidth = ln.bandwidth;
+    latency = ln.latency;
     ifaces.assign(ln.ifaces.begin(), ln.ifaces.end());
     for(auto iface : ifaces){
         iface->link = this;
@@ -24,6 +26,8 @@ Link::Link(const Link& ln): Nameable(ln){
 
 Link::Link(std::string name, ns3lxc::Link& link): Nameable(name) {
     type = link.type;
+    bandwidth = link.bandwidth;
+    latency = link.latency;
 }
 
 Link::~Link(){

@@ -106,14 +106,24 @@ int main(int argc, char *argv[]){
 	
 	setOutputDest(topology.name);
 	ns3lxc::Topology::reNumNodes(&topology);
-	if(argMap.count("-n") > 0){
-		Settings::run_mode = Mode::NS3_GEN;
+	if(argMap.size() > 1){
+		Settings::run_mode = Mode::NONE;
+	}
+	if(argMap.count("-n")){
+		Settings::run_mode |= Mode::NS3_GEN;
 		cout << "RUN mode ns3" << endl;
-	} else if(argMap.count("-c") > 0){
-		Settings::run_mode = Mode::CLEANUP;
+	}
+	if(argMap.count("-c")){
+		Settings::run_mode |= Mode::CLEANUP;
+	}
+	if(argMap.count("-s")){
+		Settings::run_mode |= Mode::NODE_GEN;
 	}
 	if(argMap.count("-g") > 0){
 		Settings::gdb = true;
+		if(argMap.size() == 2){
+			Settings::run_mode == Mode::NORMAL;
+		}
 	}
 
 	generateTopology(&topology);

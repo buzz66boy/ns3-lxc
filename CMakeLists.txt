@@ -17,7 +17,7 @@ include_directories(
         src/lib/include
         src/links/include
         src/applications/include
-        src/containers/include
+        src/nodes/include
 )
 
 set(Link_Types
@@ -42,13 +42,13 @@ set(Application_Types
         # Add your custom app files here
 )
 
-set(Container_Types
-        src/containers/include/containerType.h
-        src/containers/include/containerTypeMap.h
-        src/containers/include/lxcContainerType.h
-        src/containers/containerTypeMap.cpp
-        src/containers/lxcContainerType.cpp
-        # Add custom container handlers here
+set(Node_Types
+        src/nodes/include/nodeType.h
+        src/nodes/include/nodeTypeMap.h
+        src/nodes/include/lxcContainer.h
+        src/nodes/nodeTypeMap.cpp
+        src/nodes/lxcContainer.cpp
+        # Add custom node type handlers here
 )
 
 set(Local_Libs
@@ -99,7 +99,7 @@ set(NS-3_LXC
         src/main/main.cpp
 )
 
-add_executable(ns3lxc ${NS-3_LXC} ${NS-3_Template_Write} ${Local_Libs} ${Link_Types} ${Container_Types} ${Application_Types})
+add_executable(ns3lxc ${NS-3_LXC} ${NS-3_Template_Write} ${Local_Libs} ${Link_Types} ${Node_Types} ${Application_Types})
 
 find_library(YAML_LIB yaml-cpp)
 

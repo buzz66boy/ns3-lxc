@@ -15,7 +15,7 @@
 #include "node.h"
 #include "parserTags.h"
 #include "applicationTypeMap.h"
-#include "lxcContainerType.h"
+#include "lxcContainer.h"
 
 using namespace std;
 
@@ -84,7 +84,7 @@ static int runCommandOnContainer(string command, lxc_container *c, lxc_attach_op
     return status;
 }
 
-void LxcContainerType::writeContainerConfig(std::shared_ptr<ns3lxc::Node> nodePtr, string configPath){
+void LxcContainer::writeContainerConfig(std::shared_ptr<ns3lxc::Node> nodePtr, string configPath){
     std::ofstream ofs;
     ofs.open(configPath);
 
@@ -106,7 +106,7 @@ void LxcContainerType::writeContainerConfig(std::shared_ptr<ns3lxc::Node> nodePt
 /**
  * https://github.com/lxc/lxc/blob/master/src/lxc/lxccontainer.h
  */
-void LxcContainerType::createContainer(std::shared_ptr<ns3lxc::Node> nodePtr) {
+void LxcContainer::createNode(std::shared_ptr<ns3lxc::Node> nodePtr) {
     lxc_container *c;
     containerMap[nodePtr->name] = shared_ptr<lxc_container>(lxc_container_new(nodePtr->name.c_str(), NULL));
     c = containerMap[nodePtr->name].get();
@@ -114,7 +114,7 @@ void LxcContainerType::createContainer(std::shared_ptr<ns3lxc::Node> nodePtr) {
         cerr << "PROBLEMS WITH CONTAINER" << endl;
     }
     if(c->is_defined(c)){
-        teardownContainer(nodePtr);
+        teardownNode(nodePtr);
         containerMap[nodePtr->name] = shared_ptr<lxc_container>(lxc_container_new(nodePtr->name.c_str(), NULL));
         c = containerMap[nodePtr->name].get();
     }
@@ -132,7 +132,7 @@ void LxcContainerType::createContainer(std::shared_ptr<ns3lxc::Node> nodePtr) {
     // c->set_config_item(c, );
     
 }
-void LxcContainerType::startContainer(std::shared_ptr<ns3lxc::Node> nodePtr) {
+void LxcContainer::startNode(std::shared_ptr<ns3lxc::Node> nodePtr) {
     lxc_container *c = containerMap[nodePtr->name].get();
     cout << "Starting container " + nodePtr->name << endl;
     if (!c->start(c, 0, NULL)) {
@@ -141,15 +141,15 @@ void LxcContainerType::startContainer(std::shared_ptr<ns3lxc::Node> nodePtr) {
     }
 }
 
-void LxcContainerType::prepForInstall(std::vector<std::shared_ptr<ns3lxc::Application> > appList){
-    for(auto appPtr : appList){
-        if(applicationTypeMap.count(appPtr->name) > 0){
+void LxcContainer::prepForInstall(std::vector<std::shared_ptr<ns3lxc::Application> > appList){
+    // for(auto appPtr : appList){
+    //     if(applicationTypeMap.count(appPtr->name) > 0){
 
-        }
-    }
+    //     }
+    // }
 }
 
-void LxcContainerType::installApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {
+void LxcContainer::installApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {
     lxc_container *c = containerMap[nodePtr->name].get();
     lxc_attach_options_t opts = LXC_ATTACH_OPTIONS_DEFAULT;
     opts.namespaces = CLONE_NEWNS | CLONE_NEWPID; // Use host's network to retrieve packages (no net isolation)
@@ -207,7 +207,7 @@ void LxcContainerType::installApplications(std::shared_ptr<ns3lxc::Node> nodePtr
     }
 }
 
-void LxcContainerType::runApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {
+void LxcContainer::runApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {
     lxc_container *c = containerMap[nodePtr->name].get();
     lxc_attach_options_t opts = LXC_ATTACH_OPTIONS_DEFAULT;
     for(auto app : nodePtr->applications){
@@ -232,7 +232,7 @@ void LxcContainerType::runApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {
         }
     }
 }
-void LxcContainerType::grabOutput(std::shared_ptr<ns3lxc::Node> nodePtr) {
+void LxcContainer::grabOutput(std::shared_ptr<ns3lxc::Node> nodePtr) {
     for(auto app : nodePtr->applications){
         string lxcDir = "/var/lib/lxc/" + nodePtr->name + "/rootfs";
         if(applicationTypeMap.count(app.name) > 0){
@@ -252,7 +252,7 @@ void LxcContainerType::grabOutput(std::shared_ptr<ns3lxc::Node> nodePtr) {
     }
 }
 
-void LxcContainerType::teardownContainer(std::shared_ptr<ns3lxc::Node> nodePtr){
+void LxcContainer::teardownNode(std::shared_ptr<ns3lxc::Node> nodePtr){
     lxc_container *c = containerMap[nodePtr->name].get();
     if(pidMap.count(nodePtr->name) > 0){
         for(int pid : pidMap.at(nodePtr->name)){

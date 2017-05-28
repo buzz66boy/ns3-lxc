@@ -7,13 +7,14 @@
 #include <string>
 
 // declarations
-enum class Mode {
-    PARSE,
-    CONTAINER_GEN,
-    NS3_GEN, 
-    NS3_RUN,
-    CLEANUP,
-    NORMAL
+enum Mode {
+    NONE = 0,
+    PARSE = 1<<0,
+    NODE_GEN = 1<<1,
+    NS3_GEN = 1<<2, 
+    NS3_RUN = 1<<3,
+    CLEANUP = 1<<4,
+    NORMAL = 0xffff,
 };
 
 void create_template_settings_file(std::string settings_file);
@@ -21,7 +22,7 @@ bool check_make_dir(const char *path);
 
 class Settings {
 public:
-    static Mode run_mode;
+    static int run_mode;
     static bool gdb;
 	static std::string ns3_path;
 	static std::string output_dest;
@@ -35,11 +36,11 @@ public:
     // static int parse_config_args();
 	static int parse_settings_file(std::string settings_file);
 
-    static bool genContainers(){ return (run_mode == Mode::NORMAL || run_mode == Mode::CONTAINER_GEN); }
-    static bool genNS3() { return (run_mode == Mode::NORMAL || run_mode == Mode::NS3_GEN); }
-    static bool runNS3() { return (run_mode == Mode::NORMAL || run_mode == Mode::NS3_RUN); }
+    static bool genContainers(){ return (run_mode & Mode::NODE_GEN); }
+    static bool genNS3() { return (run_mode & Mode::NS3_GEN); }
+    static bool runNS3() { return (run_mode & Mode::NS3_RUN); }
     static bool gdbNS3() { return gdb; }
-    static bool teardown() { return (run_mode == Mode::NORMAL || run_mode == Mode::CLEANUP); }
+    static bool teardown() { return (run_mode & Mode::CLEANUP); }
 };
 
 #endif
