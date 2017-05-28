@@ -58,6 +58,14 @@ void parseLink(YAML::Node node, ParsedTopology *top){
         parseLinkIfacesAccepted(node[TAG_IFACES_ACCEPTED], top, link);
     }
 
+    if(node[TAG_BANDWIDTH]){
+        link->bandwidth = node[TAG_BANDWIDTH].as<string>();
+    }
+
+    if(node[TAG_LATENCY]){
+        link->latency = node[TAG_LATENCY].as<string>();
+    }
+
     int numIfaces = 0;
     YAML::Node ifaceNode;
 

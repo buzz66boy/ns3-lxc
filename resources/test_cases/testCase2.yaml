@@ -14,6 +14,8 @@ TestCase2:
   links:
     - csmaSimple:
         type: csma
+        bandwidth: 1Mbps
+        latency: 30
         ifaces:
           - node1 eth0 10.0.0.1
           - node2 eth0 10.0.0.2

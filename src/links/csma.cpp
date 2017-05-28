@@ -11,6 +11,9 @@
 
 using namespace std;
 
+static std::string defaultDataRate = "10Mbps";
+static std::string defaultLatency = "2"; //ms
+
 int CSMA::getIfacesSupported(){
     return 2;
 }
@@ -20,7 +23,7 @@ void CSMA::writeIncludes(std::ostream& str){
 void CSMA::writeTypeInit(std::ostream& str){
     str << "CsmaHelper csma;" << endl;
     //FIXME
-    str << "csma.SetChannelAttribute(\"DataRate\",StringValue(\"10Mbps\"));" << endl;
+    str << "csma.SetChannelAttribute(\"DataRate\",StringValue(\"" + defaultDataRate + "\"));" << endl;
     str << "TapBridgeHelper csmaTapBridge;" << endl;
     str << "csmaTapBridge.SetAttribute (\"Mode\", StringValue (\"UseLocal\"));" << endl;
 }
@@ -36,6 +39,17 @@ void CSMA::writeLinkInit(std::ostream& str, shared_ptr<ns3lxc::Link> linkPtr){
         }
     }
     str << ");" << endl;
+
+    if(linkPtr->bandwidth != ""){
+        str << "csma.SetChannelAttribute(\"DataRate\", StringValue(\"" + linkPtr->bandwidth + "\"));" << endl;
+    } else {
+        str << "csma.SetChannelAttribute(\"DataRate\", StringValue(\"" + defaultDataRate + "\"));" << endl;
+    }
+    if(linkPtr->latency != ""){
+        str << "csma.SetChannelAttribute(\"Delay\", TimeValue(MilliSeconds(" + linkPtr->latency + ")));" << endl;                
+    } else {
+        str << "csma.SetChannelAttribute(\"Delay\", TimeValue(MilliSeconds(" + defaultLatency + ")));" << endl;
+    }
 
     str << "NetDeviceContainer " + devName + " = csma.Install(" + contName + ");" << endl;
 

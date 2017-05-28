@@ -1,0 +1,31 @@
+TestCase10:
+  nodes:
+    - myNode:
+        ifaces: 
+          - eth0
+          - wlan0
+        num: 4
+  links:
+    - csma1Mb:
+        type: csma
+        bandwidth: 1Mbps
+        latency: 30 #ms
+        ifaces:
+          - myNode_1 eth0 10.0.0.1
+          - myNode_2 eth0 10.0.0.2
+    - csmaDef:
+        type: csma
+        ifaces:
+          - myNode_3 eth0 10.0.1.1
+          - myNode_4 eth0 10.0.1.2
+    - wifiSlow:
+        type: wifi
+        bandwidth: 6Mbps
+        ifaces:
+          - myNode_1 wlan0 11.0.0.1
+          - myNode_2 wlan0 11.0.0.2
+    - wifiDef:
+        type: wifi
+        ifaces:
+          - myNode_3 wlan0 11.0.1.1
+          - myNode_4 wlan0 11.0.1.2

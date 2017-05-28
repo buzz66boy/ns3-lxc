@@ -10,6 +10,19 @@
 
 using namespace std;
 
+const std::map<std::string, std::string> ofdmRateMap = {
+    { "6Mbps", "OfdmRate6Mbps"},
+    { "9Mbps", "OfdmRate9Mbps"},
+    {"12Mbps", "OfdmRate12Mbps"},
+    {"18Mbps", "OfdmRate18Mbps"},
+    {"24Mbps", "OfdmRate24Mbps"},
+    {"36Mbps", "OfdmRate36Mbps"},
+    {"48Mbps", "OfdmRate48Mbps"},
+    {"54Mbps", "OfdmRate54Mbps"}
+};
+
+static std::string defaultDataRate = "24Mbps";
+
 int Wifi::getIfacesSupported(){
     return 2;
 }
@@ -34,6 +47,16 @@ void Wifi::writeLinkInit(std::ostream& str, shared_ptr<ns3lxc::Link> linkPtr){
     string contName = linkPtr->name + "_container";
     string devName = linkPtr->name + "_dev";
     string phyName = linkPtr->name + "_phy";
+
+    if(linkPtr->bandwidth != ""){
+        if(ofdmRateMap.count(linkPtr->bandwidth) < 1){
+            cerr << "Wi-Fi Bandwidth " + linkPtr->bandwidth + " is not a valid ofdm rate" << endl;
+        } else {
+            str << "wifi.SetRemoteStationManager (\"ns3::ConstantRateWifiManager\", \"DataMode\", StringValue (\"" + ofdmRateMap.at(linkPtr->bandwidth) + "\"));" << endl;
+        }
+    } else {
+        str << "wifi.SetRemoteStationManager (\"ns3::ConstantRateWifiManager\", \"DataMode\", StringValue (\"" + ofdmRateMap.at(defaultDataRate) + "\"));" << endl;
+    }
     str << "YansWifiPhyHelper " + phyName + " = YansWifiPhyHelper::Default ();" << endl;
     str << phyName + ".SetPcapDataLinkType (YansWifiPhyHelper::DLT_IEEE802_11_RADIO);" << endl;
     str << phyName + ".SetChannel (wifiChannel.Create ());" << endl;
