@@ -1,0 +1,12 @@
+include: testCase5
+
+TestCase11:
+  topologies:
+    - top1:
+        template: TestCase5
+        num: 2
+        rotations:
+          top1_1: 90
+          top1_2: 270
+        positions:
+          top1_2: 0 100 0

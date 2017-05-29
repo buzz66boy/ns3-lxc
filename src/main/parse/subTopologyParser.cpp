@@ -17,7 +17,6 @@ static void applyIpOffset(string offset, ns3lxc::Topology *topology){
         for(auto ifacePtr : linkPtr->ifaces){
             if(ifacePtr != nullptr && ifacePtr->ip != nullptr){
                 ifacePtr->ip->applyOffset(offset);
-                cout << "link " + linkPtr->name + " offset ip to: " + ifacePtr->ip->str() << endl;
             }
         }
     }
@@ -37,7 +36,6 @@ std::vector<std::shared_ptr<ns3lxc::Topology> > parseSubTopology(YAML::Node node
 
 
     vector<shared_ptr<ns3lxc::Topology> > topList;
-    cout << "Creating " + to_string(iters) + "tops" << endl;
     for(size_t i = 0; i < iters; ++i){
         std::string name = origName;
         std::shared_ptr<ns3lxc::Topology> topPtr = nullptr;
@@ -45,16 +43,14 @@ std::vector<std::shared_ptr<ns3lxc::Topology> > parseSubTopology(YAML::Node node
         if(iters > 1){
             name += "_" + std::to_string(i + 1); //start indexing at 1
         }
-        ParsedTopology tempTop;
 
         if(node[TAG_TEMPLATE]){
             string templateName = node[TAG_TEMPLATE].as<std::string>();
-            cout << "template: " << templateName << endl;
             if(top->includedTopologies.count(templateName) > 0){
-                //tempTop.topology = ns3lxc::Topology(top->includedTopologies[templateName], name);
-                topPtr = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(top->includedTopologies[templateName], name));
+                topPtr = make_shared<ns3lxc::Topology>(top->includedTopologies[templateName], name);
             } else {
-                cout <<"PROB" << endl;
+                cerr << "The topology " + templateName + " used as a template was not found, check includes" << endl;
+                exit(56);
             }
         }
         if(node[TAG_OFFSET]){
@@ -82,6 +78,19 @@ std::vector<std::shared_ptr<ns3lxc::Topology> > parseSubTopology(YAML::Node node
         if(node[TAG_ROTATION]){
             if(node[TAG_ROTATION].Type() == YAML::NodeType::Scalar){
                 applyRotation(node[TAG_ROTATION].as<int>(), topPtr.get());
+            } else if(iters > 1){
+                if(node[TAG_ROTATION][name]){
+                    applyRotation(node[TAG_ROTATION][name].as<int>(), topPtr.get());
+                }
+            }
+        } else if(node[pluralize(TAG_ROTATION)]){
+            YAML::Node rotNode = node[pluralize(TAG_ROTATION)];
+            if(rotNode.Type() == YAML::NodeType::Scalar){
+                applyRotation(rotNode.as<int>(), topPtr.get());
+            } else if(iters > 1){
+                if(rotNode[name]){
+                    applyRotation(rotNode[name].as<int>(), topPtr.get());
+                }
             }
         }
         topList.push_back(topPtr);

@@ -6,6 +6,9 @@ TestCase5:
     - subTop:
         num: 2
         template: TestCase1
+        positions:
+          subTop_1: 0 0 0
+          subTop_2: 20 0 0
   links:
     - connect1:
         type: csma
