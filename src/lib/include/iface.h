@@ -22,11 +22,10 @@ public:
     ns3lxc::Link *link = nullptr;
     std::string bridgeName;
     std::string tapName;
+    std::string macAddr;
 
     IpAddr *ip = nullptr;
     IpAddr *subnetMask = nullptr;
-
-    std::array<uint8_t, 6> macAddr;
 
     Iface() {};
     Iface(const Iface&);

@@ -23,17 +23,25 @@ static void parseNodeIfaces(YAML::Node ifaces, std::shared_ptr<ns3lxc::Node> nod
     cout << "\tifaces:" << endl;
     if(ifaces.size() > 0){
         for(size_t i = 0; i < ifaces.size(); ++i){
-            std::string name = ifaces[i].as<std::string>();
+            vector<string> ifaceNameMac = splitString(ifaces[i].as<std::string>());
+            std::string name = ifaceNameMac[0];
             cout << "\t\t- " << name << endl;
             node->ifaces[name] = ns3lxc::Iface(name, node.get());
+            if(ifaceNameMac.size() > 1){
+                node->ifaces[name].macAddr = ifaceNameMac[1]; 
+            }
             //FIXME
-            node->ifaces[name].subnetMask = new ns3lxc::IpAddr(AF_INET, "255.255.255.0");
+            //node->ifaces[name].subnetMask = new ns3lxc::IpAddr(AF_INET, "255.255.255.0");
         }
     } else {
-        std::string name = ifaces.as<std::string>();
+        vector<string> ifaceNameMac = splitString(ifaces.as<std::string>());
+        std::string name = ifaceNameMac[0];
         cout << "\t\t- " << name << endl;
         node->ifaces[name] = ns3lxc::Iface(name, node.get());
-        node->ifaces[name].subnetMask = new ns3lxc::IpAddr(AF_INET, "255.255.255.0");
+        if(ifaceNameMac.size() > 1){
+            node->ifaces[name].macAddr = ifaceNameMac[1];   
+        }
+        //node->ifaces[name].subnetMask = new ns3lxc::IpAddr(AF_INET, "255.255.255.0");
     }
 }
 

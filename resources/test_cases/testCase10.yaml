@@ -2,7 +2,7 @@ TestCase10:
   nodes:
     - myNode:
         ifaces: 
-          - eth0
+          - eth0 "16:29:3a:34:xx:xx:xx"
           - wlan0
         num: 4
   links:

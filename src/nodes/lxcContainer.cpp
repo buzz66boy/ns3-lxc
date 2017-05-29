@@ -97,7 +97,11 @@ void LxcContainer::writeContainerConfig(std::shared_ptr<ns3lxc::Node> nodePtr, s
         ofs << "lxc.network.flags = up" << endl;
         ofs << "lxc.network.link = " << it.second.bridgeName << endl;
         ofs << "lxc.network.ipv4 = " << it.second.ip->str() << "/" << to_string(it.second.subnetMask->getCidr()) + " " << it.second.subnetMask->str() << endl;
-        ofs << "lxc.network.hwaddr = xx:xx:xx:xx:xx:xx" << endl;
+        if(it.second.macAddr != ""){
+            ofs << "lxc.network.hwaddr = " + it.second.macAddr << endl;
+        } else {
+            ofs << "lxc.network.hwaddr = xx:xx:xx:xx:xx:xx" << endl;
+        }
     }
     ofs.close();
     configMap[nodePtr->name] = configPath;
