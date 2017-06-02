@@ -12,6 +12,7 @@
 #include "node.h"
 #include "iface.h"
 #include "parserTags.h"
+#include "errorCode.h"
 #include "settingsParser.h"
 #include "topologyParser.h"
 #include "positionParser.h"
@@ -30,8 +31,6 @@ static void parseNodeIfaces(YAML::Node ifaces, std::shared_ptr<ns3lxc::Node> nod
             if(ifaceNameMac.size() > 1){
                 node->ifaces[name].macAddr = ifaceNameMac[1]; 
             }
-            //FIXME
-            //node->ifaces[name].subnetMask = new ns3lxc::IpAddr(AF_INET, "255.255.255.0");
         }
     } else {
         vector<string> ifaceNameMac = splitString(ifaces.as<std::string>());
@@ -40,8 +39,9 @@ static void parseNodeIfaces(YAML::Node ifaces, std::shared_ptr<ns3lxc::Node> nod
         node->ifaces[name] = ns3lxc::Iface(name, node.get());
         if(ifaceNameMac.size() > 1){
             node->ifaces[name].macAddr = ifaceNameMac[1];   
+        } else {
+            node->ifaces[name].macAddr = "xx:xx:xx:xx:xx:xx";
         }
-        //node->ifaces[name].subnetMask = new ns3lxc::IpAddr(AF_INET, "255.255.255.0");
     }
 }
 
@@ -100,8 +100,7 @@ std::vector<std::shared_ptr<ns3lxc::Node> > parseNode(YAML::Node node, ParsedTop
         if(node[TAG_TYPE]){
             nodePtr->type = node[TAG_TYPE].as<string>();
             if(nodeTypeMap.count(nodePtr->type) < 0){
-                cerr << "There is no Node Type " + nodePtr->type << endl;
-                exit(23);
+                throw Ns3lxcException(ErrorCode::NODE_TYPE_NOT_FOUND, origName + " " + nodePtr->type);
             }
         } else {
             nodePtr->type = Settings::container_type;

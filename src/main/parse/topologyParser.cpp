@@ -17,6 +17,7 @@
 #include "iface.h"
 #include "position.h"
 #include "parserTags.h"
+#include "errorCode.h"
 #include "nodeParser.h"
 #include "linkParser.h"
 #include "ifaceParser.h"
@@ -154,8 +155,7 @@ static void parseIncludes(YAML::Node includes, std::string topPath, ParsedTopolo
             if(stat(searchPath.c_str(), &buffer) == 0 && !S_ISDIR(buffer.st_mode)){
                 includedTop = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(parseTopologyFile(searchPath)));
             } else {
-                cerr << "Couldn't find included file " << curInclude << " while parsing " << topPath << endl;
-                exit(10);
+                throw Ns3lxcException(ErrorCode::FILE_NOT_FOUND, curInclude);
             }
         }
 
@@ -176,8 +176,7 @@ static void parseIncludes(YAML::Node includes, std::string topPath, ParsedTopolo
     			if(stat(searchPath.c_str(), &buffer) == 0 && !S_ISDIR(buffer.st_mode)){
     				includedTop = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(parseTopologyFile(searchPath)));
     			} else {
-    				cerr << "Couldn't find included file " << curInclude << " while parsing " << topPath << endl;
-    				exit(10);
+                    throw Ns3lxcException(ErrorCode::FILE_NOT_FOUND, curInclude);
     			}
     		}
 
@@ -261,7 +260,6 @@ static void parseApplications(YAML::Node apps, ParsedTopology *parsedTop){
 	        	}
         		break;
         	case(YAML::NodeType::Sequence):
-        		cout << "SEQ" << endl;
         		break;
         	case(YAML::NodeType::Map):
     		{
@@ -281,8 +279,7 @@ static void parseApplications(YAML::Node apps, ParsedTopology *parsedTop){
     				vector<string> findMe = splitString(iter.first.as<string>());
     				shared_ptr<ns3lxc::Node> nodePtr = findNode(findMe, &parsedTop->topology);
     				if(!nodePtr){
-    					//error
-    					cerr << "Couldn't find node!" << endl;
+    					throw Ns3lxcException(ErrorCode::NODE_NOT_FOUND, iter.first.as<string>());
     				}
     				bool hasApp = false;
     				ns3lxc::Application *appPtr;
@@ -296,7 +293,6 @@ static void parseApplications(YAML::Node apps, ParsedTopology *parsedTop){
     				if(hasApp && iter.second.Type() != YAML::NodeType::Null){
     					// add inline ${} parsing
     					appPtr->args = iter.second.as<string>();
-    					cout << "PArsed args " + appPtr->args + " for node " + nodePtr->name << endl;
     				} else {
     					ns3lxc::Application app(appName);
 	    				if(iter.second.Type() != YAML::NodeType::Null){

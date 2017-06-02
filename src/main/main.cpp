@@ -13,12 +13,12 @@
 #include "topology.h"
 #include "node.h"
 #include "link.h"
+#include "errorCode.h"
 
 #define MAXPATHLEN 1024
 
 #define PROJ_ROOT_DIR "ns3-lxc"
 #define SETTINGS_FILE "settings.yaml"
-#define NO_FILE_PROVIDED "Exiting, no file provided"
 
 using namespace std;
 
@@ -69,65 +69,66 @@ static void setOutputDest(string topologyName){
 }
 
 int main(int argc, char *argv[]){
+	try{
+		std::string settings_path = compute_settings_path();
 
-	if(geteuid()){
-		cerr << "Must run with root privileges" << endl;
-		exit(-1);
-	}
-	
-	std::string settings_path = compute_settings_path();
+		// open settings file and obtain directory locations
+		int result = Settings::parse_settings_file(settings_path);
 
-	// open settings file and obtain directory locations
-	int result = Settings::parse_settings_file(settings_path);
-	if(result != 0){
-		return result;
-	}
-	if(argc < 2) {
-		cerr << "Not Enough Arguments" << endl;
-		return 1;
-	}
-	map<string, string> argMap = parseArgs(argc, argv);
-	ns3lxc::Topology topology;
-
-	if(argMap.count("file") < 1) {
-		cerr << NO_FILE_PROVIDED << endl;
-		return 1;
-	}
-
-	std::ifstream infile(argMap.at("file"));
-	infile.seekg(0, ios::end);
-    if(!infile.good()){
-    	cerr << "File does not exist!" << endl;
-    	return 1;
-    }
-    infile.close();
-
-	topology = parseTopologyFile(argMap.at("file"));
-	
-	setOutputDest(topology.name);
-	ns3lxc::Topology::reNumNodes(&topology);
-	if(argMap.size() > 1){
-		Settings::run_mode = Mode::NONE;
-	}
-	if(argMap.count("-n")){
-		Settings::run_mode |= Mode::NS3_GEN;
-		cout << "RUN mode ns3" << endl;
-	}
-	if(argMap.count("-c")){
-		Settings::run_mode |= Mode::CLEANUP;
-	}
-	if(argMap.count("-s")){
-		Settings::run_mode |= Mode::NODE_GEN;
-	}
-	if(argMap.count("-g") > 0){
-		Settings::gdb = true;
-		if(argMap.size() == 2){
-			Settings::run_mode == Mode::NORMAL;
+		if(argc < 2) {
+			throw Ns3lxcException(ErrorCode::NOT_ENOUGH_ARGS, to_string(argc));
 		}
+		map<string, string> argMap = parseArgs(argc, argv);
+		ns3lxc::Topology topology;
+
+		if(argMap.count("file") < 1) {
+			throw new Ns3lxcException(ErrorCode::NO_FILE_PROVIDED, "");
+		}
+		//check for existence of topology file and make sure not folder
+		std::ifstream infile(argMap.at("file"));
+		infile.seekg(0, ios::end);
+	    if(!infile.good()){
+	    	throw Ns3lxcException(ErrorCode::FILE_NOT_FOUND, argMap.at("file"));
+	    }
+	    infile.close();
+
+		if(argMap.size() > 1){
+			Settings::run_mode = Mode::NONE;
+		}
+		if(argMap.count("-n")){
+			Settings::run_mode |= Mode::NS3_GEN;
+		}
+		if(argMap.count("-c")){
+			Settings::run_mode |= Mode::CLEANUP;
+		}
+		if(argMap.count("-s")){
+			Settings::run_mode |= Mode::NODE_GEN;
+		}
+		if(argMap.count("-g") > 0){
+			Settings::gdb = true;
+			if(argMap.size() == 2){
+				Settings::run_mode == Mode::NORMAL;
+			}
+		}
+
+		if(geteuid() && Settings::run_mode != Mode::NS3_GEN){
+			throw Ns3lxcException(ErrorCode::RUN_AS_ROOT, "");
+		}
+
+		topology = parseTopologyFile(argMap.at("file"));
+		setOutputDest(topology.name);
+		ns3lxc::Topology::reNumNodes(&topology);
+
+		try{
+			generateTopology(&topology);
+		} catch(Ns3lxcException& e){
+			//Handle teardown if applicable
+			throw e;
+		}
+	} catch(Ns3lxcException& e){
+		cerr << e.what() << endl;
+		return 1;
 	}
-
-	generateTopology(&topology);
-
 	return 0;
 	
 }

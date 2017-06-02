@@ -162,3 +162,16 @@ std::string IpAddr::getSubnet(IpAddr *subnetMask){
         return temp.str();
     }
 }
+
+bool IpAddr::equals(IpAddr &temp){
+    if(temp.isIpv4() != ipv4) return false;
+    if(ipv4){
+        if(temp.getIpv4Addr() != ipv4_address) return false;
+    } else {
+        int i = 0;
+        for(uint32_t val : temp.getIpv6Addr()){
+            if(ipv6_address_32[i++] != val) return false;
+        }
+    }
+    return true;
+}

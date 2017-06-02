@@ -6,6 +6,7 @@
 #include "yaml-cpp/yaml.h"
 
 #include "parserTags.h"
+#include "errorCode.h"
 #include "topologyParser.h"
 #include "positionParser.h"
 #include "subTopologyParser.h"
@@ -49,8 +50,7 @@ std::vector<std::shared_ptr<ns3lxc::Topology> > parseSubTopology(YAML::Node node
             if(top->includedTopologies.count(templateName) > 0){
                 topPtr = make_shared<ns3lxc::Topology>(top->includedTopologies[templateName], name);
             } else {
-                cerr << "The topology " + templateName + " used as a template was not found, check includes" << endl;
-                exit(56);
+                throw Ns3lxcException(ErrorCode::TEMPLATE_NOT_FOUND, templateName);
             }
         }
         if(node[TAG_OFFSET]){

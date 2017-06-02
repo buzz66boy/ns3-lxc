@@ -2,6 +2,7 @@
 #include <iostream>
 #include <map>
 
+#include "errorCode.h"
 #include "position.h"
 
 #define PI 3.141592653
@@ -54,10 +55,6 @@ void Positionable::centerPositionsAroundParent(Positionable *par){
             absPos.y = position.y + myRelPos.y;
             absPos.z = position.z + myRelPos.z;
             absPositions.push_back(absPos);
-            // if(position.time == 0.0){
-            //     std::cout << "pos " << position.str() << std::endl;
-            //     std::cout << "absPos " << absPos.str() << std::endl;
-            // }
         }
         for(auto pos: positions){
             if(!times.at(pos.time)){
@@ -137,8 +134,7 @@ static Position getPos(double time, std::vector<Position> positions){
         return position;
     }
 
-    std::cerr << "Error in positionable" << std::endl;
-    return Position();
+    throw Ns3lxcException(ErrorCode::POSITION_ERROR, std::to_string(time));
 
 }
 

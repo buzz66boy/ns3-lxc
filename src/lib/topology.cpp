@@ -2,6 +2,8 @@
 #include <memory>
 #include <iostream>
 
+#include "errorCode.h"
+#include "ifaceParser.h"
 #include "node.h"
 #include "topology.h"
 
@@ -87,12 +89,12 @@ Topology::Topology(Topology *temp): Nameable(*temp), Positionable(*temp) {
             Iface *ifacePtr = linkPtr->ifaces[i];
             Node *foundNode = findNode(this, ifacePtr->node->name);
             if(!foundNode){
-                std::cerr << "NODE NOT FOUND!! " + ifacePtr->node->name << std::endl;
+                throw Ns3lxcException(ErrorCode::NODE_NOT_FOUND, ifacePtr->node->name);
             }
             if(foundNode->ifaces.count(ifacePtr->name)){
                 linkPtr->ifaces[i] = &foundNode->ifaces.at(ifacePtr->name);
             } else {
-                std::cerr << "Can't find iface " << ifacePtr->name << std::endl;
+                throw Ns3lxcException(ErrorCode::IFACE_NOT_FOUND, ifacePtr->name);
             }
         }
         Link::reRefIfaces(linkPtr.get());
@@ -108,7 +110,7 @@ Topology::Topology(Topology *temp): Nameable(*temp), Positionable(*temp) {
             if(nodeMap.count(nodeCast.origName) > 0){
                 ifacesProvided[it.first] = nodeMap[nodeCast.origName];
             } else {
-                std::cerr << "ISSUES 1 " << nodeCast.origName << std::endl;
+                throw Ns3lxcException(ErrorCode::NODE_NOT_FOUND, nodeCast.origName);
             }
         } catch (std::bad_cast e){
             try{
@@ -116,10 +118,10 @@ Topology::Topology(Topology *temp): Nameable(*temp), Positionable(*temp) {
                 if (topMap.count(topCast.origName) > 0){
                     ifacesProvided[it.first] = topMap[topCast.origName];
                 } else {
-                    std::cerr << "ISSUES 2" << std::endl;
+                    throw Ns3lxcException(ErrorCode::TOPOLOGY_NOT_FOUND, topCast.origName);
                 }
             } catch (std::bad_cast e){
-                std::cerr << "BAD CAST 2" << std::endl;
+                throw Ns3lxcException(ErrorCode::PROVIDER_NOT_FOUND, it.first);
             }
         }
     }
@@ -130,7 +132,7 @@ Topology::Topology(Topology *temp): Nameable(*temp), Positionable(*temp) {
             if(linkMap.count(linkCast.origName) > 0){
                 ifacesAccepted[it.first] = linkMap[linkCast.origName];
             } else {
-                std::cerr << "ISSUES 1 " << linkCast.origName << std::endl;
+                throw Ns3lxcException(ErrorCode::LINK_NOT_FOUND, linkCast.origName);
             }
         } catch (std::bad_cast e){
             try{
@@ -138,10 +140,10 @@ Topology::Topology(Topology *temp): Nameable(*temp), Positionable(*temp) {
                 if (topMap.count(topCast.origName) > 0){
                     ifacesAccepted[it.first] = topMap[topCast.origName];
                 } else {
-                    std::cerr << "ISSUES 2" << std::endl;
+                    throw Ns3lxcException(ErrorCode::TOPOLOGY_NOT_FOUND, topCast.origName);
                 }
             } catch (std::bad_cast e){
-                std::cerr << "BAD CAST 2" << std::endl;
+                throw Ns3lxcException(ErrorCode::ACCEPTOR_NOT_FOUND, it.first);
             }
         }
     }

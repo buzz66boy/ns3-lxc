@@ -5,6 +5,7 @@
 
 #include "settingsParser.h"
 #include "topology.h"
+#include "errorCode.h"
 #include "linkTypeMap.h"
 #include "ns3Writer.h"
 
@@ -167,11 +168,7 @@ static void writeNodePos(std::ostream& str, ns3lxc::Topology *top){
                     curTime = lowestTime;
                     str << "mob->AddWaypoint(Waypoint(" + pos->ns3Str() + "));" << endl;
                 } else {
-                    cerr << "Error in Position waypoint writing " + to_string(lowestTime) + to_string(curTime) << endl;
-                    cerr << "T: " << to_string(nodePtr->absPositions.size()) << endl;
-                    for(auto it: nodePtr->absPositions){
-                        cerr << it.str() << endl;
-                    }
+                    throw Ns3lxcException(ErrorCode::POSITION_ERROR, "Waypoing Writing");
                 }
             }
         } else if(nodePtr->positions.size() > 1){
@@ -193,7 +190,7 @@ static void writeNodePos(std::ostream& str, ns3lxc::Topology *top){
                     curTime = lowestTime;
                     str << "mob->AddWaypoint(Waypoint(" + pos->ns3Str() + "));" << endl;
                 } else {
-                    cerr << "Error in Position waypoint writing " << endl;
+                    throw Ns3lxcException(ErrorCode::POSITION_ERROR, "Waypoing Writing");
                 }
             }
         } else {
@@ -232,6 +229,6 @@ void Ns3Writer::writeAnimDescriptions(std::ostream& str, ns3lxc::Topology *top){
 }
 
 void Ns3Writer::grabOutput(std::string outputPath){
-    system(("cp *.pcap " + outputPath).c_str());
-    system(("cp animation.xml " + outputPath).c_str());
+    system(("mv *.pcap " + outputPath).c_str());
+    system(("mv animation.xml " + outputPath).c_str());
 }

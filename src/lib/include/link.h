@@ -1,5 +1,5 @@
-#ifndef __CONNECTION_H_INCLUDED__
-#define __CONNECTION_H_INCLUDED__
+#ifndef __LINK_H_INCLUDED__
+#define __LINK_H_INCLUDED__
 
 // forward declared dependencies
 

@@ -1,5 +1,5 @@
-#ifndef __NETWORK_H_INCLUDED__
-#define __NETWORK_H_INCLUDED__
+#ifndef __TOPOLOGY_H_INCLUDED__
+#define __TOPOLOGY_H_INCLUDED__
 
 // forward declared dependencies
 

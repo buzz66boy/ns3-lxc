@@ -5,7 +5,12 @@
 #include <memory>
 
 #include "yaml-cpp/yaml.h"
+#include "topology.h"
 #include "topologyParser.h"
+
+std::weak_ptr<ns3lxc::IfaceProvider> getProvider(std::string provider, ns3lxc::Topology *top);
+
+std::weak_ptr<ns3lxc::IfaceAcceptor> getAcceptor(std::string acceptor, ns3lxc::Topology *top);
 
 void parseIfacesProvided(YAML::Node ifaces, ParsedTopology *parsedTop);
 

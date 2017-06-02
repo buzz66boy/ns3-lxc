@@ -15,7 +15,7 @@ void Logger::write(logLevel printLevel, std::string str){
             out << "INFO " << str;
             break;
         case WARN:
-            out << "wARN " << str;
+            out << "WARN " << str;
         case ERR:
             out << "ERR " << str;
             if(!same)

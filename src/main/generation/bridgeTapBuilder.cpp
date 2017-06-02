@@ -6,6 +6,7 @@
 
 #include "node.h"
 #include "iface.h"
+#include "errorCode.h"
 #include "nodeTypeMap.h"
 #include "bridgeTapBuilder.h"
 
@@ -50,32 +51,27 @@ void buildBridgeTap(ns3lxc::Iface *ifacePtr){
     //brctl addbr 'bridge'
     err = system(("brctl addbr " + bridge).c_str());
     if(err){
-        cerr << "BAD" << endl;
+       throw Ns3lxcException(ErrorCode::BR_CREATE_FAILURE, bridge + " for iface: " + ifacePtr->name);
     }
     //ip tuntap add 'tap' mode tap
     err = system(("ip tuntap add " + tap + " mode tap").c_str());
     if(err){
-        cerr << "BAD2" << endl;
+       throw Ns3lxcException(ErrorCode::TAP_CREATE_FAILURE, tap + " for iface: " + ifacePtr->name);
     }
     //ifconfig 'tap' 0.0.0.0 promisc up
     err = system(("ifconfig " + tap + " 0.0.0.0 promisc up").c_str());
     if(err){
-        cerr << "BAD3" << endl;
+       throw Ns3lxcException(ErrorCode::TAP_CREATE_FAILURE, tap + " for iface: " + ifacePtr->name);
     }
     //brctl addif 'bridge' 'tap'
     err = system(("brctl addif " + bridge + " " + tap).c_str());
     if(err){
-        cerr << "BAD4" << endl;
+       throw Ns3lxcException(ErrorCode::BR_CREATE_FAILURE, bridge + " with tap " + tap + " for iface: " + ifacePtr->name);
     }
 
-    //ifconfig 'bridge' 'ipAddr' netmask 'subnetAddr' up  ### adds two to IPADDR??? 
-    string sub = ifacePtr->ip->str();
-    sub = sub.substr(0, sub.find_last_of(".")) + '2';
     err = system(("ifconfig " + bridge + " up ").c_str());
-    // err = system(("ifconfig " + bridge + " " + sub + \
-    //     " netmask " + ifacePtr->subnetMask->str() + " up").c_str());
     if(err){
-        cerr << "BAD5" << endl;
+       throw Ns3lxcException(ErrorCode::BR_CREATE_FAILURE, bridge + " for iface: " + ifacePtr->name);
     }
 }
 

@@ -1,5 +1,5 @@
-#ifndef __CONTAINER_H_INCLUDED__
-#define __CONTAINER_H_INCLUDED__
+#ifndef __NODE_H_INCLUDED__
+#define __NODE_H_INCLUDED__
 
 // forward declared dependencies
 
@@ -21,12 +21,10 @@ class Node : public Positionable, public IfaceProvider, public Nameable {
 private:
     bool requiresReRef = false;
 public:
-    int nodeNum = 0; //For ns-3 writing, keep track of what # the node is (for ref)
+    int nodeNum = -1; //For ns-3 writing, keep track of what # the node is (for ref)
     std::string type;
 	std::map<std::string, Iface> ifaces;
 	std::vector<Application> applications;
-    std::vector<std::string> bridges;
-    std::vector<std::string> taps;
 	
 	ns3lxc::Iface *getIface(std::string ifaceName) override; // OVERRIDE IfaceProvider
 

@@ -35,13 +35,13 @@ void parsePositions(YAML::Node posNode, ns3lxc::Topology *topPtr){
     if(posNode.Type() == YAML::NodeType::Scalar){
         vector<string> xyz = splitString(posNode.as<string>());
         topPtr->positions.push_back(ns3lxc::Position(0, stod(xyz[0]), stod(xyz[1]), stod(xyz[2])));
-        cout << "\tAdded " + posNode.as<string>() << endl;
+        // cout << "\tAdded " + posNode.as<string>() << endl;
     } else if(posNode.begin()->second.Type() == YAML::NodeType::Scalar){
         for(auto iter : posNode){
             double time = iter.first.as<double>();
             vector<string> xyz = splitString(iter.second.as<string>());
             topPtr->positions.push_back(ns3lxc::Position(time, stod(xyz[0]), stod(xyz[1]), stod(xyz[2])));
-            cout << "\tAdded " + iter.second.as<string>() << endl;
+            // cout << "\tAdded " + iter.second.as<string>() << endl;
         }
     }
     computeAbsolutePositions(topPtr);

@@ -31,6 +31,8 @@ public:
     IpAddr(int af, int cidr);
     ~IpAddr() {}
 
+    bool equals(IpAddr &temp);
+
     bool isIpv4() { return ipv4; }
     uint32_t getIpv4Addr() { return ipv4_address; }
     std::vector<uint32_t> getIpv6Addr();

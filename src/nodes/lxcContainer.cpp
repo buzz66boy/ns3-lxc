@@ -14,6 +14,7 @@
 #include "settingsParser.h"
 #include "node.h"
 #include "parserTags.h"
+#include "errorCode.h"
 #include "applicationTypeMap.h"
 #include "lxcContainer.h"
 
@@ -115,7 +116,7 @@ void LxcContainer::createNode(std::shared_ptr<ns3lxc::Node> nodePtr) {
     containerMap[nodePtr->name] = shared_ptr<lxc_container>(lxc_container_new(nodePtr->name.c_str(), NULL));
     c = containerMap[nodePtr->name].get();
     if(!c){
-        cerr << "PROBLEMS WITH CONTAINER" << endl;
+        throw Ns3lxcException(ErrorCode::NODE_CREATE_FAILURE, nodePtr->name);
     }
     if(c->is_defined(c)){
         teardownNode(nodePtr);
@@ -126,12 +127,11 @@ void LxcContainer::createNode(std::shared_ptr<ns3lxc::Node> nodePtr) {
     writeContainerConfig(nodePtr, configPath);
 
     if(!c->load_config(c, configMap[nodePtr->name].c_str())){
-        cerr << "EMERGENCY" << endl;
+        throw Ns3lxcException(ErrorCode::NODE_CREATE_FAILURE, nodePtr->name);
     }
     if(!c->createl(c, "download", NULL, NULL, LXC_CREATE_QUIET, "-d", containerDistro.c_str(), "-r", containerRelease.c_str(), "-a", "amd64", NULL))
     {
-        //create failed
-        cerr << "Container " << nodePtr->name << " could not be created" << endl;
+        throw Ns3lxcException(ErrorCode::NODE_CREATE_FAILURE, nodePtr->name);
     }
     // c->set_config_item(c, );
     
@@ -141,16 +141,12 @@ void LxcContainer::startNode(std::shared_ptr<ns3lxc::Node> nodePtr) {
     cout << "Starting container " + nodePtr->name << endl;
     if (!c->start(c, 0, NULL)) {
         //failed to start
-        cerr << "Container " << nodePtr->name << " failed to start" << endl;
+        throw Ns3lxcException(ErrorCode::NODE_START_FAILURE, nodePtr->name);
     }
 }
 
 void LxcContainer::prepForInstall(std::vector<std::shared_ptr<ns3lxc::Application> > appList){
-    // for(auto appPtr : appList){
-    //     if(applicationTypeMap.count(appPtr->name) > 0){
-
-    //     }
-    // }
+    // do nothing
 }
 
 void LxcContainer::installApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {

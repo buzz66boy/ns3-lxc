@@ -4,6 +4,7 @@
 #include <iostream>
 #include <algorithm>
 
+#include "errorCode.h"
 #include "link.h"
 #include "node.h"
 
@@ -30,8 +31,6 @@ ns3lxc::Node::Node(const ns3lxc::Node &temp): Positionable(temp), Nameable(temp)
     requiresReRef = true;
     type = temp.type;
     applications = temp.applications;
-    bridges = temp.bridges;
-    taps = temp.taps;
     nodeNum = temp.nodeNum;
 }
 
@@ -43,6 +42,5 @@ Iface *ns3lxc::Node::getIface(std::string ifaceName){
     if(ifaces.count(ifaceName) > 0){
         return &ifaces[ifaceName];
     }
-    std::cerr << "Couldn't find iface " << ifaceName << " " << ifaces.size() << std::endl;
-    return nullptr;
+    throw Ns3lxcException(ErrorCode::IFACE_NOT_FOUND, ifaceName + " on Node " + name);
 }

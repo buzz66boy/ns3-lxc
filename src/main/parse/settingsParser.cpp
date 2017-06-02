@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 
 #include "yaml-cpp/yaml.h"
+#include "errorCode.h"
 #include "settingsParser.h"
 
 #define NS3_PATH_STR "NS-3_PATH"
@@ -65,34 +66,29 @@ int Settings::parse_settings_file(std::string settings_file){
 
 	if(!settings){
 		create_template_settings_file(settings_file);
-		cerr << "No settings.conf file found, an empty template has been created in " << endl;
-		return 1;
+		throw Ns3lxcException(ErrorCode::FILE_NOT_FOUND, settings_file);
 	}
 
 	if(settings[NS3_PATH_STR]){
 		Settings::ns3_path = settings[NS3_PATH_STR].as<std::string>();
 	} else {
-		cerr << "The NS-3 path variable is not set" << endl;
-		return 2;
+		throw Ns3lxcException(ErrorCode::SETTINGS_ATTR_NOT_FOUND, NS3_PATH_STR);
 	}
 
 	// check for required destinations and error if not found
 	struct stat buffer;
 	if(stat(Settings::ns3_path.c_str(), &buffer) != 0 || !S_ISDIR(buffer.st_mode)){
-		cerr << "The NS-3 path specified does not exist or is not accesible" << endl;
-		return 3;
+		throw Ns3lxcException(ErrorCode::FOLDER_NOT_FOUND, Settings::ns3_path);
 	}
 
 	if(settings[TEMP_DEST_STR]){
 		Settings::temp_dir = settings[TEMP_DEST_STR].as<string>();
 	} else {
-		cerr << "No temp directory specified in settings.yaml" << endl;
-		return 4;
+		throw Ns3lxcException(ErrorCode::SETTINGS_ATTR_NOT_FOUND, TEMP_DEST_STR);
 	}
 
 	if(!check_make_dir(Settings::temp_dir.c_str())){
-		cerr << "Cannot make default output destination, aborting" << endl;
-		return 5;
+		throw Ns3lxcException(ErrorCode::FOLDER_NOT_CREATED, Settings::temp_dir);
 	}
 
 	if(settings[SCRIPT_DEST_STR]){
@@ -102,8 +98,7 @@ int Settings::parse_settings_file(std::string settings_file){
 	}
 
 	if(!check_make_dir(Settings::script_dest.c_str())){
-		cerr << "Cannot make default script destination, aborting" << endl;
-		return 6;
+		throw Ns3lxcException(ErrorCode::FOLDER_NOT_CREATED, Settings::script_dest);
 	}
 
 	if(settings[OUTPUT_DEST_STR]){
@@ -113,14 +108,12 @@ int Settings::parse_settings_file(std::string settings_file){
 	}
 
 	if(!check_make_dir(Settings::output_dest.c_str())){
-		cerr << "Cannot make default output destination, aborting" << endl;
-		return 7;
+		throw Ns3lxcException(ErrorCode::FOLDER_NOT_CREATED, Settings::output_dest);
 	}
 
 	Settings::container_config_dir = Settings::temp_dir + CONTAINER_CONFIG;
 	if(!check_make_dir(Settings::container_config_dir.c_str())){
-		cerr << "Cannot make container config destination, aborting" << endl;
-		return 8;
+		throw Ns3lxcException(ErrorCode::FOLDER_NOT_CREATED, Settings::container_config_dir);
 	}
 	
 	if(settings[CONTAINER_TYPE]){

@@ -7,29 +7,28 @@
 #include "yaml-cpp/yaml.h"
 
 #include "parserTags.h"
+#include "errorCode.h"
 #include "ifaceParser.h"
 
 using namespace std;
 
-static std::weak_ptr<ns3lxc::IfaceProvider> getProvider(string provider, ParsedTopology *parsedTop){
-    if(parsedTop->topology.nodeMap.count(provider) > 0){
-        return parsedTop->topology.nodeMap[provider];
-    } else if(parsedTop->topology.topMap.count(provider) > 0){
-        return parsedTop->topology.topMap[provider];
+std::weak_ptr<ns3lxc::IfaceProvider> getProvider(string provider, ns3lxc::Topology *top){
+    if(top->nodeMap.count(provider) > 0){
+        return top->nodeMap[provider];
+    } else if(top->topMap.count(provider) > 0){
+        return top->topMap[provider];
     } else {
-        cerr << "COULDNT FIND" << endl;
-        return weak_ptr<ns3lxc::IfaceProvider>();
+        throw Ns3lxcException(ErrorCode::PROVIDER_NOT_FOUND, provider);
     }
 }
 
-static std::weak_ptr<ns3lxc::IfaceAcceptor> getAcceptor(string acceptor, ParsedTopology *parsedTop){
-        if(parsedTop->topology.topMap.count(acceptor) > 0){
-            return parsedTop->topology.topMap[acceptor];
-        } else if(parsedTop->topology.linkMap.count(acceptor) > 0){
-            return parsedTop->topology.linkMap[acceptor];
+std::weak_ptr<ns3lxc::IfaceAcceptor> getAcceptor(string acceptor, ns3lxc::Topology *top){
+        if(top->topMap.count(acceptor) > 0){
+            return top->topMap[acceptor];
+        } else if(top->linkMap.count(acceptor) > 0){
+            return top->linkMap[acceptor];
         } else {
-            cerr << "COULDNT FIND" << endl;
-            return weak_ptr<ns3lxc::IfaceAcceptor>();
+            throw Ns3lxcException(ErrorCode::ACCEPTOR_NOT_FOUND, acceptor);
         }
 }
 
@@ -37,7 +36,7 @@ void parseIfacesProvided(YAML::Node ifaces, ParsedTopology *parsedTop){
     for(auto i = 0; i < ifaces.size(); ++i){
         vector<string> split = splitString(ifaces[i].begin()->second.as<string>());
         parsedTop->topology.ifacesProvidedSubNames[ifaces[i].begin()->first.as<string>()] = split[1];
-        std::weak_ptr<ns3lxc::IfaceProvider> provPtr = getProvider(split[0], parsedTop);
+        std::weak_ptr<ns3lxc::IfaceProvider> provPtr = getProvider(split[0], &parsedTop->topology);
         parsedTop->topology.ifacesProvided[ifaces[i].begin()->first.as<string>()] = provPtr;
     }
 }
@@ -51,12 +50,12 @@ void parseAcceptedIfaces(YAML::Node acceptedIface, ParsedTopology *parsedTop){
         vector<string> provideSplit = splitString(provider);
 
         //Find Provider
-        shared_ptr<ns3lxc::IfaceProvider> provPtr = getProvider(provideSplit[0], parsedTop).lock();
-        shared_ptr<ns3lxc::IfaceAcceptor> accPtr = getAcceptor(acceptSplit[0], parsedTop).lock();
+        shared_ptr<ns3lxc::IfaceProvider> provPtr = getProvider(provideSplit[0], &parsedTop->topology).lock();
+        shared_ptr<ns3lxc::IfaceAcceptor> accPtr = getAcceptor(acceptSplit[0], &parsedTop->topology).lock();
 
         ns3lxc::Iface *iface = provPtr->getIface(provideSplit[1]);
         if(provideSplit.size() < 3){
-            cerr << "No IP specified or invalid provider for " + provider << endl;
+            throw Ns3lxcException(ErrorCode::NO_IP, provider);
         } else {
             iface->assignIp(AF_INET, provideSplit[2]);   
         }
@@ -77,6 +76,6 @@ void parseIfacesAccepted(YAML::Node ifacesAccepted, ParsedTopology *parsedTop){
         } else {
             parsedTop->topology.ifacesAcceptedSubNames[ifacesAccepted[i].begin()->first.as<string>()] = "";
         }
-        parsedTop->topology.ifacesAccepted[ifacesAccepted[i].begin()->first.as<string>()] = getAcceptor(split[0], parsedTop);
+        parsedTop->topology.ifacesAccepted[ifacesAccepted[i].begin()->first.as<string>()] = getAcceptor(split[0], &parsedTop->topology);
     }
 }

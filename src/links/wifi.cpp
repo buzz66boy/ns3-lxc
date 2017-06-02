@@ -7,6 +7,7 @@
 #include "iface.h"
 #include "node.h"
 #include "wifi.h"
+#include "errorCode.h"
 
 using namespace std;
 
@@ -50,7 +51,7 @@ void Wifi::writeLinkInit(std::ostream& str, shared_ptr<ns3lxc::Link> linkPtr){
 
     if(linkPtr->bandwidth != ""){
         if(ofdmRateMap.count(linkPtr->bandwidth) < 1){
-            cerr << "Wi-Fi Bandwidth " + linkPtr->bandwidth + " is not a valid ofdm rate" << endl;
+            throw Ns3lxcException(ErrorCode::NS3_WRITE_FAILURE , "Wi-Fi Bandwidth " + linkPtr->bandwidth + " is not a valid ofdm rate");
         } else {
             str << "wifi.SetRemoteStationManager (\"ns3::ConstantRateWifiManager\", \"DataMode\", StringValue (\"" + ofdmRateMap.at(linkPtr->bandwidth) + "\"));" << endl;
         }

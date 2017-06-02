@@ -42,6 +42,8 @@ public:
 };
 
 class IfaceProvider {
+protected:
+    IfaceProvider() {};
 public:
     std::map<std::string, std::string> ifacesProvidedSubNames; //maps this level's iface names to lower level's
     std::map<std::string, std::weak_ptr<ns3lxc::IfaceProvider> > ifacesProvided; //keep a ref to the providers we contain
@@ -49,6 +51,8 @@ public:
 };
 
 class IfaceAcceptor {
+protected:
+    IfaceAcceptor() {};
 public:
     std::map<std::string, std::string> ifacesAcceptedSubNames; //maps this level's iface names to lower level's
     std::map<std::string, std::weak_ptr<ns3lxc::IfaceAcceptor> > ifacesAccepted; //keep a ref to who below us accepts ifaces
