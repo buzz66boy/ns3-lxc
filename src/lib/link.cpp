@@ -7,7 +7,7 @@
 
 using namespace ns3lxc;
 
-Link::Link(const Link& ln): Nameable(ln){
+Link::Link(const Link& ln): Nameable(ln), AdditionalTags(ln) {
     type = ln.type;
     numIfaces = ln.numIfaces;
     if(ln.ip){
@@ -24,7 +24,7 @@ Link::Link(const Link& ln): Nameable(ln){
     }
 }
 
-Link::Link(std::string name, ns3lxc::Link& link): Nameable(name) {
+Link::Link(std::string name, ns3lxc::Link& link): Nameable(name), AdditionalTags(link) {
     type = link.type;
     bandwidth = link.bandwidth;
     latency = link.latency;

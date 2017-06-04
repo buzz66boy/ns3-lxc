@@ -16,7 +16,7 @@ void ns3lxc::Node::reRefIfaces(ns3lxc::Node *node){
     }
 }
 
-ns3lxc::Node::Node(ns3lxc::Node& temp, std::string nodeName, std::string origName): Positionable(temp), Nameable(nodeName, origName), IfaceProvider() {
+ns3lxc::Node::Node(ns3lxc::Node& temp, std::string nodeName, std::string origName): Positionable(temp), Nameable(nodeName, origName), AdditionalTags(temp), IfaceProvider() {
     ifaces = temp.ifaces;
     reRefIfaces(this);
     requiresReRef = true;
@@ -25,7 +25,7 @@ ns3lxc::Node::Node(ns3lxc::Node& temp, std::string nodeName, std::string origNam
     nodeNum = temp.nodeNum;
 }
 
-ns3lxc::Node::Node(const ns3lxc::Node &temp): Positionable(temp), Nameable(temp), IfaceProvider() {
+ns3lxc::Node::Node(const ns3lxc::Node &temp): Positionable(temp), Nameable(temp), AdditionalTags(temp), IfaceProvider() {
     ifaces = temp.ifaces;
     reRefIfaces(this);
     requiresReRef = true;

@@ -290,15 +290,26 @@ static void parseApplications(YAML::Node apps, ParsedTopology *parsedTop){
     						break;
     					}
     				}
-    				if(hasApp && iter.second.Type() != YAML::NodeType::Null){
+    				if(hasApp){
     					// add inline ${} parsing
-    					appPtr->args = iter.second.as<string>();
+                        if(iter.second.Type() == YAML::NodeType::Scalar){
+    					   appPtr->args = iter.second.as<string>();
+                        } else if(iter.second.Type() == YAML::NodeType::Map){
+                            for(auto pair : iter.second){
+                                appPtr->additionalTags[pair.first.as<string>()] = pair.second;
+                            }
+                        }
     				} else {
     					ns3lxc::Application app(appName);
-	    				if(iter.second.Type() != YAML::NodeType::Null){
+	    				if(iter.second.Type() == YAML::NodeType::Scalar){
 	    					//args are present
 	    					app.args = iter.second.as<string>();
-	    				}
+	    				} else if(iter.second.Type() == YAML::NodeType::Map){
+                            for(auto pair : iter.second){
+                                app.additionalTags[pair.first.as<string>()] = pair.second;
+                                cout << pair.first.as<string>() << endl;
+                            }
+                        }
 	    				nodePtr->applications.push_back(app);
     				}
     				cout << "Added " + appName + " to node " + nodePtr->name << endl;

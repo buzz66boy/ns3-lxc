@@ -9,13 +9,14 @@
 #include <vector>
 #include <memory>
 
+#include "additionalTags.h"
 #include "iface.h"
 #include "nameable.h"
 
 namespace ns3lxc {
 
 // declarations
-class Link : public IfaceAcceptor, public Nameable {
+class Link : public IfaceAcceptor, public Nameable, public AdditionalTags {
 private:
 	bool requiresReRef = false;
 	
@@ -33,7 +34,7 @@ public:
 	std::string bandwidth;
 	std::string latency;
 	
-	Link(std::string name, std::string type, int numIfaces): Nameable(name), type(type), numIfaces(numIfaces) {};
+	Link(std::string name, std::string type, int numIfaces): Nameable(name), AdditionalTags(), type(type), numIfaces(numIfaces) {};
 	Link(std::string name, Link& link);
 	Link(std::string name): Nameable(name) {}
 	Link(const Link&);

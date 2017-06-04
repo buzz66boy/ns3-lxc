@@ -1,0 +1,7 @@
+TestCase12:
+  nodes:
+    - node1:
+        iface: eth0
+        application:
+          - iperf:
+              flash: tuesday

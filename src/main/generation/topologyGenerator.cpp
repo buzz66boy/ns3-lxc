@@ -24,9 +24,12 @@ void generateTopology(ns3lxc::Topology *topology){
         NodeSpawner::startNodes(topology);
         NodeSpawner::installApplications(topology);
     }
+
+    string scriptLoc = Settings::script_dest + "/" + topology->name + ".cc";
     if(Settings::genNS3()){
-        string scriptLoc = Settings::script_dest + "/" + topology->name + ".cc";
         Ns3Writer::writeScript(topology, scriptLoc);
+    }
+    if(Settings::runNS3()){
         cout << "Waiting to continue (enter): ";
         cout.flush();
         cin.ignore();
@@ -36,8 +39,6 @@ void generateTopology(ns3lxc::Topology *topology){
         dst << src.rdbuf();
         src.close();
         dst.close();
-    }
-    if(Settings::runNS3()){
         char cwd[PATH_MAX];
         getcwd(cwd,  PATH_MAX + 1);
         chdir(Settings::ns3_path.c_str());

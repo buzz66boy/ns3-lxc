@@ -50,7 +50,6 @@ static map<string, string> parseArgs(int argc, char *argv[]){
 			argMap[arg] = "exists";
 		} else {
 			argMap["file"] = arg;
-			cout << arg << endl;
 		}
 	}
 	return argMap;

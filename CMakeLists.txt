@@ -61,6 +61,7 @@ set(Local_Libs
 		src/lib/include/topology.h
 		src/lib/include/application.h
         src/lib/include/nameable.h
+        src/lib/include/additionalTags.h
 		src/lib/ipaddr.cpp
         src/lib/node.cpp
 		src/lib/link.cpp
@@ -68,6 +69,7 @@ set(Local_Libs
         src/lib/iface.cpp
         src/lib/application.cpp
         src/lib/position.cpp
+        src/lib/additionalTags.cpp
 )
 
 set(NS-3_LXC

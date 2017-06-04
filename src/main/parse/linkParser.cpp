@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <map>
+#include <vector>
 #include <sys/socket.h>
 
 #include "yaml-cpp/yaml.h"
@@ -30,6 +31,7 @@ static void parseLinkIfacesAccepted(YAML::Node node, ParsedTopology *top, shared
 }
 
 void parseLink(YAML::Node node, ParsedTopology *top){
+    vector<string> recognizedTags;
     std::string name = node.begin()->first.as<std::string>();
     node = node[name];
 
@@ -37,33 +39,40 @@ void parseLink(YAML::Node node, ParsedTopology *top){
 
     std::shared_ptr<ns3lxc::Link> link;
     if(node[TAG_TEMPLATE]){
+        recognizedTags.push_back(TAG_TEMPLATE);
         link = std::make_shared<ns3lxc::Link>(name, *top->links[node[TAG_TEMPLATE].as<string>()]);
     } else {
         link = std::make_shared<ns3lxc::Link>(name);
     }
 
     if(node[TAG_TYPE]){
+        recognizedTags.push_back(TAG_TYPE);
         link->setType(node[TAG_TYPE].as<std::string>());
     } else {
         throw Ns3lxcException(ErrorCode::LINK_TYPE_NOT_SPECIFIED, name);
     }
     ns3lxc::IpAddr subnetIp(AF_INET, "255.255.255.0");
     if(node[TAG_CIDR]){
+        recognizedTags.push_back(TAG_CIDR);
         int cidr = node[TAG_CIDR].as<int>();
         subnetIp = ns3lxc::IpAddr(AF_INET, cidr);
     } else if(node[TAG_SUBNET]){
+        recognizedTags.push_back(TAG_SUBNET);
         subnetIp = ns3lxc::IpAddr(AF_INET, node[TAG_SUBNET].as<string>());
     }
 
     if(node[TAG_IFACES_ACCEPTED]){
+        recognizedTags.push_back(TAG_IFACES_ACCEPTED);
         parseLinkIfacesAccepted(node[TAG_IFACES_ACCEPTED], top, link);
     }
 
     if(node[TAG_BANDWIDTH]){
+        recognizedTags.push_back(TAG_BANDWIDTH);
         link->bandwidth = node[TAG_BANDWIDTH].as<string>();
     }
 
     if(node[TAG_LATENCY]){
+        recognizedTags.push_back(TAG_LATENCY);
         link->latency = node[TAG_LATENCY].as<string>();
     }
 
@@ -71,12 +80,16 @@ void parseLink(YAML::Node node, ParsedTopology *top){
     YAML::Node ifaceNode;
 
     if(node[TAG_IFACE]){
+        recognizedTags.push_back(TAG_IFACE);
         ifaceNode = node[TAG_IFACE];
     } else if(node[pluralize(TAG_IFACE)]){
+        recognizedTags.push_back(pluralize(TAG_IFACE));
         ifaceNode = node[pluralize(TAG_IFACE)];
     }  else if (node[TAG_INTERFACE]){
+        recognizedTags.push_back(TAG_INTERFACE);
         ifaceNode = node[TAG_INTERFACE];
     } else if (node[pluralize(TAG_INTERFACE)]){
+        recognizedTags.push_back(pluralize(TAG_INTERFACE));
         ifaceNode = node[pluralize(TAG_INTERFACE)];
     }
     if(ifaceNode.Type() == YAML::NodeType::Scalar){
@@ -104,6 +117,7 @@ void parseLink(YAML::Node node, ParsedTopology *top){
             }
         }
     }
+    link->mapAdditionalTags(recognizedTags, node);
     if(top->topology.linkMap.count(link->name) > 0){
         cout << "LINK EXISTS" << link->name << endl;
     } else {

@@ -216,7 +216,7 @@ void LxcContainer::runApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {
             string command = app.name + " " + app.args;
             int pid = runCommandOnContainer(command, c, &opts, false);
             pidMap[nodePtr->name].push_back(pid);
-        } else if(applicationTypeMap.at(app.name)->isApplicationSynced()) {
+        }  else if(applicationTypeMap.count(app.name) > 0 && applicationTypeMap.at(app.name)->isApplicationSynced()) {
             switch(applicationTypeMap.at(app.name)->getInstallMethod()){
                 default:
                 case(InstallMethod::PACKMAN):

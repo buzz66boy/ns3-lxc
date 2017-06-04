@@ -197,5 +197,4 @@ static int reNum(Topology *top, int curNum){
 void Topology::reNumNodes(Topology *top){
     top->curNodeNum = 0;
     reNum(top, 0);
-
 }

@@ -13,11 +13,12 @@
 #include "position.h"
 #include "iface.h"
 #include "nameable.h"
+#include "additionalTags.h"
 
 namespace ns3lxc {
 
 // declarations
-class Node : public Positionable, public IfaceProvider, public Nameable {
+class Node : public Positionable, public IfaceProvider, public Nameable, public AdditionalTags {
 private:
     bool requiresReRef = false;
 public:
@@ -28,7 +29,7 @@ public:
 	
 	ns3lxc::Iface *getIface(std::string ifaceName) override; // OVERRIDE IfaceProvider
 
-    Node(): Nameable(), Positionable(), IfaceProvider() {};
+    Node(): Nameable(), Positionable(), IfaceProvider(), AdditionalTags() {};
     Node(std::string name):  Nameable(name), Positionable(), IfaceProvider() {};
     Node(ns3lxc::Node& temp, std::string nodeName, std::string origName);
     Node(const ns3lxc::Node &temp);
