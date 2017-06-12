@@ -29,7 +29,7 @@ public:
      * Make necessary type-specific steps to install the applications on any container
      *  such as pre-downloading packages
      **/
-    virtual void prepForInstall(std::vector<std::shared_ptr<ns3lxc::Application> > appList) = 0;
+    virtual void prepForInstall(std::vector<std::shared_ptr<ns3lxc::Application> >) = 0;
 
     /**
      * Install the applications in node->applications on the node and run them
@@ -38,7 +38,12 @@ public:
     virtual void installApplications(std::shared_ptr<ns3lxc::Node>) = 0;
 
     /**
-     * Start the applications on the node if they are synched
+     * Run the commands specified for node that aren't tied to an application
+     **/
+    virtual void runCommands(std::shared_ptr<ns3lxc::Node>) = 0;
+
+    /**
+     * Start the applications on the node if they are synched and run the commands associated with them
      **/
     virtual void runApplications(std::shared_ptr<ns3lxc::Node>) = 0; // for now, change to sync'ed packet later?
     

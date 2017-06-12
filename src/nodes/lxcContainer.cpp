@@ -170,7 +170,7 @@ void LxcContainer::installApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {
                 case(InstallMethod::SCRIPT):
                 case(InstallMethod::FOLDER):
                 {
-                    pair<string, string> location = appType->getLocation();
+                    pair<string, string> location = appType->getLocation(&app);
                     if(location.first != ""){
                         string localLoc = location.first;
                         string nodeLoc = (location.second != "") ? location.second : location.first;
@@ -185,7 +185,7 @@ void LxcContainer::installApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {
                     //already installed
                     break;
             }
-            vector<pair<string, string> > existingFiles = appType->getExistingRequiredFiles(app.args, nodePtr);
+            vector<pair<string, string> > existingFiles = appType->getExistingRequiredFiles(&app, nodePtr);
             for(pair<string, string> locPair : existingFiles){
                 //transfer existing files to location on container
                 if(locPair.second[0] != '/'){
@@ -193,7 +193,7 @@ void LxcContainer::installApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {
                 }
                 system(("cp -r " + locPair.first + " " + lxcDir + locPair.second).c_str());
             }
-            vector<pair<string, string> > requiredFiles = appType->getRequiredFiles(app.args, nodePtr);
+            vector<pair<string, string> > requiredFiles = appType->getRequiredFiles(&app, nodePtr);
             for(pair<string, string> locPair : requiredFiles){
                 if(locPair.first[0] != '/'){
                     locPair.first = "/" + locPair.first;
@@ -207,27 +207,36 @@ void LxcContainer::installApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {
     }
 }
 
+void LxcContainer::runCommands(std::shared_ptr<ns3lxc::Node> nodePtr){
+    lxc_container *c = containerMap[nodePtr->name].get();
+    lxc_attach_options_t opts = LXC_ATTACH_OPTIONS_DEFAULT;
+    for(auto cmdPair : nodePtr->commands){
+        int res = runCommandOnContainer(cmdPair.first, c, &opts, true);
+    }
+}
+
 void LxcContainer::runApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {
     lxc_container *c = containerMap[nodePtr->name].get();
     lxc_attach_options_t opts = LXC_ATTACH_OPTIONS_DEFAULT;
     for(auto app : nodePtr->applications){
         //Only run non-mapped app if args are present
-        if(applicationTypeMap.count(app.name) < 1 && app.args != ""){
-            string command = app.name + " " + app.args;
-            int pid = runCommandOnContainer(command, c, &opts, false);
-            pidMap[nodePtr->name].push_back(pid);
-        }  else if(applicationTypeMap.count(app.name) > 0 && applicationTypeMap.at(app.name)->isApplicationSynced()) {
-            switch(applicationTypeMap.at(app.name)->getInstallMethod()){
-                default:
-                case(InstallMethod::PACKMAN):
-                    for(pair<string, bool> cmdPair : applicationTypeMap.at(app.name)->getExecutionCommands(app.args, nodePtr)){
-                        string command = cmdPair.first;
-                        int res = runCommandOnContainer(command, c, &opts, cmdPair.second);
-                        if(!cmdPair.second){
-                            pidMap[nodePtr->name].push_back(res);
-                        }
-                    }
-                    break;
+        if(applicationTypeMap.count(app.name) < 1 && app.commands.size() > 0){
+            int pid;
+            for(pair<string, bool> cmdPair : app.commands){
+                pid = runCommandOnContainer(cmdPair.first, c, &opts, false);
+                pidMap[nodePtr->name].push_back(pid);
+            }
+        } else if(applicationTypeMap.count(app.name) > 0 && applicationTypeMap.at(app.name)->isApplicationSynced()) {
+            for(pair<string, bool> cmdPair : app.commands){
+                int pid = runCommandOnContainer(cmdPair.first, c, &opts, false);
+                pidMap[nodePtr->name].push_back(pid);
+            }
+            for(pair<string, bool> cmdPair : applicationTypeMap.at(app.name)->getExecutionCommands(&app, nodePtr)){
+                string command = cmdPair.first;
+                int res = runCommandOnContainer(command, c, &opts, cmdPair.second);
+                if(!cmdPair.second){
+                    pidMap[nodePtr->name].push_back(res);
+                }
             }
         }
     }
@@ -236,7 +245,7 @@ void LxcContainer::grabOutput(std::shared_ptr<ns3lxc::Node> nodePtr) {
     for(auto app : nodePtr->applications){
         string lxcDir = "/var/lib/lxc/" + nodePtr->name + "/rootfs";
         if(applicationTypeMap.count(app.name) > 0){
-            for(string path : applicationTypeMap.at(app.name)->getCleanupLocations(app.args, nodePtr)){
+            for(string path : applicationTypeMap.at(app.name)->getCleanupLocations(&app, nodePtr)){
                 if(path[0] != '/'){
                     path = '/' + path;
                 }
@@ -272,7 +281,7 @@ void LxcContainer::teardownNode(std::shared_ptr<ns3lxc::Node> nodePtr){
     lxc_attach_options_t opts = LXC_ATTACH_OPTIONS_DEFAULT;
     for(auto app: nodePtr->applications){
         if(applicationTypeMap.count(app.name) > 0){
-            for(string command : applicationTypeMap.at(app.name)->getCleanupCommands(app.args, nodePtr)){
+            for(string command : applicationTypeMap.at(app.name)->getCleanupCommands(&app, nodePtr)){
                 runCommandOnContainer(command, c, &opts, true);
             }
         }

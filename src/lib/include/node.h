@@ -26,6 +26,7 @@ public:
     std::string type;
 	std::map<std::string, Iface> ifaces;
 	std::vector<Application> applications;
+    std::vector<std::pair<std::string, bool> > commands;
 	
 	ns3lxc::Iface *getIface(std::string ifaceName) override; // OVERRIDE IfaceProvider
 

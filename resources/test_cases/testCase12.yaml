@@ -4,4 +4,4 @@ TestCase12:
         iface: eth0
         application:
           - iperf:
-              flash: tuesday
+              flash: tuesday #test of extra tags being sent to app

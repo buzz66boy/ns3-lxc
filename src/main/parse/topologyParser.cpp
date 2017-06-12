@@ -22,6 +22,8 @@
 #include "linkParser.h"
 #include "ifaceParser.h"
 #include "positionParser.h"
+#include "applicationParser.h"
+#include "commandParser.h"
 #include "subTopologyParser.h"
 #include "topologyParser.h"
 
@@ -30,8 +32,7 @@ using namespace std;
 static void parseIncludes(YAML::Node includes, std::string topPath, ParsedTopology *parsedTop);
 static void parseNodes(YAML::Node nodes, ParsedTopology *parsedTop);
 static void parseLinks(YAML::Node links, ParsedTopology *parsedTop);
-static void parseSubTopologies(YAML::Node topologies, ParsedTopology *parsedTop);
-static void parseApplications(YAML::Node apps, ParsedTopology *parsedTop);
+static void parseSubTopologies(YAML::Node topologies, ParsedTopology *parsedTop);\
 
 ns3lxc::Topology parseTopologyFile(std::string topPath){	
 	ParsedTopology parsedTop;
@@ -131,6 +132,13 @@ void parseTopology(YAML::Node topology, ParsedTopology *parsedTop){
     } else if (topology[pluralize(TAG_APPLICATION)]){
         parseApplications(topology[pluralize(TAG_APPLICATION)], parsedTop);
     }
+
+    if(topology[TAG_COMMAND]){
+        parseCommands(topology[TAG_COMMAND], parsedTop);
+    } else if(topology[pluralize(TAG_COMMAND)]){
+        parseCommands(topology[pluralize(TAG_COMMAND)], parsedTop);
+    }
+
     computeAbsolutePositions(&parsedTop->topology);
 	cout << "DONE PARSING TOP " << parsedTop->topology.name << endl;
 
@@ -222,18 +230,9 @@ static void parseLinks(YAML::Node links, ParsedTopology *parsedTop){
 	}
 }
 
-static void addAppToAllNodes(ns3lxc::Application *app, ns3lxc::Topology *top){
-	for(auto subTopPtr : top->subTopologies){
-		addAppToAllNodes(app, subTopPtr.get());
-	}
-	for(auto nodePtr : top->nodes){
-		nodePtr->applications.push_back(ns3lxc::Application(*app));
-	}
-}
-
-static shared_ptr<ns3lxc::Node> findNode(vector<string> search, ns3lxc::Topology *top){
+shared_ptr<ns3lxc::Node> findNode(vector<string> search, ns3lxc::Topology *top){
 	if(search.size() < 1){
-		return shared_ptr<ns3lxc::Node>();
+		throw Ns3lxcException(ErrorCode::NODE_NOT_FOUND, " find node");
 	}
 	if(top->topMap.count(search[0]) > 0){
 		shared_ptr<ns3lxc::Topology> topPtr = top->topMap.at(search[0]);
@@ -242,82 +241,8 @@ static shared_ptr<ns3lxc::Node> findNode(vector<string> search, ns3lxc::Topology
 	} else if(top->nodeMap.count(search[0]) > 0){
 		return top->nodeMap.at(search[0]);
 	} else {
-		return shared_ptr<ns3lxc::Node>();
+		throw Ns3lxcException(ErrorCode::NODE_NOT_FOUND, search[0]);
 	}
-}
-
-static void parseApplications(YAML::Node apps, ParsedTopology *parsedTop){
-	for(size_t i = 0; i < apps.size(); ++i){
-        string appName = apps[i].begin()->first.as<string>();
-        switch(apps[i].begin()->second.Type()){
-        	case YAML::NodeType::Scalar:
-        		if(apps[i].begin()->second.as<string>() == "all"){
-        			ns3lxc::Application app(appName);
-	        		addAppToAllNodes(&app, &parsedTop->topology);
-	        	} else {
-	        		vector<string> split = splitString(apps[i].begin()->second.as<string>());
-
-	        	}
-        		break;
-        	case(YAML::NodeType::Sequence):
-        		break;
-        	case(YAML::NodeType::Map):
-    		{
-    			YAML::Node mapNode = apps[i].begin()->second;
-    			if(mapNode[TAG_ALL]){
-    				ns3lxc::Application app(appName);
-    				if(mapNode[TAG_ALL].Type() != YAML::NodeType::Null){
-    					//default args are present
-    					app.args = mapNode[TAG_ALL].as<string>();
-    				}
-	        		addAppToAllNodes(&app, &parsedTop->topology);
-    			}
-    			for(auto iter : mapNode){
-    				if(iter.first.as<string>() == TAG_ALL){
-    					continue;
-    				}
-    				vector<string> findMe = splitString(iter.first.as<string>());
-    				shared_ptr<ns3lxc::Node> nodePtr = findNode(findMe, &parsedTop->topology);
-    				if(!nodePtr){
-    					throw Ns3lxcException(ErrorCode::NODE_NOT_FOUND, iter.first.as<string>());
-    				}
-    				bool hasApp = false;
-    				ns3lxc::Application *appPtr;
-    				for(auto app : nodePtr->applications){
-    					if(app.name == appName){
-    						hasApp = true;
-    						appPtr = &app;
-    						break;
-    					}
-    				}
-    				if(hasApp){
-    					// add inline ${} parsing
-                        if(iter.second.Type() == YAML::NodeType::Scalar){
-    					   appPtr->args = iter.second.as<string>();
-                        } else if(iter.second.Type() == YAML::NodeType::Map){
-                            for(auto pair : iter.second){
-                                appPtr->additionalTags[pair.first.as<string>()] = pair.second;
-                            }
-                        }
-    				} else {
-    					ns3lxc::Application app(appName);
-	    				if(iter.second.Type() == YAML::NodeType::Scalar){
-	    					//args are present
-	    					app.args = iter.second.as<string>();
-	    				} else if(iter.second.Type() == YAML::NodeType::Map){
-                            for(auto pair : iter.second){
-                                app.additionalTags[pair.first.as<string>()] = pair.second;
-                                cout << pair.first.as<string>() << endl;
-                            }
-                        }
-	    				nodePtr->applications.push_back(app);
-    				}
-    				cout << "Added " + appName + " to node " + nodePtr->name << endl;
-    			}
-        		break;
-        	}
-        }
-    }
 }
 
 static void renameSubTopologies1(ns3lxc::Topology *topology, std::string prefix){

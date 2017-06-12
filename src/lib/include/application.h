@@ -5,7 +5,7 @@
 class Node;
 
 // include dependencies
-#include <vector>
+#include <map>
 #include <string>
 #include <map>
 
@@ -18,11 +18,27 @@ namespace ns3lxc {
 class Application: public Nameable, public AdditionalTags {
 public:
 	std::string path = "";
-	std::string args = "";
 
-    Application(std::string name): Nameable(name), AdditionalTags() {};
-    Application(std::string name, std::string args): Nameable(name), AdditionalTags(), args(args) {};
+    /**
+     * Map of string command and boolean indicating inheritance
+     **/
+    std::vector<std::pair<std::string, bool> > commands;
+    
+    /**
+     * Should App be used when templated (user by higher level top)
+     **/
+    bool inherit = true;
+
+    Application(std::string name, bool inherit = true): inherit(inherit), Nameable(name), AdditionalTags() {};
+    Application(std::string name, std::string cmd): Nameable(name), commands({std::pair<std::string, bool> (cmd, false)}) {}
     Application(const Application& temp);
+
+    /** 
+     * Constructor to filter out non-inherited commands
+     **/
+    Application(Application *temp);
+
+    void addCommand(std::string cmd, bool shouldInherit = true) {commands.push_back(std::pair<std::string, bool> (cmd, shouldInherit)); }
 };
 
 }

@@ -10,6 +10,7 @@
 #define TAG_NODE "node" 
 #define TAG_TOPOLOGY "topology"
 #define TAG_APPLICATION "application"
+#define TAG_COMMAND "command"
 #define TAG_LINK "link"
 #define TAG_BANDWIDTH "bandwidth"
 #define TAG_LATENCY "latency"

@@ -32,10 +32,10 @@ ComplexNetwork:
 
   applications:
     - iperf3:
-        firstHalf middle: -s
-        firstHalf end: -c -u 10.0.0.2 #${secondHalf end eth1 ip}
+        - firstHalf middle: iperf3 -s
+        - firstHalf end: iperf3 -c -u 10.0.0.2 #${secondHalf end eth1 ip}
     # - quagga: all
           
   ifacesProvided:
     - left: firstHalf left
-    - right: secondHalf left 
+    - right: secondHalf left

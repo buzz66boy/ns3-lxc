@@ -5,6 +5,7 @@
 
 // include dependencies
 #include <string>
+#include <vector>
 #include <map>
 #include <memory>
 
@@ -29,5 +30,6 @@ public:
 ns3lxc::Topology parseTopologyFile(std::string topPath);
 void parseTopology(YAML::Node topology, ParsedTopology *parsedTop);
 void renameSubTopologies(ns3lxc::Topology *topology, std::string prefix="");
+std::shared_ptr<ns3lxc::Node> findNode(std::vector<std::string> search, ns3lxc::Topology *top);
 
 #endif

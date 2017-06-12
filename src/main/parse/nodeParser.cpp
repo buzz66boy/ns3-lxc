@@ -48,11 +48,11 @@ static void parseNodeIfaces(YAML::Node ifaces, std::shared_ptr<ns3lxc::Node> nod
 void parseNodeApplications(YAML::Node apps, std::shared_ptr<ns3lxc::Node> node){
     for(size_t i = 0; i < apps.size(); ++i){
         string appName = apps[i].begin()->first.as<string>();
-        string args = "";
+        string cmd = "";
         if(apps[i].begin()->second.Type() == YAML::NodeType::Scalar){
             //add ${} parsing
-            args = apps[i].begin()->second.as<string>();
-            node->applications.push_back(ns3lxc::Application(appName, args));
+            cmd = apps[i].begin()->second.as<string>();
+            node->applications.push_back(ns3lxc::Application(appName, cmd));
         } else if(apps[i].begin()->second.Type() == YAML::NodeType::Map) {
             ns3lxc::Application app(appName);
             for(auto pair : apps[i].begin()->second){

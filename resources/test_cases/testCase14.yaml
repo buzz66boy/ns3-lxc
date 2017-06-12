@@ -1,0 +1,6 @@
+include: testCase13
+
+TestCase14:
+  topologies:
+    - inheritTest:
+        template: TestCase13

@@ -6,11 +6,20 @@
 
 using namespace std;
 
-std::vector<std::pair<std::string, bool> > GenericPackman::getExecutionCommands(std::string args, std::shared_ptr<ns3lxc::Node> nodePtr){
-    string build = "";
-    if(sleepTime > 0){
-        build = build + "sleep " + to_string(sleepTime) + ";";
+std::vector<std::pair<std::string, bool> > GenericPackman::getExecutionCommands(ns3lxc::Application *app, std::shared_ptr<ns3lxc::Node> nodePtr){
+    vector<pair<string, bool> > cmdVect;
+    if(app->commands.size() > 0){
+        for(size_t i = 0; i < app->commands.size(); ++i){
+            if(i == app->commands.size() - 1){
+                string build = "";
+                if(sleepTime > 0){
+                    build = build + "sleep " + to_string(sleepTime) + ";";
+                }
+                build = build + app->commands[i].first + " &> " + nodePtr->name + "_" + name + "_log.txt";
+            } else {
+
+            }
+        }
     }
-    build = build + name + " " + args + " &> " + nodePtr->name + "_" + name;
-    return vector<pair<string, bool> >({pair<string, bool>(build, false)});
+    return cmdVect;
 }

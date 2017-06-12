@@ -54,43 +54,40 @@ std::vector<std::shared_ptr<ns3lxc::Topology> > parseSubTopology(YAML::Node node
             }
         }
         if(node[TAG_OFFSET]){
-            string offset = node[TAG_OFFSET].as<std::string>();
-            applyIpOffset(offset, topPtr.get());
+            if(node[TAG_OFFSET].Type() == YAML::NodeType::Scalar){
+                string offset = node[TAG_OFFSET].as<std::string>();
+                applyIpOffset(offset, topPtr.get());
+            } else if (iters > 1 && node[TAG_OFFSET][name]){
+                string offset = node[TAG_OFFSET][name].as<std::string>();
+                applyIpOffset(offset, topPtr.get());
+            }
         }
         if(node[TAG_POSITION]){
-            if(iters > 1){
-                if(node[TAG_POSITION][name]){
-                    parsePositions(node[TAG_POSITION][name], topPtr.get());
-                }
+            if(iters > 1 && node[TAG_POSITION][name]){
+                parsePositions(node[TAG_POSITION][name], topPtr.get());
             } else {
                 parsePositions(node[TAG_POSITION], topPtr.get());
             }
         } else if (node[pluralize(TAG_POSITION)]){
-            if(iters > 1){
-                YAML::Node baseNode = node[pluralize(TAG_POSITION)];
-                if(baseNode[name]){
-                    parsePositions(baseNode[name], topPtr.get());
-                }
+            YAML::Node baseNode = node[pluralize(TAG_POSITION)];
+            if(iters > 1 && baseNode[name]){
+                parsePositions(baseNode[name], topPtr.get());
             } else {
-                parsePositions(node[pluralize(TAG_POSITION)], topPtr.get());
+                parsePositions(baseNode, topPtr.get());
             }
         }
         if(node[TAG_ROTATION]){
             if(node[TAG_ROTATION].Type() == YAML::NodeType::Scalar){
                 applyRotation(node[TAG_ROTATION].as<int>(), topPtr.get());
-            } else if(iters > 1){
-                if(node[TAG_ROTATION][name]){
-                    applyRotation(node[TAG_ROTATION][name].as<int>(), topPtr.get());
-                }
+            } else if(iters > 1 && node[TAG_ROTATION][name]){
+                applyRotation(node[TAG_ROTATION][name].as<int>(), topPtr.get());
             }
         } else if(node[pluralize(TAG_ROTATION)]){
             YAML::Node rotNode = node[pluralize(TAG_ROTATION)];
             if(rotNode.Type() == YAML::NodeType::Scalar){
                 applyRotation(rotNode.as<int>(), topPtr.get());
-            } else if(iters > 1){
-                if(rotNode[name]){
-                    applyRotation(rotNode[name].as<int>(), topPtr.get());
-                }
+            } else if(iters > 1 && rotNode[name]){
+                applyRotation(rotNode[name].as<int>(), topPtr.get());
             }
         }
         topList.push_back(topPtr);

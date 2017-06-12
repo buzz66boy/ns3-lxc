@@ -51,6 +51,13 @@ const char* Ns3lxcException::what() const throw() {
         case(ErrorCode::NODE_TYPE_NOT_SPECIFIED):
             errStr = "Node Type not specified: ";
             break;
+        //APPS
+        case(ErrorCode::APP_NOT_FOUND):
+            errStr = "Application not found: ";
+            break;
+        case(ErrorCode::NODE_NOT_SPECIFIED):
+            errStr = "Node not specified for: ";
+            break;
         //LINKS
         case(ErrorCode::LINK_NOT_FOUND):
             errStr = "Link not found: ";

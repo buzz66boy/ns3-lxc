@@ -28,6 +28,7 @@ public:
     void startNode(std::shared_ptr<ns3lxc::Node>) override;
     void prepForInstall(std::vector<std::shared_ptr<ns3lxc::Application> > appList) override;
     void installApplications(std::shared_ptr<ns3lxc::Node>) override;
+    void runCommands(std::shared_ptr<ns3lxc::Node>) override;
     void runApplications(std::shared_ptr<ns3lxc::Node>) override;
     void grabOutput(std::shared_ptr<ns3lxc::Node>) override;
     void teardownNode(std::shared_ptr<ns3lxc::Node>) override;

@@ -1,0 +1,30 @@
+TestCase13:
+  nodes:
+    - myNode:
+        num: 3
+        type: archlinux
+        iface: eth0
+
+  applications:
+    - iperf3:
+        inherit: true
+        commands:
+          - test 2
+        nodes:
+          - myNode_1: iperf3 -s
+    - sl: 
+        inherit: false
+        nodes:
+          - myNode_2
+    - telnet:
+        - myNode_3
+
+  commands:
+    inherit: #list of inherited commands to run
+      myNode_1: ls
+      myNode_2: echo "test"
+    myNode_2: #since inherit defined above, further cmds not inherited
+      - echo "Hello There!"
+      - echo "A fine addition to my collection"
+    myNode_1:
+      iperf3: test

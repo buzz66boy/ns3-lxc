@@ -21,8 +21,23 @@ ns3lxc::Node::Node(ns3lxc::Node& temp, std::string nodeName, std::string origNam
     reRefIfaces(this);
     requiresReRef = true;
     type = temp.type;
-    applications = temp.applications;
     nodeNum = temp.nodeNum;
+    for(auto cmdPair : temp.commands){
+        if(cmdPair.second){
+            commands.push_back(cmdPair);
+        }
+        // else {
+        //     std::cout << "Filtering command " + cmdPair.first + " for node " + name << std::endl;
+        // }
+    }
+    for(Application app : temp.applications){
+        if(app.inherit){
+            applications.push_back(Application(&app));
+        }
+        // else {
+            // std::cout << "Filtering out app " + app.name + " on node " + name << std::endl;
+        // }
+    }
 }
 
 ns3lxc::Node::Node(const ns3lxc::Node &temp): Positionable(temp), Nameable(temp), AdditionalTags(temp), IfaceProvider() {
@@ -32,6 +47,7 @@ ns3lxc::Node::Node(const ns3lxc::Node &temp): Positionable(temp), Nameable(temp)
     type = temp.type;
     applications = temp.applications;
     nodeNum = temp.nodeNum;
+    commands = temp.commands;
 }
 
 Iface *ns3lxc::Node::getIface(std::string ifaceName){
