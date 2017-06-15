@@ -53,3 +53,11 @@ make -j8
 - If anything fails on the cmake/make stage, it is most likely because dependencies are not installed on the system properly
 - It is recommended to run the "resources/test_cases/testCase1.yaml" file first with the command `bin/ns3lxc resources/test_cases/testCase1.yaml`
 - **NOTE**: First run will take some time on the container creation phase, as it will download the appropriate template and you will see no output from this step. You can avoid this by creating a container manually via lxc of the appropriate type with a command such as`lxc-create -n nodeName -t download` and selecting the appropriate distro, release, and architecture.
+
+## Program Options (help text)
+usage: 'sudo bin/ns3lxc pathToTopology [-n] [-c] [-s] [-g] [-h]'
+- -n: write only ns-3 script SUDO NOT REQUIRED
+- -c: cleanup mode, teardown bridges, taps, and containers
+- -s: spawn mode, do not teardown after simulation completion
+- -g: GDB mode, run ns-3 script with GDB
+- -h: show this help text
