@@ -31,7 +31,7 @@ public:
     static std::string temp_dir;
     static std::string container_config_dir;
 	static std::string script_dest;
-    static std::string container_type;
+    static std::string node_type;
 
     // static int parse_config_args();
 	static int parse_settings_file(std::string settings_file);

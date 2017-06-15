@@ -12,5 +12,5 @@ TEMP_DIR: temp
 # path variable to store container output
 OUTPUT_DEST: temp/output
 
-# default container template to use for LXC
-CONTAINER_TYPE: ubuntu xenial
+# default node type to use
+NODE_TYPE: ubuntu xenial

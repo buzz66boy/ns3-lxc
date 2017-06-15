@@ -23,10 +23,6 @@ static void addCommandToTopology(std::string cmd, bool inherit, ns3lxc::Topology
     }
 }
 
-static void addCommandToNode(std::string cmd, bool inherit, shared_ptr<ns3lxc::Node> nodePtr){
-    nodePtr->commands.push_back(pair<string, bool>(cmd, inherit));
-}
-
 static void parseCommandMap(YAML::Node cmds, ParsedTopology *parsedTop, bool inherit){
     for(auto cmdPair : cmds){
         string key = cmdPair.first.as<string>();
@@ -38,7 +34,7 @@ static void parseCommandMap(YAML::Node cmds, ParsedTopology *parsedTop, bool inh
         switch(cmdPair.second.Type()){
             default:
             case(YAML::NodeType::Scalar):
-                addCommandToNode(cmdPair.second.as<string>(), inherit, nodePtr);
+                nodePtr->addCommand(cmdPair.second.as<string>(), inherit);
                 // cout << "adding cmd: " + cmdPair.second.as<string>() + " to node " +nodePtr->name << endl;
                 break;
             case(YAML::NodeType::Map):
@@ -62,7 +58,7 @@ static void parseCommandMap(YAML::Node cmds, ParsedTopology *parsedTop, bool inh
             case(YAML::NodeType::Sequence):
                 for(auto cmd : cmdPair.second){
                     // cout << "adding cmd: " + cmd.as<string>() + " to node " +nodePtr->name << endl;
-                    addCommandToNode(cmd.as<string>(), inherit, nodePtr);
+                    nodePtr->addCommand(cmd.as<string>(), inherit);
                 }
                 break;
         }

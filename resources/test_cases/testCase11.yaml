@@ -10,3 +10,5 @@ TestCase11:
           top1_2: 270
         positions:
           top1_2: 0 100 0
+        offsets:
+          top1_2: 0.0.1.0

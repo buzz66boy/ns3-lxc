@@ -22,6 +22,9 @@ using namespace std;
 
 static void parseNodeIfaces(YAML::Node ifaces, std::shared_ptr<ns3lxc::Node> node){
     cout << "\tifaces:" << endl;
+    if(node->ifaces.size() > 0){
+        node->ifaces.clear();
+    }
     if(ifaces.size() > 0){
         for(size_t i = 0; i < ifaces.size(); ++i){
             vector<string> ifaceNameMac = splitString(ifaces[i].as<std::string>());
@@ -46,6 +49,9 @@ static void parseNodeIfaces(YAML::Node ifaces, std::shared_ptr<ns3lxc::Node> nod
 }
 
 void parseNodeApplications(YAML::Node apps, std::shared_ptr<ns3lxc::Node> node){
+    if(node->applications.size() > 0){
+        node->applications.clear();
+    }
     for(size_t i = 0; i < apps.size(); ++i){
         string appName = apps[i].begin()->first.as<string>();
         string cmd = "";
@@ -59,6 +65,19 @@ void parseNodeApplications(YAML::Node apps, std::shared_ptr<ns3lxc::Node> node){
                 app.additionalTags[pair.first.as<string>()] = pair.second;
             }
             node->applications.push_back(app);
+        }
+    }
+}
+
+void parseNodeCommands(YAML::Node cmds, std::shared_ptr<ns3lxc::Node> nodePtr){
+    if(nodePtr->commands.size() > 0){
+        nodePtr->commands.clear();
+    }
+    if(cmds.Type() == YAML::NodeType::Scalar){
+        nodePtr->addCommand(cmds.as<string>(), true);
+    } else if (cmds.Type() == YAML::NodeType::Sequence){
+        for(auto cmd : cmds){
+            nodePtr->addCommand(cmd.as<string>(), true);
         }
     }
 }
@@ -111,6 +130,11 @@ std::vector<std::shared_ptr<ns3lxc::Node> > parseNode(YAML::Node node, ParsedTop
             recognizedTags.push_back(pluralize(TAG_APPLICATION));
             parseNodeApplications(node[pluralize(TAG_APPLICATION)], nodePtr);
         }
+        if(node[TAG_COMMAND]){
+            parseNodeCommands(node[TAG_COMMAND], nodePtr);
+        } else if(node[pluralize(TAG_COMMAND)]){
+            parseNodeCommands(node[pluralize(TAG_COMMAND)], nodePtr);
+        }
 
         if(node[TAG_TYPE]){
             recognizedTags.push_back(TAG_TYPE);
@@ -119,26 +143,22 @@ std::vector<std::shared_ptr<ns3lxc::Node> > parseNode(YAML::Node node, ParsedTop
                 throw Ns3lxcException(ErrorCode::NODE_TYPE_NOT_FOUND, origName + " " + nodePtr->type);
             }
         } else {
-            nodePtr->type = Settings::container_type;
+            nodePtr->type = Settings::node_type;
         }
 
         if(node[TAG_POSITION]){
             recognizedTags.push_back(TAG_POSITION);
-            if(iters > 1){
-                if(node[TAG_POSITION][name]){
-                    parsePositions(node[TAG_POSITION][name], nodePtr);
-                }
-            } else {
+            if(iters > 1 && node[TAG_POSITION][name]){
+                parsePositions(node[TAG_POSITION][name], nodePtr);
+            } else if(node[TAG_POSITION].Type() == YAML::NodeType::Scalar) {
                 parsePositions(node[TAG_POSITION], nodePtr);
             }
         } else if (node[pluralize(TAG_POSITION)]){
             recognizedTags.push_back(pluralize(TAG_POSITION));
-            if(iters > 1){
-                YAML::Node baseNode = node[pluralize(TAG_POSITION)];
-                if(baseNode[name]){
-                    parsePositions(baseNode[name], nodePtr);
-                }
-            } else {
+            if(iters > 1 && node[pluralize(TAG_POSITION)][name]){
+                YAML::Node baseNode = node[pluralize(TAG_POSITION)][name];
+                parsePositions(baseNode[name], nodePtr);
+            } else if (node[pluralize(TAG_POSITION)].Type() == YAML::NodeType::Scalar){
                 parsePositions(node[pluralize(TAG_POSITION)], nodePtr);
             }
         }

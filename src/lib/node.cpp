@@ -1,6 +1,7 @@
 #include <iostream>
 #include <memory>
 #include <map>
+#include <vector>
 #include <iostream>
 #include <algorithm>
 
@@ -48,6 +49,10 @@ ns3lxc::Node::Node(const ns3lxc::Node &temp): Positionable(temp), Nameable(temp)
     applications = temp.applications;
     nodeNum = temp.nodeNum;
     commands = temp.commands;
+}
+
+void ns3lxc::Node::addCommand(std::string cmd, bool inherit){
+    commands.push_back(std::pair<std::string, bool>(cmd, inherit));
 }
 
 Iface *ns3lxc::Node::getIface(std::string ifaceName){

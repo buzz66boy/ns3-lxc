@@ -35,6 +35,8 @@ public:
     Node(ns3lxc::Node& temp, std::string nodeName, std::string origName);
     Node(const ns3lxc::Node &temp);
 
+    void addCommand(std::string cmd, bool inherit);
+
     static void reRefIfaces(ns3lxc::Node*);
 };
 

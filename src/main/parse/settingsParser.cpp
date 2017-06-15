@@ -12,11 +12,11 @@
 #define SCRIPT_DEST_STR "SCRIPT_DEST"
 #define TEMP_DEST_STR "TEMP_DIR"
 #define OUTPUT_DEST_STR "OUTPUT_DEST"
-#define CONTAINER_TYPE "CONTAINER_TYPE"
+#define NODE_TYPE "NODE_TYPE"
 
 #define SCRIPT_DEFAULT_DEST "../../output/scripts"
 #define OUTPUT_DEFAULT_DEST "../../output"
-#define DEFAULT_CONTAINER "ubuntu xenial"
+#define DEFAULT_NODE_TYPE "ubuntu xenial"
 
 #define CONTAINER_CONFIG "/container_config"
 
@@ -42,7 +42,7 @@ string Settings::temp_dir;
 string Settings::top_output_dest;
 string Settings::output_dest;
 string Settings::container_config_dir;
-string Settings::container_type;
+string Settings::node_type;
 
 bool check_make_dir(const char *path){
 	struct stat buffer;
@@ -116,10 +116,10 @@ int Settings::parse_settings_file(std::string settings_file){
 		throw Ns3lxcException(ErrorCode::FOLDER_NOT_CREATED, Settings::container_config_dir);
 	}
 	
-	if(settings[CONTAINER_TYPE]){
-		Settings::container_type = settings[CONTAINER_TYPE].as<std::string>();
+	if(settings[NODE_TYPE]){
+		Settings::node_type = settings[NODE_TYPE].as<std::string>();
 	} else {
-		Settings::container_type = DEFAULT_CONTAINER;
+		Settings::node_type = DEFAULT_NODE_TYPE;
 	}
 
 	return 0;
