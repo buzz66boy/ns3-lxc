@@ -1,5 +1,5 @@
 SimpleNetwork:
-    ip: 10.0.0.0/29
+    ip: 10.0.0.0/29 # Experimental flag, does nothing
     nodes:
         - MyPC:
             ifaces:
@@ -20,7 +20,7 @@ SimpleNetwork:
             ifacesAccepted:
               - wifiBridge
         - wire2:
-            ip: 12.0.0.0
+            ip: 12.0.0.0 # Experimental flag, does nothing
             cidr: 24
             type: csma
             ifaces:

@@ -2,7 +2,7 @@ include:
   - complexNetworkHalf
 
 ComplexNetwork:
-  ip: 10.0.0.0/20
+  ip: 10.0.0.0/20 # Experimental flag, does nothing
   topologies:
     - firstHalf: 
         template: ComplexNetworkHalf
@@ -10,7 +10,7 @@ ComplexNetwork:
         position: 0 0 0
     - secondHalf: 
         template: ComplexNetworkHalf
-        offset: 0.0.6.0
+        offset: 0.0.6.0 
         #position: 100 0 0
         positions:
           0: 100 0 0
@@ -19,13 +19,13 @@ ComplexNetwork:
   links:
     - topConnect:
         type: wifi
-        offset: 0.0.4.0
+        offset: 0.0.4.0 # Experimental flag, does nothing
         ifaces:
           - firstHalf top 10.0.4.1
           - secondHalf bottom 10.0.4.2
     - botConnect:
         type: wifi
-        offset: 0.0.5.0
+        offset: 0.0.5.0 # Experimental flag, does nothing
         ifaces:
           - firstHalf bottom 10.0.5.1
           - secondHalf top 10.0.5.2

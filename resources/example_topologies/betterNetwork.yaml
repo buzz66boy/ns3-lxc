@@ -2,8 +2,8 @@ include:
     - simpleNetwork
 
 BetterNetwork:
-    ip: 11.0.0.0
-    cidr: 24
+    ip: 11.0.0.0 # Experimental flag, does nothing
+    cidr: 24 # Experimental flag, does nothing
     nodes:
       - masterPC:
           ifaces:
