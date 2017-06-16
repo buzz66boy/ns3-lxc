@@ -11,6 +11,7 @@
 #include "nodeTypeMap.h"
 #include "node.h"
 #include "iface.h"
+#include "nodeTypeMap.h"
 #include "parserTags.h"
 #include "errorCode.h"
 #include "settingsParser.h"
@@ -33,6 +34,8 @@ static void parseNodeIfaces(YAML::Node ifaces, std::shared_ptr<ns3lxc::Node> nod
             node->ifaces[name] = ns3lxc::Iface(name, node.get());
             if(ifaceNameMac.size() > 1){
                 node->ifaces[name].macAddr = ifaceNameMac[1]; 
+            } else {
+                node->ifaces[name].macAddr = "xx:xx:xx:xx:xx:xx";
             }
         }
     } else {
@@ -61,9 +64,7 @@ void parseNodeApplications(YAML::Node apps, std::shared_ptr<ns3lxc::Node> node){
             node->applications.push_back(ns3lxc::Application(appName, cmd));
         } else if(apps[i].begin()->second.Type() == YAML::NodeType::Map) {
             ns3lxc::Application app(appName);
-            for(auto pair : apps[i].begin()->second){
-                app.additionalTags[pair.first.as<string>()] = pair.second;
-            }
+            app.mapAdditionalTags(vector<string>(), apps[i].begin()->second);
             node->applications.push_back(app);
         }
     }
@@ -139,11 +140,11 @@ std::vector<std::shared_ptr<ns3lxc::Node> > parseNode(YAML::Node node, ParsedTop
         if(node[TAG_TYPE]){
             recognizedTags.push_back(TAG_TYPE);
             nodePtr->type = node[TAG_TYPE].as<string>();
-            if(nodeTypeMap.count(nodePtr->type) < 0){
-                throw Ns3lxcException(ErrorCode::NODE_TYPE_NOT_FOUND, origName + " " + nodePtr->type);
-            }
         } else {
             nodePtr->type = Settings::node_type;
+        }
+        if(nodeTypeMap.count(nodePtr->type) < 1){
+            throw Ns3lxcException(ErrorCode::NODE_TYPE_NOT_FOUND, origName + " " + nodePtr->type);
         }
 
         if(node[TAG_POSITION]){

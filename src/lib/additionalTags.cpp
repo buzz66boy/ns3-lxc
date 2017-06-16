@@ -21,6 +21,7 @@ void AdditionalTags::mapAdditionalTags(std::vector<std::string> knownTags, YAML:
         if(find(knownTags.begin(), knownTags.end(), node) != knownTags.end()){
             continue;
         }
+        std::cout << "Adding additional flag: " + node << std::endl;
         additionalTags[node] = pair.second;
     }
 }

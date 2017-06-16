@@ -154,7 +154,11 @@ void LxcContainer::installApplications(std::shared_ptr<ns3lxc::Node> nodePtr) {
     lxc_attach_options_t opts = LXC_ATTACH_OPTIONS_DEFAULT;
     opts.namespaces = CLONE_NEWNS | CLONE_NEWPID; // Use host's network to retrieve packages (no net isolation)
     string packman = distroPackMap.at(containerDistro);
+    string updateCmd = packman + " " + packmanMap.at(packman).at("update");
+    runCommandOnContainer(updateCmd, c, &opts, true);
+
     string installCmd = packman + " " + packmanMap.at(packman).at("install") + " ";
+
     for(auto app : nodePtr->applications){
         if(applicationTypeMap.count(app.name) < 1 || applicationTypeMap.at(app.name)->getInstallMethod() == InstallMethod::PACKMAN){
             string command = installCmd + app.name;

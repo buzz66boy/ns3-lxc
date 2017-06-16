@@ -7,11 +7,11 @@
 #include "yaml-cpp/yaml.h"
 
 #include "ipaddr.h"
+#include "linkTypeMap.h"
 #include "parserTags.h"
 #include "topologyParser.h"
 #include "link.h"
 #include "topology.h"
-#include "linkTypeMap.h"
 #include "errorCode.h"
 #include "ifaceParser.h"
 #include "linkParser.h"
@@ -48,6 +48,9 @@ void parseLink(YAML::Node node, ParsedTopology *top){
     if(node[TAG_TYPE]){
         recognizedTags.push_back(TAG_TYPE);
         link->setType(node[TAG_TYPE].as<std::string>());
+        if(linkTypeMap.count(link->getType()) < 1){
+            throw Ns3lxcException(ErrorCode::LINK_TYPE_NOT_FOUND, name);
+        }
     } else {
         throw Ns3lxcException(ErrorCode::LINK_TYPE_NOT_SPECIFIED, name);
     }

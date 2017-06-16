@@ -1,15 +1,16 @@
+time: 20
+
 TestCase13:
   nodes:
     - myNode:
         num: 3
-        type: archlinux
         iface: eth0
 
   applications:
     - iperf3:
         inherit: true
         commands:
-          - test 2
+          - echo test 2
         nodes:
           - myNode_1: iperf3 -s
     - sl: 
@@ -27,4 +28,6 @@ TestCase13:
       - echo "Hello There!"
       - echo "A fine addition to my collection"
     myNode_1:
-      iperf3: test
+      iperf3: echo test3
+    myNode_2:
+      sl: /usr/games/sl

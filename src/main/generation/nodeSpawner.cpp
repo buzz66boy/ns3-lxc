@@ -33,6 +33,16 @@ void NodeSpawner::installApplications(ns3lxc::Topology *top){
         nodeTypeMap.at(nodePtr->type)->installApplications(nodePtr);
     }
 }
+
+void NodeSpawner::runCommands(ns3lxc::Topology *top){
+    for(auto subTopPtr : top->subTopologies){
+        runCommands(subTopPtr.get());
+    }
+    for(shared_ptr<ns3lxc::Node> nodePtr : top->nodes){
+        nodeTypeMap.at(nodePtr->type)->runCommands(nodePtr);
+    }
+}
+
 void NodeSpawner::runApplications(ns3lxc::Topology *top){
     for(auto subTopPtr : top->subTopologies){
         runApplications(subTopPtr.get());

@@ -17,6 +17,10 @@ void validateLink(std::shared_ptr<ns3lxc::Link> linkPtr){
         fail = true;
     }
     string name = " " + linkPtr->name + " ";
+    if(linkPtr->getType() == ""){
+        cerr << "Link" + name + "has no type" << endl;
+        fail = true;
+    }
     if(linkPtr->ifaces.size() < 1){
         cout << "INFO: Link" + name + "does not have any connected interfaces" << endl;
     }

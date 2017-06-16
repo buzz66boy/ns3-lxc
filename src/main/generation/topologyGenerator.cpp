@@ -43,6 +43,7 @@ void generateTopology(ns3lxc::Topology *topology){
         getcwd(cwd,  PATH_MAX + 1);
         chdir(Settings::ns3_path.c_str());
         system("./waf"); //Makes more consistent run when everything's build first
+        NodeSpawner::runCommands(topology);
         NodeSpawner::runApplications(topology);
         if(Settings::gdbNS3()){
             system(("./waf --run scratch/" + topology->name + " --command-template=\"gdb --args %s\"").c_str());
