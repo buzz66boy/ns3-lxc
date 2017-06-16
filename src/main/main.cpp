@@ -9,6 +9,7 @@
 #include "yaml-cpp/yaml.h"
 #include "settingsParser.h"
 #include "topologyParser.h"
+#include "topologyValidator.h"
 #include "topologyGenerator.h"
 #include "topology.h"
 #include "node.h"
@@ -19,6 +20,13 @@
 
 #define PROJ_ROOT_DIR "ns3-lxc"
 #define SETTINGS_FILE "settings.yaml"
+
+#define HELP_STATEMENT "usage: 'sudo bin/ns3lxc pathToTopology [-n] [-c] [-s] [-g] [-h]'\n\
+-n: write only ns-3 script SUDO NOT REQUIRED\n\
+-c: cleanup mode, teardown bridges, taps, and containers\n\
+-s: spawn mode, do not teardown after simulation completion\n\
+-g: GDB mode, run ns-3 script with GDB\n\
+-h: show this help text"
 
 using namespace std;
 
@@ -75,14 +83,21 @@ int main(int argc, char *argv[]){
 		int result = Settings::parse_settings_file(settings_path);
 
 		if(argc < 2) {
+			cout << HELP_STATEMENT << endl;
 			throw Ns3lxcException(ErrorCode::NOT_ENOUGH_ARGS, to_string(argc));
 		}
 		map<string, string> argMap = parseArgs(argc, argv);
 		ns3lxc::Topology topology;
 
-		if(argMap.count("file") < 1) {
-			throw new Ns3lxcException(ErrorCode::NO_FILE_PROVIDED, "");
+		if(argMap.count("-h")){
+			cout << HELP_STATEMENT << endl;
+			exit(0);
 		}
+
+		if(argMap.count("file") < 1) {
+			throw Ns3lxcException(ErrorCode::NO_FILE_PROVIDED, "");
+		}
+
 		//check for existence of topology file and make sure not folder
 		std::ifstream infile(argMap.at("file"));
 		infile.seekg(0, ios::end);
@@ -117,7 +132,7 @@ int main(int argc, char *argv[]){
 		topology = parseTopologyFile(argMap.at("file"));
 		setOutputDest(topology.name);
 		ns3lxc::Topology::reNumNodes(&topology);
-
+		validateTopology(&topology);
 		try{
 			generateTopology(&topology);
 		} catch(Ns3lxcException& e){

@@ -1,0 +1,14 @@
+TestCase15:
+  nodes:
+    - node:
+        iface: eth0
+        num: 5
+  links:
+    - wifiLink:
+        type: wifi
+        ifaces:
+          - node_1 eth0 10.0.0.1
+          - node_2 eth0 10.0.0.2
+          - node_3 eth0 10.0.0.3
+          - node_4 eth0 10.0.0.4
+          - node_5 eth0 10.0.0.5

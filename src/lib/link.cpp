@@ -9,7 +9,6 @@ using namespace ns3lxc;
 
 Link::Link(const Link& ln): Nameable(ln), AdditionalTags(ln) {
     type = ln.type;
-    numIfaces = ln.numIfaces;
     if(ln.ip){
         ip = new IpAddr(*ln.ip);
     }
@@ -24,10 +23,16 @@ Link::Link(const Link& ln): Nameable(ln), AdditionalTags(ln) {
     }
 }
 
-Link::Link(std::string name, ns3lxc::Link& link): Nameable(name), AdditionalTags(link) {
-    type = link.type;
-    bandwidth = link.bandwidth;
-    latency = link.latency;
+Link::Link(std::string name, ns3lxc::Link& ln): Nameable(name), AdditionalTags(ln) {
+    type = ln.type;
+    bandwidth = ln.bandwidth;
+    latency = ln.latency;
+    if(ln.ip){
+        ip = new IpAddr(*ln.ip);
+    }
+    if(ln.subnetMask){
+        subnetMask = new IpAddr(*ln.subnetMask);
+    }
 }
 
 Link::~Link(){
@@ -40,19 +45,16 @@ Link::~Link(){
 }
 
 int Link::connectIface(std::string ifaceName, ns3lxc::Iface *iface){
-	connectIface(iface);
+	return connectIface(iface);
 }
 
 int Link::connectIface(ns3lxc::Iface *iface){
-    if(numIfaces == 0 || ifaces.size() < numIfaces){
         ifaces.push_back(iface);
         if(subnetMask){
             iface->assignSubnetMask(subnetMask);
         }
         iface->link = this;
         return 1;
-    }
-    return 0; //none added
 }
 
 void Link::reRefIfaces(Link *linkPtr){

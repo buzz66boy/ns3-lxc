@@ -51,15 +51,16 @@ void parseLink(YAML::Node node, ParsedTopology *top){
     } else {
         throw Ns3lxcException(ErrorCode::LINK_TYPE_NOT_SPECIFIED, name);
     }
-    ns3lxc::IpAddr subnetIp(AF_INET, "255.255.255.0");
+    ns3lxc::IpAddr subnetMask(AF_INET, "255.255.255.0");
     if(node[TAG_CIDR]){
         recognizedTags.push_back(TAG_CIDR);
         int cidr = node[TAG_CIDR].as<int>();
-        subnetIp = ns3lxc::IpAddr(AF_INET, cidr);
-    } else if(node[TAG_SUBNET]){
-        recognizedTags.push_back(TAG_SUBNET);
-        subnetIp = ns3lxc::IpAddr(AF_INET, node[TAG_SUBNET].as<string>());
+        subnetMask = ns3lxc::IpAddr(AF_INET, cidr);
+    } else if(node[TAG_SUBNET_MASK]){
+        recognizedTags.push_back(TAG_SUBNET_MASK);
+        subnetMask = ns3lxc::IpAddr(AF_INET, node[TAG_SUBNET_MASK].as<string>());
     }
+    link->subnetMask = new ns3lxc::IpAddr(subnetMask);
 
     if(node[TAG_IFACES_ACCEPTED]){
         recognizedTags.push_back(TAG_IFACES_ACCEPTED);
@@ -91,10 +92,8 @@ void parseLink(YAML::Node node, ParsedTopology *top){
     } else if (node[pluralize(TAG_INTERFACE)]){
         recognizedTags.push_back(pluralize(TAG_INTERFACE));
         ifaceNode = node[pluralize(TAG_INTERFACE)];
-    }
-    if(ifaceNode.Type() == YAML::NodeType::Scalar){
-        link->setNumIface(ifaceNode.as<int>());
-    } else if(ifaceNode.Type() != YAML::NodeType::Null) {
+    } 
+    if(ifaceNode.Type() == YAML::NodeType::Sequence) {
         for(size_t i = 0; i < ifaceNode.size(); ++i){
             std::vector<std::string> split = splitString(ifaceNode[i].as<std::string>());
             cout << "\tconnecting " << split[0] << " " << split[1] << " with ip " << (split.size() > 2 ? split[2] : "") << endl;
@@ -113,7 +112,7 @@ void parseLink(YAML::Node node, ParsedTopology *top){
                     delete ifacePtr->subnetMask;
                 }
                 ifacePtr->ip = new ns3lxc::IpAddr(AF_INET, split[2]);
-                ifacePtr->subnetMask = new ns3lxc::IpAddr(subnetIp);
+                ifacePtr->subnetMask = new ns3lxc::IpAddr(subnetMask);
             }
         }
     }

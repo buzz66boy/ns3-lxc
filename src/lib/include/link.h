@@ -19,10 +19,7 @@ namespace ns3lxc {
 class Link : public IfaceAcceptor, public Nameable, public AdditionalTags {
 private:
 	bool requiresReRef = false;
-	
 	std::string type;
-	
-	int numIfaces = 0;
 	
 public:
 
@@ -34,7 +31,7 @@ public:
 	std::string bandwidth;
 	std::string latency;
 	
-	Link(std::string name, std::string type, int numIfaces): Nameable(name), AdditionalTags(), type(type), numIfaces(numIfaces) {};
+	Link(std::string name, std::string type): Nameable(name), AdditionalTags(), type(type) {};
 	Link(std::string name, Link& link);
 	Link(std::string name): Nameable(name) {}
 	Link(const Link&);
@@ -42,9 +39,6 @@ public:
 
 	std::string getType() { return type; }
 	void setType(std::string typ) { type = typ; }
-
-	int getNumIface() { return numIfaces; }
-	void setNumIface(int num) { numIfaces = num; }
 
 	const std::vector<Iface*>& getIfaces() const { return ifaces; } 
 	

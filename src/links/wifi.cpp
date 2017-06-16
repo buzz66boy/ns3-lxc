@@ -25,7 +25,7 @@ const std::map<std::string, std::string> ofdmRateMap = {
 static std::string defaultDataRate = "24Mbps";
 
 int Wifi::getIfacesSupported(){
-    return 2;
+    return 5;
 }
 void Wifi::writeIncludes(std::ostream& str){
     str << "#include \"ns3/wifi-module.h\"" << endl;

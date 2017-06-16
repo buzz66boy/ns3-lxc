@@ -5,6 +5,7 @@
 #include "link.h"
 #include "iface.h"
 #include "errorCode.h"
+#include "linkTypeMap.h"
 #include "linkValidator.h"
 
 using namespace std;
@@ -18,6 +19,10 @@ void validateLink(std::shared_ptr<ns3lxc::Link> linkPtr){
     string name = " " + linkPtr->name + " ";
     if(linkPtr->ifaces.size() < 1){
         cout << "INFO: Link" + name + "does not have any connected interfaces" << endl;
+    }
+    if(linkPtr->ifaces.size() > linkTypeMap.at(linkPtr->getType())->getIfacesSupported()){
+        cerr << "Link" + name + "has more interfaces connected than the Link Type supports" << endl;
+        fail = true;
     }
     for(auto ifacePtr : linkPtr->ifaces){
         string ifaceStr = "Iface " + ifacePtr->name + " connected to link" + name;

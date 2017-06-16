@@ -5,6 +5,7 @@
 #include "errorCode.h"
 #include "topology.h"
 #include "nodeValidator.h"
+#include "linkValidator.h"
 #include "topologyValidator.h"
 
 using namespace std;
@@ -28,6 +29,7 @@ void validateTopology(ns3lxc::Topology *top){
             cerr << "Link " + linkPtr->name + " not mapped correctly" << endl;
             fail = true;
         }
+        validateLink(linkPtr);
     }
     for(auto subTopPtr : top->subTopologies){
         if(top->topMap.at(subTopPtr->origName) != subTopPtr){
