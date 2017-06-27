@@ -1,3 +1,10 @@
+# The ns3-lxc Project: ns-3 automation with Linux Container integration
+
+## Download the latest version of ns3-lxc
+Version 0.1 ([details](https://github.com/buzz66boy/ns3-lxc/releases))
+- zip: https://github.com/buzz66boy/ns3-lxc/archive/v0.1.zip
+- tar.gz: https://github.com/buzz66boy/ns3-lxc/archive/v0.1.tar.gz
+
 The aim of the ns3-lxc project is to create a program that automates and integrates the usage of Linux Containers (LXCs) with the real-time simulation capabilities of ns-3; abstracting away the need for users to write their own ns-3 script, instantiate their own containers, and ease the process of running applications on those containers. Primary use-cases for ns3-lxc include: testing of network routing protocols, simulation of large-scale, rapidly changing topologies, testing of new ns-3 modules, and website development and testing.
 
 A more in-depth overview may be found in the 'docs/report.odt' document.
