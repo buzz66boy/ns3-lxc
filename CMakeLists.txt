@@ -15,7 +15,8 @@ include_directories(
         src/main/parse/include
         src/main/generation/include
         src/main/validation/include
-        src/lib/include
+        src/lib/yntdl/objects/include
+        src/lib/yntdl/parse/include
         src/links/include
         src/applications/include
         src/nodes/include
@@ -53,46 +54,46 @@ set(Node_Types
 )
 
 set(Local_Libs
-		src/lib/include/ipaddr.h
-		src/lib/include/node.h
-		src/lib/include/iface.h
-		src/lib/include/position.h
-		src/lib/include/link.h
-		src/lib/include/topology.h
-		src/lib/include/application.h
-        src/lib/include/nameable.h
-        src/lib/include/additionalTags.h
-		src/lib/ipaddr.cpp
-        src/lib/node.cpp
-		src/lib/link.cpp
-        src/lib/topology.cpp
-        src/lib/iface.cpp
-        src/lib/application.cpp
-        src/lib/position.cpp
-        src/lib/additionalTags.cpp
+		src/lib/yntdl/objects/include/ipaddr.h
+		src/lib/yntdl/objects/include/node.h
+		src/lib/yntdl/objects/include/iface.h
+		src/lib/yntdl/objects/include/position.h
+		src/lib/yntdl/objects/include/link.h
+		src/lib/yntdl/objects/include/topology.h
+		src/lib/yntdl/objects/include/application.h
+        src/lib/yntdl/objects/include/nameable.h
+        src/lib/yntdl/objects/include/additionalTags.h
+		src/lib/yntdl/objects/ipaddr.cpp
+        src/lib/yntdl/objects/node.cpp
+		src/lib/yntdl/objects/link.cpp
+        src/lib/yntdl/objects/topology.cpp
+        src/lib/yntdl/objects/iface.cpp
+        src/lib/yntdl/objects/application.cpp
+        src/lib/yntdl/objects/position.cpp
+        src/lib/yntdl/objects/additionalTags.cpp
+        src/lib/yntdl/parse/include/parserTags.h
+        src/lib/yntdl/parse/include/settingsParser.h
+        src/lib/yntdl/parse/include/topologyParser.h
+        src/lib/yntdl/parse/include/subTopologyParser.h
+        src/lib/yntdl/parse/include/nodeParser.h
+        src/lib/yntdl/parse/include/linkParser.h
+        src/lib/yntdl/parse/include/ifaceParser.h
+        src/lib/yntdl/parse/include/positionParser.h
+        src/lib/yntdl/parse/include/applicationParser.h
+        src/lib/yntdl/parse/include/commandParser.h
+        src/lib/yntdl/parse/parserTags.cpp
+        src/lib/yntdl/parse/topologyParser.cpp
+        src/lib/yntdl/parse/subTopologyParser.cpp
+        src/lib/yntdl/parse/settingsParser.cpp
+        src/lib/yntdl/parse/nodeParser.cpp
+        src/lib/yntdl/parse/linkParser.cpp
+        src/lib/yntdl/parse/ifaceParser.cpp
+        src/lib/yntdl/parse/positionParser.cpp
+        src/lib/yntdl/parse/applicationParser.cpp
+        src/lib/yntdl/parse/commandParser.cpp
 )
 
 set(NS-3_LXC
-        src/main/parse/include/parserTags.h
-        src/main/parse/include/settingsParser.h
-    	src/main/parse/include/topologyParser.h
-        src/main/parse/include/subTopologyParser.h
-        src/main/parse/include/nodeParser.h
-        src/main/parse/include/linkParser.h
-        src/main/parse/include/ifaceParser.h
-        src/main/parse/include/positionParser.h
-        src/main/parse/include/applicationParser.h
-        src/main/parse/include/commandParser.h
-        src/main/parse/parserTags.cpp
-    	src/main/parse/topologyParser.cpp
-        src/main/parse/subTopologyParser.cpp
-        src/main/parse/settingsParser.cpp
-        src/main/parse/nodeParser.cpp
-        src/main/parse/linkParser.cpp
-        src/main/parse/ifaceParser.cpp
-        src/main/parse/positionParser.cpp
-        src/main/parse/applicationParser.cpp
-        src/main/parse/commandParser.cpp
         src/main/generation/include/bridgeTapBuilder.h
         src/main/generation/include/nodeSpawner.h
         src/main/generation/include/ns3Writer.h
