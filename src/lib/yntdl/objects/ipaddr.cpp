@@ -6,7 +6,7 @@
 
 #include "ipaddr.h"
 
-using namespace ns3lxc;
+using namespace yntdl;
 
 IpAddr::IpAddr(const IpAddr& temp){
     ipv4 = temp.ipv4;

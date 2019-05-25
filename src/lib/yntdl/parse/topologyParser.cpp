@@ -34,7 +34,7 @@ static void parseNodes(YAML::Node nodes, ParsedTopology *parsedTop);
 static void parseLinks(YAML::Node links, ParsedTopology *parsedTop);
 static void parseSubTopologies(YAML::Node topologies, ParsedTopology *parsedTop);\
 
-ns3lxc::Topology parseTopologyFile(std::string topPath){	
+yntdl::Topology parseTopologyFile(std::string topPath){	
 	ParsedTopology parsedTop;
 	
 	YAML::Node topology = YAML::LoadFile(topPath);
@@ -144,7 +144,7 @@ void parseTopology(YAML::Node topology, ParsedTopology *parsedTop){
 
 static void parseIncludes(YAML::Node includes, std::string topPath, ParsedTopology *parsedTop){
 	//Get dir of top file to search for included files
-	shared_ptr<ns3lxc::Topology> includedTop;
+	shared_ptr<yntdl::Topology> includedTop;
 	std::string curInclude;
 	std::string searchPath;
 	std::string topDir = topPath.substr(0, topPath.find_last_of("\\/"));
@@ -155,11 +155,11 @@ static void parseIncludes(YAML::Node includes, std::string topPath, ParsedTopolo
 
         struct stat buffer;
         if(stat(searchPath.c_str(), &buffer) == 0 && !S_ISDIR(buffer.st_mode)){
-            includedTop = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(parseTopologyFile(searchPath)));
+            includedTop = shared_ptr<yntdl::Topology>(new yntdl::Topology(parseTopologyFile(searchPath)));
         } else {
             searchPath = searchPath = topDir + "/include/" + curInclude + ".yaml";
             if(stat(searchPath.c_str(), &buffer) == 0 && !S_ISDIR(buffer.st_mode)){
-                includedTop = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(parseTopologyFile(searchPath)));
+                includedTop = shared_ptr<yntdl::Topology>(new yntdl::Topology(parseTopologyFile(searchPath)));
             } else {
                 throw Ns3lxcException(ErrorCode::FILE_NOT_FOUND, curInclude);
             }
@@ -176,11 +176,11 @@ static void parseIncludes(YAML::Node includes, std::string topPath, ParsedTopolo
 
     		struct stat buffer;
     		if(stat(searchPath.c_str(), &buffer) == 0 && !S_ISDIR(buffer.st_mode)){
-    			includedTop = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(parseTopologyFile(searchPath)));
+    			includedTop = shared_ptr<yntdl::Topology>(new yntdl::Topology(parseTopologyFile(searchPath)));
     		} else {
     			searchPath = searchPath = topDir + "/include/" + curInclude + ".yaml";
     			if(stat(searchPath.c_str(), &buffer) == 0 && !S_ISDIR(buffer.st_mode)){
-    				includedTop = shared_ptr<ns3lxc::Topology>(new ns3lxc::Topology(parseTopologyFile(searchPath)));
+    				includedTop = shared_ptr<yntdl::Topology>(new yntdl::Topology(parseTopologyFile(searchPath)));
     			} else {
                     throw Ns3lxcException(ErrorCode::FILE_NOT_FOUND, curInclude);
     			}
@@ -195,8 +195,8 @@ static void parseIncludes(YAML::Node includes, std::string topPath, ParsedTopolo
 
 static void parseSubTopologies(YAML::Node topologies, ParsedTopology *parsedTop){
 	for(auto i = 0; i < topologies.size(); ++i){
-		std::vector<std::shared_ptr<ns3lxc::Topology> > curTops = parseSubTopology(topologies[i], parsedTop);
-		for(shared_ptr<ns3lxc::Topology> curTop : curTops){
+		std::vector<std::shared_ptr<yntdl::Topology> > curTops = parseSubTopology(topologies[i], parsedTop);
+		for(shared_ptr<yntdl::Topology> curTop : curTops){
 			parsedTop->topology.subTopologies.push_back(curTop);
 			parsedTop->topology.topMap[curTop->name] = curTop;
 		}
@@ -205,7 +205,7 @@ static void parseSubTopologies(YAML::Node topologies, ParsedTopology *parsedTop)
 }
 
 static void parseNodes(YAML::Node nodes, ParsedTopology *parsedTop){
-	std::vector<shared_ptr<ns3lxc::Node> > curNodes;
+	std::vector<shared_ptr<yntdl::Node> > curNodes;
 	for(auto i = 0; i < nodes.size(); ++i){
 		curNodes = parseNode(nodes[i], parsedTop);
 
@@ -213,7 +213,7 @@ static void parseNodes(YAML::Node nodes, ParsedTopology *parsedTop){
 			if(parsedTop->topology.nodeMap.count(curNodes[j]->name) > 0){
 				cout << "NODE EXISTS" << endl;
 			} else {
-				parsedTop->topology.nodeMap.insert(std::map<std::string, std::shared_ptr<ns3lxc::Node> >::value_type(curNodes[j]->name, curNodes[j]));
+				parsedTop->topology.nodeMap.insert(std::map<std::string, std::shared_ptr<yntdl::Node> >::value_type(curNodes[j]->name, curNodes[j]));
 				parsedTop->topology.nodes.push_back(curNodes[j]);
 				curNodes[j]->nodeNum = parsedTop->topology.curNodeNum++;
 			}
@@ -228,12 +228,12 @@ static void parseLinks(YAML::Node links, ParsedTopology *parsedTop){
 	}
 }
 
-shared_ptr<ns3lxc::Node> findNode(vector<string> search, ns3lxc::Topology *top){
+shared_ptr<yntdl::Node> findNode(vector<string> search, yntdl::Topology *top){
 	if(search.size() < 1){
 		throw Ns3lxcException(ErrorCode::NODE_NOT_FOUND, " find node");
 	}
 	if(top->topMap.count(search[0]) > 0){
-		shared_ptr<ns3lxc::Topology> topPtr = top->topMap.at(search[0]);
+		shared_ptr<yntdl::Topology> topPtr = top->topMap.at(search[0]);
 		search.erase(search.begin());
 		return findNode(search, topPtr.get());
 	} else if(top->nodeMap.count(search[0]) > 0){
@@ -243,7 +243,7 @@ shared_ptr<ns3lxc::Node> findNode(vector<string> search, ns3lxc::Topology *top){
 	}
 }
 
-static void renameSubTopologies1(ns3lxc::Topology *topology, std::string prefix){
+static void renameSubTopologies1(yntdl::Topology *topology, std::string prefix){
     if(prefix == ""){
         prefix = topology->origName + "_";
     } else {
@@ -262,7 +262,7 @@ static void renameSubTopologies1(ns3lxc::Topology *topology, std::string prefix)
     }
 }
 
-void renameSubTopologies(ns3lxc::Topology *topology, std::string prefix){
+void renameSubTopologies(yntdl::Topology *topology, std::string prefix){
 	for(auto subTopPtr : topology->subTopologies){
         renameSubTopologies1(subTopPtr.get(), prefix);
     }

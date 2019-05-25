@@ -12,7 +12,7 @@
 
 using namespace std;
 
-std::weak_ptr<ns3lxc::IfaceProvider> getProvider(string provider, ns3lxc::Topology *top){
+std::weak_ptr<yntdl::IfaceProvider> getProvider(string provider, yntdl::Topology *top){
     if(top->nodeMap.count(provider) > 0){
         return top->nodeMap[provider];
     } else if(top->topMap.count(provider) > 0){
@@ -22,7 +22,7 @@ std::weak_ptr<ns3lxc::IfaceProvider> getProvider(string provider, ns3lxc::Topolo
     }
 }
 
-std::weak_ptr<ns3lxc::IfaceAcceptor> getAcceptor(string acceptor, ns3lxc::Topology *top){
+std::weak_ptr<yntdl::IfaceAcceptor> getAcceptor(string acceptor, yntdl::Topology *top){
         if(top->topMap.count(acceptor) > 0){
             return top->topMap[acceptor];
         } else if(top->linkMap.count(acceptor) > 0){
@@ -36,7 +36,7 @@ void parseIfacesProvided(YAML::Node ifaces, ParsedTopology *parsedTop){
     for(auto i = 0; i < ifaces.size(); ++i){
         vector<string> split = splitString(ifaces[i].begin()->second.as<string>());
         parsedTop->topology.ifacesProvidedSubNames[ifaces[i].begin()->first.as<string>()] = split[1];
-        std::weak_ptr<ns3lxc::IfaceProvider> provPtr = getProvider(split[0], &parsedTop->topology);
+        std::weak_ptr<yntdl::IfaceProvider> provPtr = getProvider(split[0], &parsedTop->topology);
         parsedTop->topology.ifacesProvided[ifaces[i].begin()->first.as<string>()] = provPtr;
     }
 }
@@ -50,10 +50,10 @@ void parseAcceptedIfaces(YAML::Node acceptedIface, ParsedTopology *parsedTop){
         vector<string> provideSplit = splitString(provider);
 
         //Find Provider
-        shared_ptr<ns3lxc::IfaceProvider> provPtr = getProvider(provideSplit[0], &parsedTop->topology).lock();
-        shared_ptr<ns3lxc::IfaceAcceptor> accPtr = getAcceptor(acceptSplit[0], &parsedTop->topology).lock();
+        shared_ptr<yntdl::IfaceProvider> provPtr = getProvider(provideSplit[0], &parsedTop->topology).lock();
+        shared_ptr<yntdl::IfaceAcceptor> accPtr = getAcceptor(acceptSplit[0], &parsedTop->topology).lock();
 
-        ns3lxc::Iface *iface = provPtr->getIface(provideSplit[1]);
+        yntdl::Iface *iface = provPtr->getIface(provideSplit[1]);
         if(provideSplit.size() < 3){
             throw Ns3lxcException(ErrorCode::NO_IP, provider);
         } else {

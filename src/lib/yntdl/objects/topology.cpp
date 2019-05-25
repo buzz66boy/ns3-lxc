@@ -7,7 +7,7 @@
 #include "node.h"
 #include "topology.h"
 
-using namespace ns3lxc;
+using namespace yntdl;
 
 Topology::Topology(){
     
@@ -33,14 +33,14 @@ static Link *findLink(Topology *top, std::string linkName){
     return nullptr;
 }
 
-static ns3lxc::Node *findNode(Topology *top, std::string nodeName){
+static yntdl::Node *findNode(Topology *top, std::string nodeName){
     for(auto nodePtr : top->nodes){
         if(nodePtr->name == nodeName){
             return nodePtr.get();
         }
     }
     for(auto topPtr : top->subTopologies){
-        ns3lxc::Node *n = findNode(topPtr.get(), nodeName);
+        yntdl::Node *n = findNode(topPtr.get(), nodeName);
         if(n != nullptr){
             return n;
         }
@@ -63,20 +63,20 @@ Topology::Topology(Topology *temp): Nameable(*temp), Positionable(*temp) {
         Node::reRefIfaces(ptr.get());
         for(auto ifacePair : ptr->ifaces){
             if(ifacePair.second.ip != nullptr){
-                ifacePair.second.ip = new ns3lxc::IpAddr(*ifacePair.second.ip);
+                ifacePair.second.ip = new yntdl::IpAddr(*ifacePair.second.ip);
             }
             if(ifacePair.second.subnetMask != nullptr){
-                ifacePair.second.subnetMask = new ns3lxc::IpAddr(*ifacePair.second.subnetMask);
+                ifacePair.second.subnetMask = new yntdl::IpAddr(*ifacePair.second.subnetMask);
             }
         }
     }
     for(i = 0; i < temp->links.size(); ++i){
         std::shared_ptr<Link> ptr = std::make_shared<Link>(*temp->links[i]);
         if(ptr->ip != nullptr){
-            ptr->ip = new ns3lxc::IpAddr(*ptr->ip);
+            ptr->ip = new yntdl::IpAddr(*ptr->ip);
         }
         if(ptr->subnetMask != nullptr){
-            ptr->subnetMask = new ns3lxc::IpAddr(*ptr->subnetMask);
+            ptr->subnetMask = new yntdl::IpAddr(*ptr->subnetMask);
         }
         links.push_back(ptr);
         linkMap[ptr->origName] = ptr;

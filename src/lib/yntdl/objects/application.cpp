@@ -2,7 +2,7 @@
 #include <iostream>
 #include "application.h"
 
-using namespace ns3lxc;
+using namespace yntdl;
 
 Application::Application(const Application& temp): Nameable(temp), AdditionalTags(temp) {
     path = temp.path;

@@ -12,7 +12,7 @@ class Node;
 #include "additionalTags.h"
 #include "nameable.h"
 
-namespace ns3lxc {
+namespace yntdl {
 
 // declarations
 class Application: public Nameable, public AdditionalTags {

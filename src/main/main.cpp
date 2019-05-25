@@ -87,7 +87,7 @@ int main(int argc, char *argv[]){
 			throw Ns3lxcException(ErrorCode::NOT_ENOUGH_ARGS, to_string(argc));
 		}
 		map<string, string> argMap = parseArgs(argc, argv);
-		ns3lxc::Topology topology;
+		yntdl::Topology topology;
 
 		if(argMap.count("-h")){
 			cout << HELP_STATEMENT << endl;
@@ -131,7 +131,7 @@ int main(int argc, char *argv[]){
 
 		topology = parseTopologyFile(argMap.at("file"));
 		setOutputDest(topology.name);
-		ns3lxc::Topology::reNumNodes(&topology);
+		yntdl::Topology::reNumNodes(&topology);
 		validateTopology(&topology);
 		try{
 			generateTopology(&topology);

@@ -6,7 +6,7 @@
 
 using namespace std;
 
-std::vector<std::pair<std::string, bool> > GenericPackman::getExecutionCommands(ns3lxc::Application *app, std::shared_ptr<ns3lxc::Node> nodePtr){
+std::vector<std::pair<std::string, bool> > GenericPackman::getExecutionCommands(yntdl::Application *app, std::shared_ptr<yntdl::Node> nodePtr){
     vector<pair<string, bool> > cmdVect;
     if(app->commands.size() > 0){
         for(size_t i = 0; i < app->commands.size(); ++i){

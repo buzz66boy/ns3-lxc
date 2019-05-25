@@ -9,7 +9,7 @@
 
 #include "nameable.h"
 
-namespace ns3lxc {
+namespace yntdl {
 
 // declarations
 class Position {

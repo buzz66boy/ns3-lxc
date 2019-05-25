@@ -20,16 +20,16 @@
 
 class ParsedTopology {
 public:
-    ns3lxc::Topology topology;
-	std::map<std::string, std::shared_ptr<ns3lxc::Topology> > includedTopologies;
-	std::map<std::string, std::shared_ptr<ns3lxc::Node> > nodes;
-	std::map<std::string, std::shared_ptr<ns3lxc::Link> > links;
-	std::map<std::string, std::shared_ptr<ns3lxc::Application> > applications;
+    yntdl::Topology topology;
+	std::map<std::string, std::shared_ptr<yntdl::Topology> > includedTopologies;
+	std::map<std::string, std::shared_ptr<yntdl::Node> > nodes;
+	std::map<std::string, std::shared_ptr<yntdl::Link> > links;
+	std::map<std::string, std::shared_ptr<yntdl::Application> > applications;
 };
 
-ns3lxc::Topology parseTopologyFile(std::string topPath);
+yntdl::Topology parseTopologyFile(std::string topPath);
 void parseTopology(YAML::Node topology, ParsedTopology *parsedTop);
-void renameSubTopologies(ns3lxc::Topology *topology, std::string prefix="");
-std::shared_ptr<ns3lxc::Node> findNode(std::vector<std::string> search, ns3lxc::Topology *top);
+void renameSubTopologies(yntdl::Topology *topology, std::string prefix="");
+std::shared_ptr<yntdl::Node> findNode(std::vector<std::string> search, yntdl::Topology *top);
 
 #endif

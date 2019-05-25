@@ -15,7 +15,7 @@
 #include "nameable.h"
 #include "additionalTags.h"
 
-namespace ns3lxc {
+namespace yntdl {
 
 // declarations
 class Node : public Positionable, public IfaceProvider, public Nameable, public AdditionalTags {
@@ -28,16 +28,16 @@ public:
 	std::vector<Application> applications;
     std::vector<std::pair<std::string, bool> > commands;
 	
-	ns3lxc::Iface *getIface(std::string ifaceName) override; // OVERRIDE IfaceProvider
+	yntdl::Iface *getIface(std::string ifaceName) override; // OVERRIDE IfaceProvider
 
     Node(): Nameable(), Positionable(), IfaceProvider(), AdditionalTags() {};
     Node(std::string name):  Nameable(name), Positionable(), IfaceProvider() {};
-    Node(ns3lxc::Node& temp, std::string nodeName, std::string origName);
-    Node(const ns3lxc::Node &temp);
+    Node(yntdl::Node& temp, std::string nodeName, std::string origName);
+    Node(const yntdl::Node &temp);
 
     void addCommand(std::string cmd, bool inherit);
 
-    static void reRefIfaces(ns3lxc::Node*);
+    static void reRefIfaces(yntdl::Node*);
 };
 
 }

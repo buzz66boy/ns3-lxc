@@ -4,9 +4,9 @@
 #include "logger.h"
 
 void printTopology(Logger, ParsedTopology);
-void printTopology(Logger, ns3lxc::Topology);
-void printNode(Logger, ns3lxc::Node);
-void printLink(Logger, ns3lxc::Link);
-void printApplication(Logger, ns3lxc::Application);
+void printTopology(Logger, yntdl::Topology);
+void printNode(Logger, yntdl::Node);
+void printLink(Logger, yntdl::Link);
+void printApplication(Logger, yntdl::Application);
 
 #endif

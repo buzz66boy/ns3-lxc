@@ -14,7 +14,7 @@
 
 using namespace std;
 
-void generateTopology(ns3lxc::Topology *topology){
+void generateTopology(yntdl::Topology *topology){
     assignBridgesTaps(topology);
     findLinkTypesUsed(topology);
     if(Settings::genContainers()){
@@ -62,7 +62,7 @@ void generateTopology(ns3lxc::Topology *topology){
     }
 }
 
-void findLinkTypesUsed(ns3lxc::Topology *topology){
+void findLinkTypesUsed(yntdl::Topology *topology){
     for(auto linkPtr : topology->links){
         linkTypeMap.find(linkPtr->getType())->second->setUsed();
     }

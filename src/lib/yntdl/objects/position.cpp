@@ -7,7 +7,7 @@
 
 #define PI 3.141592653
 
-using namespace ns3lxc;
+using namespace yntdl;
 
 std::string Position::str(){
     return ("Time: " + std::to_string(time)

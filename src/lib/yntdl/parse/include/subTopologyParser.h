@@ -8,6 +8,6 @@
 #include "topology.h"
 #include "topologyParser.h"
 
-std::vector<std::shared_ptr<ns3lxc::Topology> > parseSubTopology(YAML::Node node, ParsedTopology *top);
+std::vector<std::shared_ptr<yntdl::Topology> > parseSubTopology(YAML::Node node, ParsedTopology *top);
 
 #endif

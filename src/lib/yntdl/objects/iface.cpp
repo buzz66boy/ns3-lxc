@@ -8,7 +8,7 @@
 #include "nameable.h"
 #include "iface.h"
 
-using namespace ns3lxc;
+using namespace yntdl;
 
 Iface::Iface(const Iface& ifa): Nameable(ifa) {
     node = ifa.node;
@@ -68,14 +68,14 @@ void Iface::assignSubnetMask(int af, int cidr){
     subnetMask = new IpAddr(af, cidr);
 }
 
-ns3lxc::Iface *ns3lxc::IfaceProvider::getIface(std::string ifaceName){
+yntdl::Iface *yntdl::IfaceProvider::getIface(std::string ifaceName){
     if(ifacesProvided.count(ifaceName) > 0){
         return ifacesProvided[ifaceName].lock()->getIface( ifacesProvidedSubNames[ifaceName] );
     }
     return nullptr;
 }
 
-int ns3lxc::IfaceAcceptor::connectIface(std::string ifaceName, ns3lxc::Iface *iface){
+int yntdl::IfaceAcceptor::connectIface(std::string ifaceName, yntdl::Iface *iface){
     if(ifacesAccepted.count(ifaceName) > 0){
         return ifacesAccepted[ifaceName].lock()->connectIface( ifacesAcceptedSubNames[ifaceName], iface );
     }

@@ -14,7 +14,7 @@
 
 using namespace std;
 
-static void addCommandToTopology(std::string cmd, bool inherit, ns3lxc::Topology *top){
+static void addCommandToTopology(std::string cmd, bool inherit, yntdl::Topology *top){
     for(auto nodePtr : top->nodes){
         nodePtr->commands.push_back(pair<string, bool>(cmd, inherit));
     }
@@ -30,7 +30,7 @@ static void parseCommandMap(YAML::Node cmds, ParsedTopology *parsedTop, bool inh
             continue;
         }
         vector<string> findMe = splitString(key);
-        shared_ptr<ns3lxc::Node> nodePtr = findNode(findMe, &parsedTop->topology);
+        shared_ptr<yntdl::Node> nodePtr = findNode(findMe, &parsedTop->topology);
         switch(cmdPair.second.Type()){
             default:
             case(YAML::NodeType::Scalar):
@@ -42,7 +42,7 @@ static void parseCommandMap(YAML::Node cmds, ParsedTopology *parsedTop, bool inh
                     string appName = mapPair.first.as<string>();
                     bool appFound = false;
                     for(size_t i = 0; i < nodePtr->applications.size(); ++i){
-                        ns3lxc::Application *app = &nodePtr->applications[i];
+                        yntdl::Application *app = &nodePtr->applications[i];
                         if(app->name == appName){
                             app->addCommand(mapPair.second.as<string>(), inherit);
                             // cout << "adding cmd: " + mapPair.second.as<string>() + " to app " + appName + " on node " +nodePtr->name << endl;

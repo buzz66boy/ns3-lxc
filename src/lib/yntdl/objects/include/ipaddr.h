@@ -9,7 +9,7 @@
 
 #include <arpa/inet.h>
 
-namespace ns3lxc {
+namespace yntdl {
 
 class IpAddr {
 private:

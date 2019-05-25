@@ -14,8 +14,8 @@ public:
     int getIfacesSupported() override;
     void writeIncludes(std::ostream& str) override;
     void writeTypeInit(std::ostream& str) override;
-    void writeLinkInit(std::ostream& str, std::shared_ptr<ns3lxc::Link> linkPtr) override;
-    void addIfacesToLink(std::ostream& str, std::shared_ptr<ns3lxc::Link> linkPtr) override;
+    void writeLinkInit(std::ostream& str, std::shared_ptr<yntdl::Link> linkPtr) override;
+    void addIfacesToLink(std::ostream& str, std::shared_ptr<yntdl::Link> linkPtr) override;
     void writeClosingRemarks(std::ostream& str) override {};
 };
 

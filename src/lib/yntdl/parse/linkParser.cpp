@@ -22,7 +22,7 @@ bool doesLinkExist(YAML::Node node, ParsedTopology *top){
     return (top->topology.linkMap.count(node.begin()->first.as<std::string>()) > 0);
 }
 
-static void parseLinkIfacesAccepted(YAML::Node node, ParsedTopology *top, shared_ptr<ns3lxc::Link> linkPtr){
+static void parseLinkIfacesAccepted(YAML::Node node, ParsedTopology *top, shared_ptr<yntdl::Link> linkPtr){
         for(size_t i = 0; i < node.size(); ++i){
             string accName = node[i].as<string>();
             top->topology.ifacesAcceptedSubNames[accName] = "";
@@ -37,12 +37,12 @@ void parseLink(YAML::Node node, ParsedTopology *top){
 
     std::cout << "parsing link " << name << endl;
 
-    std::shared_ptr<ns3lxc::Link> link;
+    std::shared_ptr<yntdl::Link> link;
     if(node[TAG_TEMPLATE]){
         recognizedTags.push_back(TAG_TEMPLATE);
-        link = std::make_shared<ns3lxc::Link>(name, *top->links[node[TAG_TEMPLATE].as<string>()]);
+        link = std::make_shared<yntdl::Link>(name, *top->links[node[TAG_TEMPLATE].as<string>()]);
     } else {
-        link = std::make_shared<ns3lxc::Link>(name);
+        link = std::make_shared<yntdl::Link>(name);
     }
 
     if(node[TAG_TYPE]){
@@ -54,16 +54,16 @@ void parseLink(YAML::Node node, ParsedTopology *top){
     } else {
         throw Ns3lxcException(ErrorCode::LINK_TYPE_NOT_SPECIFIED, name);
     }
-    ns3lxc::IpAddr subnetMask(AF_INET, "255.255.255.0");
+    yntdl::IpAddr subnetMask(AF_INET, "255.255.255.0");
     if(node[TAG_CIDR]){
         recognizedTags.push_back(TAG_CIDR);
         int cidr = node[TAG_CIDR].as<int>();
-        subnetMask = ns3lxc::IpAddr(AF_INET, cidr);
+        subnetMask = yntdl::IpAddr(AF_INET, cidr);
     } else if(node[TAG_SUBNET_MASK]){
         recognizedTags.push_back(TAG_SUBNET_MASK);
-        subnetMask = ns3lxc::IpAddr(AF_INET, node[TAG_SUBNET_MASK].as<string>());
+        subnetMask = yntdl::IpAddr(AF_INET, node[TAG_SUBNET_MASK].as<string>());
     }
-    link->subnetMask = new ns3lxc::IpAddr(subnetMask);
+    link->subnetMask = new yntdl::IpAddr(subnetMask);
 
     if(node[TAG_IFACES_ACCEPTED]){
         recognizedTags.push_back(TAG_IFACES_ACCEPTED);
@@ -100,8 +100,8 @@ void parseLink(YAML::Node node, ParsedTopology *top){
         for(size_t i = 0; i < ifaceNode.size(); ++i){
             std::vector<std::string> split = splitString(ifaceNode[i].as<std::string>());
             cout << "\tconnecting " << split[0] << " " << split[1] << " with ip " << (split.size() > 2 ? split[2] : "") << endl;
-            shared_ptr<ns3lxc::IfaceProvider> provPtr = getProvider(split[0], &top->topology).lock();
-            ns3lxc::Iface *ifacePtr = provPtr->getIface(split[1]);
+            shared_ptr<yntdl::IfaceProvider> provPtr = getProvider(split[0], &top->topology).lock();
+            yntdl::Iface *ifacePtr = provPtr->getIface(split[1]);
             if(!ifacePtr){
                 throw Ns3lxcException(ErrorCode::IFACE_NOT_FOUND, split[1]);
             }
@@ -114,8 +114,8 @@ void parseLink(YAML::Node node, ParsedTopology *top){
                 if(ifacePtr->subnetMask == nullptr){
                     delete ifacePtr->subnetMask;
                 }
-                ifacePtr->ip = new ns3lxc::IpAddr(AF_INET, split[2]);
-                ifacePtr->subnetMask = new ns3lxc::IpAddr(subnetMask);
+                ifacePtr->ip = new yntdl::IpAddr(AF_INET, split[2]);
+                ifacePtr->subnetMask = new yntdl::IpAddr(subnetMask);
             }
         }
     }

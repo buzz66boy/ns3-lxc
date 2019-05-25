@@ -7,7 +7,7 @@
 
 #include "yaml-cpp/yaml.h"
 
-namespace ns3lxc {
+namespace yntdl {
 
 class AdditionalTags {
 public:

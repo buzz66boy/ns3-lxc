@@ -4,6 +4,6 @@
 #include <memory>
 #include "node.h"
 
-void validateNode(std::shared_ptr<ns3lxc::Node> nodePtr);
+void validateNode(std::shared_ptr<yntdl::Node> nodePtr);
 
 #endif

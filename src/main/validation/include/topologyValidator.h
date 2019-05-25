@@ -3,6 +3,6 @@
 
 #include "topology.h"
 
-void validateTopology(ns3lxc::Topology *top);
+void validateTopology(yntdl::Topology *top);
 
 #endif

@@ -21,7 +21,7 @@
 
 using namespace std;
 
-static void parseNodeIfaces(YAML::Node ifaces, std::shared_ptr<ns3lxc::Node> node){
+static void parseNodeIfaces(YAML::Node ifaces, std::shared_ptr<yntdl::Node> node){
     cout << "\tifaces:" << endl;
     if(node->ifaces.size() > 0){
         node->ifaces.clear();
@@ -31,7 +31,7 @@ static void parseNodeIfaces(YAML::Node ifaces, std::shared_ptr<ns3lxc::Node> nod
             vector<string> ifaceNameMac = splitString(ifaces[i].as<std::string>());
             std::string name = ifaceNameMac[0];
             cout << "\t\t- " << name << endl;
-            node->ifaces[name] = ns3lxc::Iface(name, node.get());
+            node->ifaces[name] = yntdl::Iface(name, node.get());
             if(ifaceNameMac.size() > 1){
                 node->ifaces[name].macAddr = ifaceNameMac[1]; 
             } else {
@@ -42,7 +42,7 @@ static void parseNodeIfaces(YAML::Node ifaces, std::shared_ptr<ns3lxc::Node> nod
         vector<string> ifaceNameMac = splitString(ifaces.as<std::string>());
         std::string name = ifaceNameMac[0];
         cout << "\t\t- " << name << endl;
-        node->ifaces[name] = ns3lxc::Iface(name, node.get());
+        node->ifaces[name] = yntdl::Iface(name, node.get());
         if(ifaceNameMac.size() > 1){
             node->ifaces[name].macAddr = ifaceNameMac[1];   
         } else {
@@ -51,7 +51,7 @@ static void parseNodeIfaces(YAML::Node ifaces, std::shared_ptr<ns3lxc::Node> nod
     }
 }
 
-void parseNodeApplications(YAML::Node apps, std::shared_ptr<ns3lxc::Node> node){
+void parseNodeApplications(YAML::Node apps, std::shared_ptr<yntdl::Node> node){
     if(node->applications.size() > 0){
         node->applications.clear();
     }
@@ -61,16 +61,16 @@ void parseNodeApplications(YAML::Node apps, std::shared_ptr<ns3lxc::Node> node){
         if(apps[i].begin()->second.Type() == YAML::NodeType::Scalar){
             //add ${} parsing
             cmd = apps[i].begin()->second.as<string>();
-            node->applications.push_back(ns3lxc::Application(appName, cmd));
+            node->applications.push_back(yntdl::Application(appName, cmd));
         } else if(apps[i].begin()->second.Type() == YAML::NodeType::Map) {
-            ns3lxc::Application app(appName);
+            yntdl::Application app(appName);
             app.mapAdditionalTags(vector<string>(), apps[i].begin()->second);
             node->applications.push_back(app);
         }
     }
 }
 
-void parseNodeCommands(YAML::Node cmds, std::shared_ptr<ns3lxc::Node> nodePtr){
+void parseNodeCommands(YAML::Node cmds, std::shared_ptr<yntdl::Node> nodePtr){
     if(nodePtr->commands.size() > 0){
         nodePtr->commands.clear();
     }
@@ -83,7 +83,7 @@ void parseNodeCommands(YAML::Node cmds, std::shared_ptr<ns3lxc::Node> nodePtr){
     }
 }
 
-std::vector<std::shared_ptr<ns3lxc::Node> > parseNode(YAML::Node node, ParsedTopology *top){
+std::vector<std::shared_ptr<yntdl::Node> > parseNode(YAML::Node node, ParsedTopology *top){
     size_t iters = 1;
     vector<string> recognizedTags;
     std::string origName = node.begin()->first.as<std::string>();
@@ -94,11 +94,11 @@ std::vector<std::shared_ptr<ns3lxc::Node> > parseNode(YAML::Node node, ParsedTop
         recognizedTags.push_back(TAG_NUM);
     }
 
-    vector<shared_ptr<ns3lxc::Node> > nodeList;
+    vector<shared_ptr<yntdl::Node> > nodeList;
 
     for(size_t i = 0; i < iters; ++i){
         std::string name = origName;
-        std::shared_ptr<ns3lxc::Node> nodePtr = nullptr;
+        std::shared_ptr<yntdl::Node> nodePtr = nullptr;
 
         if(iters > 1){
             name += "_" + std::to_string(i + 1); //start indexing at 1
@@ -106,10 +106,10 @@ std::vector<std::shared_ptr<ns3lxc::Node> > parseNode(YAML::Node node, ParsedTop
         cout << "Node: " << name << endl;
         if(node[TAG_TEMPLATE]){
             recognizedTags.push_back(TAG_TEMPLATE);
-            nodePtr = make_shared<ns3lxc::Node>(*top->nodes[node[TAG_TEMPLATE].as<std::string>()], name, name);
-            ns3lxc::Node::reRefIfaces(nodePtr.get());
+            nodePtr = make_shared<yntdl::Node>(*top->nodes[node[TAG_TEMPLATE].as<std::string>()], name, name);
+            yntdl::Node::reRefIfaces(nodePtr.get());
         } else {
-            nodePtr = make_shared<ns3lxc::Node>(name);
+            nodePtr = make_shared<yntdl::Node>(name);
         }
         if(node[TAG_IFACE]){
             recognizedTags.push_back(TAG_IFACE);

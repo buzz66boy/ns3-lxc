@@ -11,7 +11,7 @@
 
 using namespace std;
 
-void Ns3Writer::writeScript(ns3lxc::Topology *top, std::string scriptLoc){
+void Ns3Writer::writeScript(yntdl::Topology *top, std::string scriptLoc){
     ofstream str;
     cout << "Saving ns-3 file @ " + Settings::script_dest + "/" + top->name + ".cc" << endl;
     str.open(scriptLoc);
@@ -99,7 +99,7 @@ void printTime(){
 )" << endl;
 }
 
-void Ns3Writer::writeInit(std::ostream& str, ns3lxc::Topology *top){
+void Ns3Writer::writeInit(std::ostream& str, yntdl::Topology *top){
     str << "Simulator::Stop (Seconds (" + to_string(top->runTime) + ".));" << endl;
     str << "nodes.Create(" + to_string(top->curNodeNum) + ");" << endl;
     for(auto it : linkTypeMap){
@@ -109,7 +109,7 @@ void Ns3Writer::writeInit(std::ostream& str, ns3lxc::Topology *top){
     }
 }
 
-void Ns3Writer::writeLinksForTopology(std::ostream& str, ns3lxc::Topology *top){
+void Ns3Writer::writeLinksForTopology(std::ostream& str, yntdl::Topology *top){
     for(auto subTopPtr : top->subTopologies){
         writeLinksForTopology(str, subTopPtr.get());
     }
@@ -124,7 +124,7 @@ void Ns3Writer::writeLinksForTopology(std::ostream& str, ns3lxc::Topology *top){
     }
 }
 
-static void allocNodePos(std::ostream& str, ns3lxc::Topology *top){
+static void allocNodePos(std::ostream& str, yntdl::Topology *top){
     for(auto nodePtr : top->nodes){
         if(nodePtr->absPositions.size() < 1 && nodePtr->positions.size() < 1){
             str << "positionAlloc->Add (Vector (0,0,0));" << endl;
@@ -147,7 +147,7 @@ static void allocNodePos(std::ostream& str, ns3lxc::Topology *top){
     }
 }
 
-static void writeNodePos(std::ostream& str, ns3lxc::Topology *top){
+static void writeNodePos(std::ostream& str, yntdl::Topology *top){
     for(auto nodePtr : top->nodes){
         if(nodePtr->absPositions.size() > 1){
             str << "waymobility.Install(nodes.Get(" + to_string(nodePtr->nodeNum) + "));" << endl;
@@ -156,7 +156,7 @@ static void writeNodePos(std::ostream& str, ns3lxc::Topology *top){
             double curTime = -1.0;
             while(i < nodePtr->absPositions.size()){
                 double lowestTime = 100000000.0;
-                ns3lxc::Position *pos = nullptr;
+                yntdl::Position *pos = nullptr;
                 for(int j = 0; j < nodePtr->absPositions.size(); ++j){
                     if(nodePtr->absPositions[j].time < lowestTime && nodePtr->absPositions[j].time > curTime){
                         lowestTime = nodePtr->absPositions[j].time;
@@ -178,7 +178,7 @@ static void writeNodePos(std::ostream& str, ns3lxc::Topology *top){
             double curTime = -1.0;
             while(i < nodePtr->positions.size()){
                 double lowestTime = 100000000.0;
-                ns3lxc::Position *pos = nullptr;
+                yntdl::Position *pos = nullptr;
                 for(int j = 0; j < nodePtr->positions.size(); ++j){
                     if(nodePtr->positions[j].time < lowestTime && nodePtr->positions[j].time > curTime){
                         lowestTime = nodePtr->positions[j].time;
@@ -202,7 +202,7 @@ static void writeNodePos(std::ostream& str, ns3lxc::Topology *top){
     }
 }
 
-void Ns3Writer::writePositions(std::ostream& str, ns3lxc::Topology *top){
+void Ns3Writer::writePositions(std::ostream& str, yntdl::Topology *top){
     str << R"(
 MobilityHelper mobility;
 MobilityHelper waymobility;
@@ -219,7 +219,7 @@ Ptr<ListPositionAllocator> positionAlloc = CreateObject<ListPositionAllocator> (
     writeNodePos(str, top);
 }
 
-void Ns3Writer::writeAnimDescriptions(std::ostream& str, ns3lxc::Topology *top){
+void Ns3Writer::writeAnimDescriptions(std::ostream& str, yntdl::Topology *top){
     for(auto nodePtr : top->nodes){
         str << "anim.UpdateNodeDescription(" << nodePtr->nodeNum << ",\"" << nodePtr->name << "\");" << endl;
     }

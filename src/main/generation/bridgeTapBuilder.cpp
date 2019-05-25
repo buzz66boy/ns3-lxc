@@ -12,9 +12,9 @@
 
 using namespace std;
 
-int assignBridgesTaps(ns3lxc::Topology *top, int curNum){
+int assignBridgesTaps(yntdl::Topology *top, int curNum){
     for(auto linkPtr : top->links){
-        for(ns3lxc::Iface *ifacePtr : linkPtr->ifaces){
+        for(yntdl::Iface *ifacePtr : linkPtr->ifaces){
             if(nodeTypeMap.at(ifacePtr->node->type)->createBridgesTaps()){
                 ifacePtr->bridgeName = to_string(curNum) + "_b";
                 ifacePtr->tapName = to_string(curNum) + "_t";
@@ -28,7 +28,7 @@ int assignBridgesTaps(ns3lxc::Topology *top, int curNum){
     return curNum;
 }
 
-void buildAllBridgesTaps(ns3lxc::Topology *top){
+void buildAllBridgesTaps(yntdl::Topology *top){
     for(auto topPtr : top->subTopologies){
         buildAllBridgesTaps(topPtr.get());
     }
@@ -44,7 +44,7 @@ void buildAllBridgesTaps(ns3lxc::Topology *top){
     }
 }
 
-void buildBridgeTap(ns3lxc::Iface *ifacePtr){
+void buildBridgeTap(yntdl::Iface *ifacePtr){
     int err;
     string tap = ifacePtr->tapName;
     string bridge = ifacePtr->bridgeName;
@@ -75,7 +75,7 @@ void buildBridgeTap(ns3lxc::Iface *ifacePtr){
     }
 }
 
-void tearDownAllBridgesTaps(ns3lxc::Topology *top){
+void tearDownAllBridgesTaps(yntdl::Topology *top){
     for(auto topPtr : top->subTopologies){
         tearDownAllBridgesTaps(topPtr.get());
     }
@@ -91,7 +91,7 @@ void tearDownAllBridgesTaps(ns3lxc::Topology *top){
     }
 }
 
-void tearDownBridgeTap(ns3lxc::Iface *ifacePtr){
+void tearDownBridgeTap(yntdl::Iface *ifacePtr){
     int err;
     string tap = ifacePtr->tapName;
     string bridge = ifacePtr->bridgeName;

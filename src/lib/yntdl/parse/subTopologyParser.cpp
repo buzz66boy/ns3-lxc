@@ -13,7 +13,7 @@
 
 using namespace std;
 
-static void applyIpOffset(string offset, ns3lxc::Topology *topology){
+static void applyIpOffset(string offset, yntdl::Topology *topology){
     // cout << "Apply " + offset + " to top " + topology->name << endl;
     for(auto linkPtr : topology->links){
         for(auto ifacePtr : linkPtr->ifaces){
@@ -27,7 +27,7 @@ static void applyIpOffset(string offset, ns3lxc::Topology *topology){
     }
 }
 
-std::vector<std::shared_ptr<ns3lxc::Topology> > parseSubTopology(YAML::Node node, ParsedTopology *top){
+std::vector<std::shared_ptr<yntdl::Topology> > parseSubTopology(YAML::Node node, ParsedTopology *top){
     size_t iters = 1;
     std::string origName = node.begin()->first.as<std::string>();
     node = node[origName];
@@ -37,10 +37,10 @@ std::vector<std::shared_ptr<ns3lxc::Topology> > parseSubTopology(YAML::Node node
     }
 
 
-    vector<shared_ptr<ns3lxc::Topology> > topList;
+    vector<shared_ptr<yntdl::Topology> > topList;
     for(size_t i = 0; i < iters; ++i){
         std::string name = origName;
-        std::shared_ptr<ns3lxc::Topology> topPtr = nullptr;
+        std::shared_ptr<yntdl::Topology> topPtr = nullptr;
 
         if(iters > 1){
             name += "_" + std::to_string(i + 1); //start indexing at 1
@@ -49,7 +49,7 @@ std::vector<std::shared_ptr<ns3lxc::Topology> > parseSubTopology(YAML::Node node
         if(node[TAG_TEMPLATE]){
             string templateName = node[TAG_TEMPLATE].as<std::string>();
             if(top->includedTopologies.count(templateName) > 0){
-                topPtr = make_shared<ns3lxc::Topology>(top->includedTopologies[templateName], name);
+                topPtr = make_shared<yntdl::Topology>(top->includedTopologies[templateName], name);
             } else {
                 throw Ns3lxcException(ErrorCode::TEMPLATE_NOT_FOUND, templateName);
             }
@@ -82,7 +82,7 @@ std::vector<std::shared_ptr<ns3lxc::Topology> > parseSubTopology(YAML::Node node
         } else {
             ParsedTopology subParsedTop;
             parseTopology(node, &subParsedTop);
-            topPtr = make_shared<ns3lxc::Topology>(&subParsedTop.topology);
+            topPtr = make_shared<yntdl::Topology>(&subParsedTop.topology);
         }
         topList.push_back(topPtr);
     }

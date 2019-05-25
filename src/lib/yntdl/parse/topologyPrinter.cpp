@@ -8,18 +8,18 @@ void printTopology(Logger, ParsedTopology){
 
 }
 
-void printTopology(Logger, ns3lxc::Topology){
+void printTopology(Logger, yntdl::Topology){
 
 }
 
-void printNode(Logger, ns3lxc::Node){
+void printNode(Logger, yntdl::Node){
 
 }
 
-void printLink(Logger, ns3lxc::Link){
+void printLink(Logger, yntdl::Link){
 
 }
 
-void printApplication(Logger, ns3lxc::Application){
+void printApplication(Logger, yntdl::Application){
 
 }

@@ -12,7 +12,7 @@
 
 // declarations
 
-std::vector<std::shared_ptr<ns3lxc::Node> > parseNode(YAML::Node node, ParsedTopology *top);
-void parseNodeApplications(YAML::Node apps, std::shared_ptr<ns3lxc::Node> node);
+std::vector<std::shared_ptr<yntdl::Node> > parseNode(YAML::Node node, ParsedTopology *top);
+void parseNodeApplications(YAML::Node apps, std::shared_ptr<yntdl::Node> node);
 
 #endif

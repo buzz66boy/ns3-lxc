@@ -14,7 +14,7 @@
 
 using namespace std;
 
-static void addAppToAllNodes(ns3lxc::Application *app, ns3lxc::Topology *top){
+static void addAppToAllNodes(yntdl::Application *app, yntdl::Topology *top){
     for(auto subTopPtr : top->subTopologies){
         addAppToAllNodes(app, subTopPtr.get());
     }
@@ -23,17 +23,17 @@ static void addAppToAllNodes(ns3lxc::Application *app, ns3lxc::Topology *top){
     }
 }
 
-static void addAppToNode(ns3lxc::Application *application, std::string nodeName, ParsedTopology *parsedTop){
+static void addAppToNode(yntdl::Application *application, std::string nodeName, ParsedTopology *parsedTop){
     cout << "adding application: " + application->name + " to node " + nodeName << endl;
     for(auto cmdPair : application->commands){
         cout << "\tcmd: " + cmdPair.first << endl;
     }
     vector<string> findMe = splitString(nodeName);
-    shared_ptr<ns3lxc::Node> nodePtr = findNode(findMe, &parsedTop->topology);
+    shared_ptr<yntdl::Node> nodePtr = findNode(findMe, &parsedTop->topology);
     bool hasApp = false;
-    ns3lxc::Application *appPtr;
+    yntdl::Application *appPtr;
     for(size_t i = 0; i < nodePtr->applications.size(); ++i){
-        ns3lxc::Application *app = &nodePtr->applications[i];
+        yntdl::Application *app = &nodePtr->applications[i];
         if(app->name == application->name){
             hasApp = true;
             appPtr = app;
@@ -57,7 +57,7 @@ static void parseMappedApplication(YAML::Node mapNode, string appName, ParsedTop
     vector<string> recognizedTags;
     if(mapNode[TAG_ALL]){
         recognizedTags.push_back(TAG_ALL);
-        ns3lxc::Application app(appName);
+        yntdl::Application app(appName);
         if(mapNode[TAG_ALL].Type() != YAML::NodeType::Null){
             //default args are present
             app.addCommand(mapNode[TAG_ALL].as<string>());
@@ -75,7 +75,7 @@ static void parseMappedApplication(YAML::Node mapNode, string appName, ParsedTop
         recognizedTags.push_back(pluralize(TAG_INHERIT));
         inherit = mapNode[pluralize(TAG_INHERIT)].as<bool>();
     }
-    ns3lxc::Application app(appName, inherit);
+    yntdl::Application app(appName, inherit);
     YAML::Node cmdTag;
     if(mapNode[TAG_COMMAND]){
         recognizedTags.push_back(TAG_COMMAND);
@@ -109,7 +109,7 @@ static void parseMappedApplication(YAML::Node mapNode, string appName, ParsedTop
                 //Map of node names to commands
                 string nodeName = node.begin()->first.as<string>();
                 string cmd = node.begin()->second.as<string>();
-                ns3lxc::Application nodeApp(app);
+                yntdl::Application nodeApp(app);
                 nodeApp.addCommand(cmd);
                 addAppToNode(&nodeApp, nodeName, parsedTop);
             }
@@ -123,16 +123,16 @@ void parseApplications(YAML::Node apps, ParsedTopology *parsedTop){
         switch(apps[i].begin()->second.Type()){
             case YAML::NodeType::Scalar:
                 if(apps[i].begin()->second.as<string>() == "all"){
-                    ns3lxc::Application app(appName);
+                    yntdl::Application app(appName);
                     addAppToAllNodes(&app, &parsedTop->topology);
                 } else {
-                    ns3lxc::Application app(appName);
+                    yntdl::Application app(appName);
                     addAppToNode(&app, apps[i].begin()->second.as<string>(), parsedTop);
                 }
                 break;
             case(YAML::NodeType::Sequence):
                 for(auto nodeName : apps[i].begin()->second){
-                        ns3lxc::Application app(appName);
+                        yntdl::Application app(appName);
                     if(nodeName.Type() == YAML::NodeType::Scalar){
                         addAppToNode(&app, nodeName.as<string>(), parsedTop);
                     } else if(nodeName.Type() == YAML::NodeType::Map){

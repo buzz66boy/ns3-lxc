@@ -11,15 +11,15 @@
 #include "ipaddr.h"
 #include "nameable.h"
 
-namespace ns3lxc {
+namespace yntdl {
 class Node;
 class Link;
 // declarations
 class Iface : public Nameable {
 
 public:
-    ns3lxc::Node *node = nullptr;
-    ns3lxc::Link *link = nullptr;
+    yntdl::Node *node = nullptr;
+    yntdl::Link *link = nullptr;
     std::string bridgeName;
     std::string tapName;
     std::string macAddr;
@@ -30,7 +30,7 @@ public:
     Iface() {};
     Iface(const Iface&);
     Iface(std::string name): Nameable(name) {};
-    Iface(std::string name, ns3lxc::Node *node): Nameable(name), node(node) {};
+    Iface(std::string name, yntdl::Node *node): Nameable(name), node(node) {};
     ~Iface();
 
     void assignIp(IpAddr *ipAddr);
@@ -46,8 +46,8 @@ protected:
     IfaceProvider() {};
 public:
     std::map<std::string, std::string> ifacesProvidedSubNames; //maps this level's iface names to lower level's
-    std::map<std::string, std::weak_ptr<ns3lxc::IfaceProvider> > ifacesProvided; //keep a ref to the providers we contain
-    virtual ns3lxc::Iface *getIface(std::string ifaceName);
+    std::map<std::string, std::weak_ptr<yntdl::IfaceProvider> > ifacesProvided; //keep a ref to the providers we contain
+    virtual yntdl::Iface *getIface(std::string ifaceName);
 };
 
 class IfaceAcceptor {
@@ -55,7 +55,7 @@ protected:
     IfaceAcceptor() {};
 public:
     std::map<std::string, std::string> ifacesAcceptedSubNames; //maps this level's iface names to lower level's
-    std::map<std::string, std::weak_ptr<ns3lxc::IfaceAcceptor> > ifacesAccepted; //keep a ref to who below us accepts ifaces
+    std::map<std::string, std::weak_ptr<yntdl::IfaceAcceptor> > ifacesAccepted; //keep a ref to who below us accepts ifaces
     virtual int connectIface(std::string ifaceName, Iface *iface);
 };
 

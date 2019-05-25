@@ -5,7 +5,7 @@
 
 #include "link.h"
 
-using namespace ns3lxc;
+using namespace yntdl;
 
 Link::Link(const Link& ln): Nameable(ln), AdditionalTags(ln) {
     type = ln.type;
@@ -23,7 +23,7 @@ Link::Link(const Link& ln): Nameable(ln), AdditionalTags(ln) {
     }
 }
 
-Link::Link(std::string name, ns3lxc::Link& ln): Nameable(name), AdditionalTags(ln) {
+Link::Link(std::string name, yntdl::Link& ln): Nameable(name), AdditionalTags(ln) {
     type = ln.type;
     bandwidth = ln.bandwidth;
     latency = ln.latency;
@@ -44,11 +44,11 @@ Link::~Link(){
     }
 }
 
-int Link::connectIface(std::string ifaceName, ns3lxc::Iface *iface){
+int Link::connectIface(std::string ifaceName, yntdl::Iface *iface){
 	return connectIface(iface);
 }
 
-int Link::connectIface(ns3lxc::Iface *iface){
+int Link::connectIface(yntdl::Iface *iface){
         ifaces.push_back(iface);
         if(subnetMask){
             iface->assignSubnetMask(subnetMask);

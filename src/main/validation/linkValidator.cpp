@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void validateLink(std::shared_ptr<ns3lxc::Link> linkPtr){
+void validateLink(std::shared_ptr<yntdl::Link> linkPtr){
     bool fail = false;
     if(linkPtr->name == ""){
         cerr << "Link does not have a name" << endl;

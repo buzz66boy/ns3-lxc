@@ -8,9 +8,9 @@
 #include "node.h"
 #include "topology.h"
 
-void parsePositions(YAML::Node posNode, std::shared_ptr<ns3lxc::Node> nodePtr);
-void parsePositions(YAML::Node posNode, ns3lxc::Topology *topPtr);
-void applyRotation(int rotation, ns3lxc::Topology *topPtr);
-void computeAbsolutePositions(ns3lxc::Topology *top);
+void parsePositions(YAML::Node posNode, std::shared_ptr<yntdl::Node> nodePtr);
+void parsePositions(YAML::Node posNode, yntdl::Topology *topPtr);
+void applyRotation(int rotation, yntdl::Topology *topPtr);
+void computeAbsolutePositions(yntdl::Topology *top);
 
 #endif

@@ -8,21 +8,21 @@
 
 using namespace std;
 
-static std::string writeDaemonFile(shared_ptr<ns3lxc::Node> nodePtr);
-static std::string writeConfigFile(shared_ptr<ns3lxc::Node> nodePtr);
+static std::string writeDaemonFile(shared_ptr<yntdl::Node> nodePtr);
+static std::string writeConfigFile(shared_ptr<yntdl::Node> nodePtr);
 
-std::vector<std::pair<std::string, std::string> > Quagga::getExistingRequiredFiles(ns3lxc::Application *app, std::shared_ptr<ns3lxc::Node> nodePtr){
+std::vector<std::pair<std::string, std::string> > Quagga::getExistingRequiredFiles(yntdl::Application *app, std::shared_ptr<yntdl::Node> nodePtr){
     vector<pair<string, string> > existingFiles;
     return existingFiles;
 }
-std::vector<std::pair<std::string, std::string> > Quagga::getRequiredFiles(ns3lxc::Application *app, std::shared_ptr<ns3lxc::Node> nodePtr){
+std::vector<std::pair<std::string, std::string> > Quagga::getRequiredFiles(yntdl::Application *app, std::shared_ptr<yntdl::Node> nodePtr){
     vector<pair<string, string> > requiredFiles;
     requiredFiles.push_back(pair<string, string>("/etc/quagga/Quagga.conf", writeConfigFile(nodePtr)));
     requiredFiles.push_back(pair<string, string>("/etc/quagga/daemons", writeDaemonFile(nodePtr)));
     return requiredFiles;
 }
     
-std::vector<std::pair<std::string, bool> > Quagga::getExecutionCommands(ns3lxc::Application *app, std::shared_ptr<ns3lxc::Node>){
+std::vector<std::pair<std::string, bool> > Quagga::getExecutionCommands(yntdl::Application *app, std::shared_ptr<yntdl::Node>){
     vector<pair<string, bool> > commands;
     commands.push_back(pair<string, bool>("echo \"1\" > /proc/sys/net/ipv4/ip_forward", true));
     commands.push_back(pair<string, bool>("echo \"net.ipv4.ip_forward = 1\" >> /etc/sysctl.conf", true));
@@ -33,14 +33,14 @@ std::vector<std::pair<std::string, bool> > Quagga::getExecutionCommands(ns3lxc::
     // }
     return commands;
 }
-std::vector<std::string> Quagga::getCleanupLocations(ns3lxc::Application *app, std::shared_ptr<ns3lxc::Node>){
+std::vector<std::string> Quagga::getCleanupLocations(yntdl::Application *app, std::shared_ptr<yntdl::Node>){
     return vector<string>({"/etc/quagga/Quagga.conf", "/etc/quagga/daemons"});
 }
-std::vector<std::string> Quagga::getCleanupCommands(ns3lxc::Application *app, std::shared_ptr<ns3lxc::Node>){
+std::vector<std::string> Quagga::getCleanupCommands(yntdl::Application *app, std::shared_ptr<yntdl::Node>){
     return vector<string>();
 }
 
-static std::string writeDaemonFile(shared_ptr<ns3lxc::Node> nodePtr){
+static std::string writeDaemonFile(shared_ptr<yntdl::Node> nodePtr){
     stringstream sstr;
     //Enable ospf (and zebra)
     sstr << \
@@ -57,7 +57,7 @@ ripngd=no
     return sstr.str();
 }
 
-static std::string writeConfigFile(shared_ptr<ns3lxc::Node> nodePtr){
+static std::string writeConfigFile(shared_ptr<yntdl::Node> nodePtr){
     stringstream sstr;
     sstr << "hostname " << nodePtr->name << "_quagga" << endl;
     sstr << "log stdout" << endl;

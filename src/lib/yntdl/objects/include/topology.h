@@ -17,7 +17,7 @@
 #include "ipaddr.h"
 #include "nameable.h"
 
-namespace ns3lxc {
+namespace yntdl {
 
 // declarations
 class Topology : public Positionable, public IfaceProvider, public IfaceAcceptor, public Nameable {

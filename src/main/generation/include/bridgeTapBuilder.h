@@ -10,14 +10,14 @@
 #include "iface.h"
 #include "topology.h"
 
-int assignBridgesTaps(ns3lxc::Topology *top, int curNum = 0);
+int assignBridgesTaps(yntdl::Topology *top, int curNum = 0);
 
-void buildAllBridgesTaps(ns3lxc::Topology *top);
+void buildAllBridgesTaps(yntdl::Topology *top);
 
-void buildBridgeTap(ns3lxc::Iface*);
+void buildBridgeTap(yntdl::Iface*);
 
-void tearDownAllBridgesTaps(ns3lxc::Topology *top);
+void tearDownAllBridgesTaps(yntdl::Topology *top);
 
-void tearDownBridgeTap(ns3lxc::Iface*);
+void tearDownBridgeTap(yntdl::Iface*);
 
 #endif

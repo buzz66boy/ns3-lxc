@@ -12,42 +12,42 @@
 
 using namespace std;
 
-void parsePositions(YAML::Node posNode, std::shared_ptr<ns3lxc::Node> nodePtr){
+void parsePositions(YAML::Node posNode, std::shared_ptr<yntdl::Node> nodePtr){
     if(nodePtr->positions.size() > 0){
         nodePtr->positions.clear();
     }
     if(posNode.Type() == YAML::NodeType::Scalar){
         vector<string> xyz = splitString(posNode.as<string>());
-        nodePtr->positions.push_back(ns3lxc::Position(0, stod(xyz[0]), stod(xyz[1]), stod(xyz[2])));
+        nodePtr->positions.push_back(yntdl::Position(0, stod(xyz[0]), stod(xyz[1]), stod(xyz[2])));
     } else if(posNode.begin()->second.Type() == YAML::NodeType::Scalar){
         for(auto iter : posNode){
             double time = iter.first.as<double>();
             vector<string> xyz = splitString(iter.second.as<string>());
-            nodePtr->positions.push_back(ns3lxc::Position(time, stod(xyz[0]), stod(xyz[1]), stod(xyz[2])));
+            nodePtr->positions.push_back(yntdl::Position(time, stod(xyz[0]), stod(xyz[1]), stod(xyz[2])));
         }
     }
 }
 
-void parsePositions(YAML::Node posNode, ns3lxc::Topology *topPtr){
+void parsePositions(YAML::Node posNode, yntdl::Topology *topPtr){
     if(topPtr->positions.size() > 0){
         topPtr->positions.clear();
     }
     if(posNode.Type() == YAML::NodeType::Scalar){
         vector<string> xyz = splitString(posNode.as<string>());
-        topPtr->positions.push_back(ns3lxc::Position(0, stod(xyz[0]), stod(xyz[1]), stod(xyz[2])));
+        topPtr->positions.push_back(yntdl::Position(0, stod(xyz[0]), stod(xyz[1]), stod(xyz[2])));
         // cout << "\tAdded " + posNode.as<string>() << endl;
     } else if(posNode.begin()->second.Type() == YAML::NodeType::Scalar){
         for(auto iter : posNode){
             double time = iter.first.as<double>();
             vector<string> xyz = splitString(iter.second.as<string>());
-            topPtr->positions.push_back(ns3lxc::Position(time, stod(xyz[0]), stod(xyz[1]), stod(xyz[2])));
+            topPtr->positions.push_back(yntdl::Position(time, stod(xyz[0]), stod(xyz[1]), stod(xyz[2])));
             // cout << "\tAdded " + iter.second.as<string>() << endl;
         }
     }
     computeAbsolutePositions(topPtr);
 }
 
-void computeAbsolutePositions(ns3lxc::Topology *top){
+void computeAbsolutePositions(yntdl::Topology *top){
     for(auto topPtr : top->subTopologies){
         topPtr->centerPositionsAroundParent(top);
         computeAbsolutePositions(topPtr.get());
@@ -57,7 +57,7 @@ void computeAbsolutePositions(ns3lxc::Topology *top){
     }
 }
 
-static void applyRotation2(int rotation,  ns3lxc::Topology *topPtr){
+static void applyRotation2(int rotation,  yntdl::Topology *topPtr){
     topPtr->rotatePositions(rotation);
     for(auto nodePtr : topPtr->nodes){
         nodePtr->rotatePositions(rotation);
@@ -67,7 +67,7 @@ static void applyRotation2(int rotation,  ns3lxc::Topology *topPtr){
     }
 }
 
-void applyRotation(int rotation, ns3lxc::Topology *topPtr){
+void applyRotation(int rotation, yntdl::Topology *topPtr){
     for(auto nodePtr : topPtr->nodes){
         nodePtr->rotatePositions(rotation);
     }

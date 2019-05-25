@@ -9,8 +9,8 @@
 
 #include "topology.h"
 
-void generateTopology(ns3lxc::Topology *topology);
+void generateTopology(yntdl::Topology *topology);
 
-void findLinkTypesUsed(ns3lxc::Topology *topology);
+void findLinkTypesUsed(yntdl::Topology *topology);
 
 #endif

@@ -13,7 +13,7 @@
 #include "iface.h"
 #include "nameable.h"
 
-namespace ns3lxc {
+namespace yntdl {
 
 // declarations
 class Link : public IfaceAcceptor, public Nameable, public AdditionalTags {
@@ -42,8 +42,8 @@ public:
 
 	const std::vector<Iface*>& getIfaces() const { return ifaces; } 
 	
-	int connectIface(ns3lxc::Iface *iface); 
-	int connectIface(std::string ifaceName, ns3lxc::Iface *iface) override; // OVERRIDES IfaceAccepter
+	int connectIface(yntdl::Iface *iface); 
+	int connectIface(std::string ifaceName, yntdl::Iface *iface) override; // OVERRIDES IfaceAccepter
 
 	static void reRefIfaces(Link *linkPtr);
 };

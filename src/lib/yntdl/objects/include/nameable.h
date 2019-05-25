@@ -7,7 +7,7 @@
 #include <string>
 #include <memory>
 
-namespace ns3lxc {
+namespace yntdl {
 
 class Nameable {
 public:

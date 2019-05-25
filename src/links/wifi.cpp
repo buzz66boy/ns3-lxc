@@ -44,7 +44,7 @@ void Wifi::writeTypeInit(std::ostream& str){
     str << "Config::SetDefault (\"ns3::WifiRemoteStationManager::FragmentationThreshold\", StringValue (\"2200\"));" << endl;
     str << "wifi.SetRemoteStationManager (\"ns3::ConstantRateWifiManager\", \"DataMode\", StringValue (\"OfdmRate24Mbps\"));" << endl;
 }
-void Wifi::writeLinkInit(std::ostream& str, shared_ptr<ns3lxc::Link> linkPtr){
+void Wifi::writeLinkInit(std::ostream& str, shared_ptr<yntdl::Link> linkPtr){
     string contName = linkPtr->name + "_container";
     string devName = linkPtr->name + "_dev";
     string phyName = linkPtr->name + "_phy";
@@ -81,6 +81,6 @@ void Wifi::writeLinkInit(std::ostream& str, shared_ptr<ns3lxc::Link> linkPtr){
     
 }
 
-void Wifi::addIfacesToLink(std::ostream& str, shared_ptr<ns3lxc::Link> linkPtr){
+void Wifi::addIfacesToLink(std::ostream& str, shared_ptr<yntdl::Link> linkPtr){
 
 }

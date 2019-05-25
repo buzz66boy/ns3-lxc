@@ -9,15 +9,15 @@
 #include "link.h"
 #include "node.h"
 
-using namespace ns3lxc;
+using namespace yntdl;
 
-void ns3lxc::Node::reRefIfaces(ns3lxc::Node *node){
+void yntdl::Node::reRefIfaces(yntdl::Node *node){
     for(auto it = node->ifaces.begin(); it != node->ifaces.end(); it++){
         it->second.node = node;
     }
 }
 
-ns3lxc::Node::Node(ns3lxc::Node& temp, std::string nodeName, std::string origName): Positionable(temp), Nameable(nodeName, origName), AdditionalTags(temp), IfaceProvider() {
+yntdl::Node::Node(yntdl::Node& temp, std::string nodeName, std::string origName): Positionable(temp), Nameable(nodeName, origName), AdditionalTags(temp), IfaceProvider() {
     ifaces = temp.ifaces;
     reRefIfaces(this);
     requiresReRef = true;
@@ -41,7 +41,7 @@ ns3lxc::Node::Node(ns3lxc::Node& temp, std::string nodeName, std::string origNam
     }
 }
 
-ns3lxc::Node::Node(const ns3lxc::Node &temp): Positionable(temp), Nameable(temp), AdditionalTags(temp), IfaceProvider() {
+yntdl::Node::Node(const yntdl::Node &temp): Positionable(temp), Nameable(temp), AdditionalTags(temp), IfaceProvider() {
     ifaces = temp.ifaces;
     reRefIfaces(this);
     requiresReRef = true;
@@ -51,11 +51,11 @@ ns3lxc::Node::Node(const ns3lxc::Node &temp): Positionable(temp), Nameable(temp)
     commands = temp.commands;
 }
 
-void ns3lxc::Node::addCommand(std::string cmd, bool inherit){
+void yntdl::Node::addCommand(std::string cmd, bool inherit){
     commands.push_back(std::pair<std::string, bool>(cmd, inherit));
 }
 
-Iface *ns3lxc::Node::getIface(std::string ifaceName){
+Iface *yntdl::Node::getIface(std::string ifaceName){
     if(requiresReRef){
         reRefIfaces(this);
         requiresReRef = false;

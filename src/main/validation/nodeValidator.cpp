@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void validateNode(std::shared_ptr<ns3lxc::Node> nodePtr){
+void validateNode(std::shared_ptr<yntdl::Node> nodePtr){
     bool fail = false;
     if(nodePtr->name == ""){
         cerr << "Node does not have a name" << endl;
@@ -30,7 +30,7 @@ void validateNode(std::shared_ptr<ns3lxc::Node> nodePtr){
     }
 
     for(auto ifacePair : nodePtr->ifaces){
-        ns3lxc::Iface iface = ifacePair.second;
+        yntdl::Iface iface = ifacePair.second;
         if(iface.name == ""){
             cerr << "Iface on" + name + "was not assigned a name" << endl;
             fail = true;

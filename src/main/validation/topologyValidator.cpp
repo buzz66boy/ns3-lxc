@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void validateTopology(ns3lxc::Topology *top){
+void validateTopology(yntdl::Topology *top){
     bool fail = false;
     if(top->name == ""){
         cerr << "A Topology has no name" << endl;

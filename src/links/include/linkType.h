@@ -17,8 +17,8 @@ public:
     virtual int getIfacesSupported() = 0;
     virtual void writeIncludes(std::ostream& str) = 0;
     virtual void writeTypeInit(std::ostream& str) = 0;
-    virtual void writeLinkInit(std::ostream& str, std::shared_ptr<ns3lxc::Link> linkPtr) = 0;
-    virtual void addIfacesToLink(std::ostream& str, std::shared_ptr<ns3lxc::Link> linkPtr) = 0;
+    virtual void writeLinkInit(std::ostream& str, std::shared_ptr<yntdl::Link> linkPtr) = 0;
+    virtual void addIfacesToLink(std::ostream& str, std::shared_ptr<yntdl::Link> linkPtr) = 0;
     virtual void writeClosingRemarks(std::ostream& str) = 0;
 };
 

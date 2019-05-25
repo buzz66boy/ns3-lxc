@@ -10,13 +10,13 @@
 
 class NodeSpawner {
 public:
-    static void createNodes(ns3lxc::Topology *);
-    static void startNodes(ns3lxc::Topology *); //Change to string?
-    static void installApplications(ns3lxc::Topology *);
-    static void runCommands(ns3lxc::Topology *);
-    static void runApplications(ns3lxc::Topology *); // for now, change to sync'ed packet later?
-    static void grabOutput(ns3lxc::Topology *);
-    static void teardownNodes(ns3lxc::Topology *);
+    static void createNodes(yntdl::Topology *);
+    static void startNodes(yntdl::Topology *); //Change to string?
+    static void installApplications(yntdl::Topology *);
+    static void runCommands(yntdl::Topology *);
+    static void runApplications(yntdl::Topology *); // for now, change to sync'ed packet later?
+    static void grabOutput(yntdl::Topology *);
+    static void teardownNodes(yntdl::Topology *);
 };
 
 #endif

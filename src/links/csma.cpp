@@ -27,7 +27,7 @@ void CSMA::writeTypeInit(std::ostream& str){
     str << "TapBridgeHelper csmaTapBridge;" << endl;
     str << "csmaTapBridge.SetAttribute (\"Mode\", StringValue (\"UseLocal\"));" << endl;
 }
-void CSMA::writeLinkInit(std::ostream& str, shared_ptr<ns3lxc::Link> linkPtr){
+void CSMA::writeLinkInit(std::ostream& str, shared_ptr<yntdl::Link> linkPtr){
     string contName = linkPtr->name + "_container";
     string devName = linkPtr->name + "_dev";
     str << "NodeContainer " + contName + " = NodeContainer(";
@@ -59,7 +59,7 @@ void CSMA::writeLinkInit(std::ostream& str, shared_ptr<ns3lxc::Link> linkPtr){
     }
 
 }
-void CSMA::addIfacesToLink(std::ostream& str, shared_ptr<ns3lxc::Link> linkPtr){
+void CSMA::addIfacesToLink(std::ostream& str, shared_ptr<yntdl::Link> linkPtr){
 
 }
 

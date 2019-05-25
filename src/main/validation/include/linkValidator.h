@@ -5,6 +5,6 @@
 
 #include "link.h"
 
-void validateLink(std::shared_ptr<ns3lxc::Link> linkPtr);
+void validateLink(std::shared_ptr<yntdl::Link> linkPtr);
 
 #endif

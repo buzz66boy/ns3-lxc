@@ -9,7 +9,7 @@
 
 #include "additionalTags.h"
 
-using namespace ns3lxc;
+using namespace yntdl;
 
 void AdditionalTags::mapAdditionalTags(std::vector<std::string> knownTags, YAML::Node mapRoot){
     if(mapRoot.Type() != YAML::NodeType::Map){
