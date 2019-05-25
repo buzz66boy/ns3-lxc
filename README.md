@@ -1,5 +1,5 @@
 # The ns3-lxc Project
-ns-3 automation with Linux Container integration
+ns-3 automation with Linux Container integration. Check out the github wiki for latest news: https://github.com/buzz66boy/ns3-lxc/wiki
 
 ## Download the latest version of ns3-lxc
 Version 0.1 ([details](https://github.com/buzz66boy/ns3-lxc/releases))
