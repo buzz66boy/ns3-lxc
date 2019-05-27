@@ -4,8 +4,7 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "node.h"
-#include "iface.h"
+#include "yntdl.h"
 #include "errorCode.h"
 #include "nodeTypeMap.h"
 #include "bridgeTapBuilder.h"

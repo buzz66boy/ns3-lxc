@@ -12,11 +12,8 @@ include_directories(
         /usr/src/linux-headers-generic/
         /usr/include
         src/main/include
-        src/main/parse/include
         src/main/generation/include
         src/main/validation/include
-        src/lib/yntdl/objects/include
-        src/lib/yntdl/parse/include
         src/links/include
         src/applications/include
         src/nodes/include
@@ -53,46 +50,6 @@ set(Node_Types
         # Add custom node type handlers here
 )
 
-set(Local_Libs
-		src/lib/yntdl/objects/include/ipaddr.h
-		src/lib/yntdl/objects/include/node.h
-		src/lib/yntdl/objects/include/iface.h
-		src/lib/yntdl/objects/include/position.h
-		src/lib/yntdl/objects/include/link.h
-		src/lib/yntdl/objects/include/topology.h
-		src/lib/yntdl/objects/include/application.h
-        src/lib/yntdl/objects/include/nameable.h
-        src/lib/yntdl/objects/include/additionalTags.h
-		src/lib/yntdl/objects/ipaddr.cpp
-        src/lib/yntdl/objects/node.cpp
-		src/lib/yntdl/objects/link.cpp
-        src/lib/yntdl/objects/topology.cpp
-        src/lib/yntdl/objects/iface.cpp
-        src/lib/yntdl/objects/application.cpp
-        src/lib/yntdl/objects/position.cpp
-        src/lib/yntdl/objects/additionalTags.cpp
-        src/lib/yntdl/parse/include/parserTags.h
-        src/lib/yntdl/parse/include/settingsParser.h
-        src/lib/yntdl/parse/include/topologyParser.h
-        src/lib/yntdl/parse/include/subTopologyParser.h
-        src/lib/yntdl/parse/include/nodeParser.h
-        src/lib/yntdl/parse/include/linkParser.h
-        src/lib/yntdl/parse/include/ifaceParser.h
-        src/lib/yntdl/parse/include/positionParser.h
-        src/lib/yntdl/parse/include/applicationParser.h
-        src/lib/yntdl/parse/include/commandParser.h
-        src/lib/yntdl/parse/parserTags.cpp
-        src/lib/yntdl/parse/topologyParser.cpp
-        src/lib/yntdl/parse/subTopologyParser.cpp
-        src/lib/yntdl/parse/settingsParser.cpp
-        src/lib/yntdl/parse/nodeParser.cpp
-        src/lib/yntdl/parse/linkParser.cpp
-        src/lib/yntdl/parse/ifaceParser.cpp
-        src/lib/yntdl/parse/positionParser.cpp
-        src/lib/yntdl/parse/applicationParser.cpp
-        src/lib/yntdl/parse/commandParser.cpp
-)
-
 set(NS-3_LXC
         src/main/generation/include/bridgeTapBuilder.h
         src/main/generation/include/nodeSpawner.h
@@ -115,13 +72,15 @@ set(NS-3_LXC
         src/main/main.cpp
 )
 
-add_executable(ns3lxc ${NS-3_LXC} ${NS-3_Template_Write} ${Local_Libs} ${Link_Types} ${Node_Types} ${Application_Types})
+add_executable(ns3lxc ${NS-3_LXC} ${Link_Types} ${Node_Types} ${Application_Types})
+
+find_library(YNTDL_LIB yntdl)
 
 find_library(YAML_LIB yaml-cpp)
 
 find_library(LXC_LIB lxc)
 
 target_link_libraries(ns3lxc ${YAML_LIB} ${LXC_LIB})
-
+ target_link_libraries(ns3lxc ${YNTDL_LIB})
 
 target_compile_options(ns3lxc PUBLIC -std=c++11 -pthread -g -Wfatal-errors -pipe)

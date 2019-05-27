@@ -3,8 +3,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "settingsParser.h"
-#include "topology.h"
+#include "yntdl.h"
 #include "errorCode.h"
 #include "linkTypeMap.h"
 #include "ns3Writer.h"

@@ -6,7 +6,7 @@
 #include <ostream>
 #include <memory>
 
-#include "link.h"
+#include "yntdl.h"
 #include "linkType.h"
 
 class CSMA : public LinkType {

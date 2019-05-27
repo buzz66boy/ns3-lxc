@@ -4,9 +4,7 @@
 #include <vector>
 #include <string>
 
-#include "link.h"
-#include "iface.h"
-#include "node.h"
+#include "yntdl.h"
 #include "csma.h"
 
 using namespace std;

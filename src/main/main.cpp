@@ -7,13 +7,9 @@
 #include <sys/stat.h>
 
 #include "yaml-cpp/yaml.h"
-#include "settingsParser.h"
-#include "topologyParser.h"
+#include "yntdl.h"
 #include "topologyValidator.h"
 #include "topologyGenerator.h"
-#include "topology.h"
-#include "node.h"
-#include "link.h"
 #include "errorCode.h"
 
 #define MAXPATHLEN 1024

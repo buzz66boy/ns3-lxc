@@ -6,7 +6,7 @@
 #include <ostream>
 #include <memory>
 
-#include "topology.h"
+#include "yntdl.h"
 
 class NodeSpawner {
 public:

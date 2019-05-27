@@ -3,9 +3,7 @@
 #include <memory>
 #include <string>
 
-#include "link.h"
-#include "iface.h"
-#include "node.h"
+#include "yntdl.h"
 #include "wifi.h"
 #include "errorCode.h"
 

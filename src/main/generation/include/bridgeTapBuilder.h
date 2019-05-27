@@ -6,9 +6,7 @@
 #include <vector>
 #include <memory>
 
-#include "node.h"
-#include "iface.h"
-#include "topology.h"
+#include "yntdl.h"
 
 int assignBridgesTaps(yntdl::Topology *top, int curNum = 0);
 

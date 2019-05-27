@@ -2,7 +2,7 @@
 #define __NODE_VALIDATOR_H_INCLUDED__
 
 #include <memory>
-#include "node.h"
+#include "yntdl.h"
 
 void validateNode(std::shared_ptr<yntdl::Node> nodePtr);
 

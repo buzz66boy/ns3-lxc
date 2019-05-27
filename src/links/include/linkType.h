@@ -6,7 +6,7 @@
 #include <ostream>
 #include <memory>
 
-#include "link.h"
+#include "yntdl.h"
 
 class LinkType {
     bool used = false;

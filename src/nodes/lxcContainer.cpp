@@ -11,9 +11,7 @@
 #include <sys/wait.h>
 #include <lxc/lxccontainer.h>
 
-#include "settingsParser.h"
-#include "node.h"
-#include "parserTags.h"
+#include "yntdl.h"
 #include "errorCode.h"
 #include "applicationTypeMap.h"
 #include "lxcContainer.h"

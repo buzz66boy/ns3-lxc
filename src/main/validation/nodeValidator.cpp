@@ -2,9 +2,7 @@
 #include <iostream>
 #include <string>
 
-#include "node.h"
-#include "link.h"
-#include "iface.h"
+#include "yntdl.h"
 #include "errorCode.h"
 #include "nodeValidator.h"
 

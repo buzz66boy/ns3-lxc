@@ -2,8 +2,7 @@
 #include <memory>
 #include <string>
 
-#include "link.h"
-#include "iface.h"
+#include "yntdl.h"
 #include "errorCode.h"
 #include "linkTypeMap.h"
 #include "linkValidator.h"

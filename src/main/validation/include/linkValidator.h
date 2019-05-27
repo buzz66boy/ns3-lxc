@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "link.h"
+#include "yntdl.h"
 
 void validateLink(std::shared_ptr<yntdl::Link> linkPtr);
 

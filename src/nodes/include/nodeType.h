@@ -6,7 +6,7 @@
 #include <ostream>
 #include <memory>
 
-#include "node.h"
+#include "yntdl.h"
 
 class NodeType {
 public:

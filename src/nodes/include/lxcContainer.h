@@ -8,7 +8,7 @@
 
 #include <lxc/lxccontainer.h>
 
-#include "node.h"
+#include "yntdl.h"
 #include "nodeType.h"
 
 class LxcContainer : public NodeType {

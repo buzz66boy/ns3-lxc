@@ -7,7 +7,7 @@
 
 #include <lxc/lxccontainer.h>
 
-#include "topology.h"
+#include "yntdl.h"
 
 void generateTopology(yntdl::Topology *topology);
 

@@ -6,8 +6,7 @@
 #include <memory>
 #include <utility>
 
-#include "node.h"
-#include "topology.h"
+#include "yntdl.h"
 
 #include "applicationType.h"
 

@@ -5,7 +5,7 @@
 #include <string>
 #include <ostream>
 
-#include "topology.h"
+#include "yntdl.h"
 
 class Ns3Writer {
 public:

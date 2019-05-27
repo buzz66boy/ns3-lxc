@@ -9,9 +9,7 @@
 #include <memory>
 #include <vector>
 
-#include "application.h"
-#include "node.h"
-#include "topology.h"
+#include "yntdl.h"
 
 /*
 packman
