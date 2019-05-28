@@ -8,6 +8,7 @@
 
 #include "yaml-cpp/yaml.h"
 #include "yntdl.h"
+#include "settingsParser.h"
 #include "topologyValidator.h"
 #include "topologyGenerator.h"
 #include "errorCode.h"
@@ -71,6 +72,17 @@ static void setOutputDest(string topologyName){
 	}
 }
 
+static void applyNodeDefaultType(yntdl::Topology *top){
+	for(auto nodePtr : top->nodes){
+        if(nodePtr->type == ""){
+        	nodePtr->type = Settings::node_type;
+        }
+    }
+    for(auto subTopPtr : top->subTopologies){
+        applyNodeDefaultType(subTopPtr.get());
+    }
+}
+
 int main(int argc, char *argv[]){
 	try{
 		std::string settings_path = compute_settings_path();
@@ -127,6 +139,7 @@ int main(int argc, char *argv[]){
 
 		topology = parseTopologyFile(argMap.at("file"));
 		setOutputDest(topology.name);
+		applyNodeDefaultType(&topology);
 		yntdl::Topology::reNumNodes(&topology);
 		validateTopology(&topology);
 		try{

@@ -13,6 +13,7 @@ include_directories(
         /usr/include
         src/main/include
         src/main/generation/include
+        src/main/parse/include
         src/main/validation/include
         src/links/include
         src/applications/include
@@ -65,6 +66,8 @@ set(NS-3_LXC
         src/main/validation/topologyValidator.cpp
         src/main/validation/nodeValidator.cpp
         src/main/validation/linkValidator.cpp
+        src/main/parse/include/settingsParser.h
+        src/main/parse/settingsParser.cpp
         src/main/include/logger.h
         src/main/include/errorCode.h
         src/main/logger.cpp
