@@ -9,7 +9,6 @@
 #include "yaml-cpp/yaml.h"
 #include "yntdl.h"
 #include "settingsParser.h"
-#include "topologyValidator.h"
 #include "topologyGenerator.h"
 #include "errorCode.h"
 
@@ -141,12 +140,17 @@ int main(int argc, char *argv[]){
 		setOutputDest(topology.name);
 		applyNodeDefaultType(&topology);
 		yntdl::Topology::reNumNodes(&topology);
-		validateTopology(&topology);
+		//call YNTDL's validation
+		yntdl::validateTopology(&topology);
+		//validate types vs type maps
+
 		try{
 			generateTopology(&topology);
 		} catch(Ns3lxcException& e){
 			//Handle teardown if applicable
 			throw e;
+		} catch(yntdl::YntdlException& e1){
+			throw e1;
 		}
 	} catch(Ns3lxcException& e){
 		cerr << e.what() << endl;

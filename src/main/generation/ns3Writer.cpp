@@ -167,7 +167,7 @@ static void writeNodePos(std::ostream& str, yntdl::Topology *top){
                     curTime = lowestTime;
                     str << "mob->AddWaypoint(Waypoint(" + pos->ns3Str() + "));" << endl;
                 } else {
-                    throw Ns3lxcException(ErrorCode::POSITION_ERROR, "Waypoing Writing");
+                    throw Ns3lxcException(ErrorCode::POSITION_ERROR, "Waypoint Writing");
                 }
             }
         } else if(nodePtr->positions.size() > 1){
@@ -189,7 +189,7 @@ static void writeNodePos(std::ostream& str, yntdl::Topology *top){
                     curTime = lowestTime;
                     str << "mob->AddWaypoint(Waypoint(" + pos->ns3Str() + "));" << endl;
                 } else {
-                    throw Ns3lxcException(ErrorCode::POSITION_ERROR, "Waypoing Writing");
+                    throw Ns3lxcException(ErrorCode::POSITION_ERROR, "Waypoint Writing");
                 }
             }
         } else {

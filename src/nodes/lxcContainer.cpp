@@ -86,12 +86,13 @@ static int runCommandOnContainer(string command, lxc_container *c, lxc_attach_op
 void LxcContainer::writeContainerConfig(std::shared_ptr<yntdl::Node> nodePtr, string configPath){
     std::ofstream ofs;
     ofs.open(configPath);
-
+    int count = 0;
     for(auto it : nodePtr->ifaces){
         if(it.second.ip == nullptr || it.second.subnetMask == nullptr){
             continue;
         }
-        ofs << "lxc.network.type = veth" << endl;
+        //lxc 2.0
+/*        ofs << "lxc.network.type = veth" << endl;
         ofs << "lxc.network.name = " << it.first << endl;
         ofs << "lxc.network.flags = up" << endl;
         ofs << "lxc.network.link = " << it.second.bridgeName << endl;
@@ -101,6 +102,20 @@ void LxcContainer::writeContainerConfig(std::shared_ptr<yntdl::Node> nodePtr, st
         } else {
             ofs << "lxc.network.hwaddr = xx:xx:xx:xx:xx:xx" << endl;
         }
+        */
+        //lxc 3.0
+        ofs << "lxc.net." << count << ".type = veth" << endl;
+        ofs << "lxc.net." << count << ".name = " << it.first << endl;
+        ofs << "lxc.net." << count << ".flags = up" << endl;
+        ofs << "lxc.net." << count << ".link = " << it.second.bridgeName << endl;
+        ofs << "lxc.net." << count << ".ipv4.address = " << it.second.ip->str() << "/" << to_string(it.second.subnetMask->getCidr()) << endl;
+        //ofs << "lxc.net." << count << ".ipv4.subnet = " << it.second.subnetMask->str() << endl;
+        if(it.second.macAddr != ""){
+            ofs << "lxc.net." << count << ".hwaddr = " + it.second.macAddr << endl;
+        } else {
+            ofs << "lxc.net." << count << ".hwaddr = xx:xx:xx:xx:xx:xx" << endl;
+        }
+        ++count;
     }
     ofs.close();
     configMap[nodePtr->name] = configPath;
@@ -111,25 +126,27 @@ void LxcContainer::writeContainerConfig(std::shared_ptr<yntdl::Node> nodePtr, st
  */
 void LxcContainer::createNode(std::shared_ptr<yntdl::Node> nodePtr) {
     lxc_container *c;
+
+    c = containerMap[nodePtr->name].get();
+
+    if(c != nullptr && c->is_defined(c)){
+        teardownNode(nodePtr);
+    }
+
     containerMap[nodePtr->name] = shared_ptr<lxc_container>(lxc_container_new(nodePtr->name.c_str(), NULL));
     c = containerMap[nodePtr->name].get();
     if(!c){
         throw Ns3lxcException(ErrorCode::NODE_CREATE_FAILURE, nodePtr->name);
     }
-    if(c->is_defined(c)){
-        teardownNode(nodePtr);
-        containerMap[nodePtr->name] = shared_ptr<lxc_container>(lxc_container_new(nodePtr->name.c_str(), NULL));
-        c = containerMap[nodePtr->name].get();
-    }
     string configPath = Settings::container_config_dir + "/" + nodePtr->name + ".conf";
     writeContainerConfig(nodePtr, configPath);
 
     if(!c->load_config(c, configMap[nodePtr->name].c_str())){
-        throw Ns3lxcException(ErrorCode::NODE_CREATE_FAILURE, nodePtr->name);
+        throw Ns3lxcException(ErrorCode::NODE_CREATE_FAILURE, nodePtr->name + " test 1");
     }
     if(!c->createl(c, "download", NULL, NULL, LXC_CREATE_QUIET, "-d", containerDistro.c_str(), "-r", containerRelease.c_str(), "-a", "amd64", NULL))
     {
-        throw Ns3lxcException(ErrorCode::NODE_CREATE_FAILURE, nodePtr->name);
+        throw Ns3lxcException(ErrorCode::NODE_CREATE_FAILURE, nodePtr->name + " test 2");
     }
     // c->set_config_item(c, );
     
