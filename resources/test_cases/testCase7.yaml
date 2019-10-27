@@ -1,9 +1,8 @@
 includes:
   - testCase6
 
-time: 10
-
 TestCase7:
+  time: 10
   nodes:
     - tc7Node:
         num: 2

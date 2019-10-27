@@ -2,9 +2,8 @@ include:
   - nodeTemplates
   - linkTemplates
 
-time: 60
-
 ComplexNetworkHalf:
+  time: 60
   ip: 10.0.0.0/22 # Experimental flag, does nothing
   position: 0 0 0
   nodes:

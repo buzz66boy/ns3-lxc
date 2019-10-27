@@ -1,8 +1,7 @@
 # Tests simple link creation
 
-time: 10
-
 TestCase2:
+  time: 10
   nodes:
     - node1:
         iface: eth0

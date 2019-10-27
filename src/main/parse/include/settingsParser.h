@@ -32,6 +32,7 @@ public:
     static std::string container_config_dir;
 	static std::string script_dest;
     static std::string node_type;
+    static double run_time;
 
     // static int parse_config_args();
 	static int parse_settings_file(std::string settings_file);

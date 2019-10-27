@@ -1,11 +1,10 @@
 # tests simple inclusion/template instantiation
 
-time: 10
-
 includes:
   - testCase1
 
 TestCase3:
+  time: 10
   topologies:
     - first:
         template: TestCase1

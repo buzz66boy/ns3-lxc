@@ -2,9 +2,8 @@
 
 includes: testCase5
 
-time: 10
-
 TestCase9:
+  time: 10
   topologies:
     - tc:
         template: TestCase5

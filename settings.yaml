@@ -14,3 +14,6 @@ OUTPUT_DEST: temp/output
 
 # default node type to use
 NODE_TYPE: ubuntu xenial
+
+# default run time of simulation in seconds
+SIM_TIME: 60.0

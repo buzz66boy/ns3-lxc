@@ -1,6 +1,5 @@
-time: 20
-
 TestCase13:
+  time: 20
   nodes:
     - myNode:
         num: 3

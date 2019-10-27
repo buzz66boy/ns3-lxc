@@ -2,9 +2,8 @@ include:
   - complexNetwork
   # - complexNetworkHalf
 
-time: 60
-
 SuperComplexNetwork:
+  time: 60
   topologies:
     - complexNet1:
         template: ComplexNetwork

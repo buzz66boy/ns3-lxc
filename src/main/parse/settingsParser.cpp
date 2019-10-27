@@ -13,10 +13,12 @@
 #define TEMP_DEST_STR "TEMP_DIR"
 #define OUTPUT_DEST_STR "OUTPUT_DEST"
 #define NODE_TYPE "NODE_TYPE"
+#define SIM_TIME "SIM_TIME"
 
 #define SCRIPT_DEFAULT_DEST "../../output/scripts"
 #define OUTPUT_DEFAULT_DEST "../../output"
 #define DEFAULT_NODE_TYPE "ubuntu xenial"
+#define DEFAULT_SIM_TIME 60.0
 
 #define CONTAINER_CONFIG "/container_config"
 
@@ -43,6 +45,7 @@ string Settings::top_output_dest;
 string Settings::output_dest;
 string Settings::container_config_dir;
 string Settings::node_type;
+double Settings::run_time;
 
 bool check_make_dir(const char *path){
 	struct stat buffer;
@@ -120,6 +123,12 @@ int Settings::parse_settings_file(std::string settings_file){
 		Settings::node_type = settings[NODE_TYPE].as<std::string>();
 	} else {
 		Settings::node_type = DEFAULT_NODE_TYPE;
+	}
+
+	if(settings[SIM_TIME]){
+		Settings::run_time = settings[SIM_TIME].as<double>();
+	} else { 
+		Settings::run_time = DEFAULT_SIM_TIME;
 	}
 
 	return 0;

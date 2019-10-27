@@ -16,6 +16,7 @@
 
 #define PROJ_ROOT_DIR "ns3-lxc"
 #define SETTINGS_FILE "settings.yaml"
+#define TAG_TIME "time"
 
 #define HELP_STATEMENT "usage: 'sudo bin/ns3lxc pathToTopology [-n] [-c] [-s] [-g] [-h]'\n\
 -n: write only ns-3 script SUDO NOT REQUIRED\n\
@@ -137,12 +138,15 @@ int main(int argc, char *argv[]){
 		}
 
 		topology = parseTopologyFile(argMap.at("file"));
+		if(topology.additionalTags[TAG_TIME]){
+			Settings::run_time = topology.additionalTags[TAG_TIME].as<double>();
+		}
 		setOutputDest(topology.name);
 		applyNodeDefaultType(&topology);
 		yntdl::Topology::reNumNodes(&topology);
 		//call YNTDL's validation
 		yntdl::validateTopology(&topology);
-		//validate types vs type maps
+		//FIXME: validate types vs type maps and set simulation run time
 
 		try{
 			generateTopology(&topology);

@@ -37,7 +37,7 @@ int main( int argc, char *argv[]){
 
     writeAnimDescriptions(str, top);
 
-    str << "for(uint64_t i = 0; i <= " + to_string(top->runTime) + "; i += 10){Simulator::Schedule(Seconds(i), &printTime);}" << endl;
+    str << "for(uint64_t i = 0; i <= " + to_string(Settings::run_time) + "; i += 10){Simulator::Schedule(Seconds(i), &printTime);}" << endl;
     str << "\tSimulator::Run ();" << endl;
     str << "\tSimulator::Destroy ();" << endl;
     str << "}" << endl;
@@ -99,7 +99,7 @@ void printTime(){
 }
 
 void Ns3Writer::writeInit(std::ostream& str, yntdl::Topology *top){
-    str << "Simulator::Stop (Seconds (" + to_string(top->runTime) + ".));" << endl;
+    str << "Simulator::Stop (Seconds (" + to_string(Settings::run_time) + ".));" << endl;
     str << "nodes.Create(" + to_string(top->curNodeNum) + ");" << endl;
     for(auto it : linkTypeMap){
         if(it.second->isUsed()){

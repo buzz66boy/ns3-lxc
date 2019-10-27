@@ -1,8 +1,7 @@
 # Tests Simple Container Creation
 
-time: 10
-
 TestCase1:
+  time: 10
   nodes:
     - node1:
         ifaces:

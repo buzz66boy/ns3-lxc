@@ -1,6 +1,5 @@
-time: 10
-
 TestCase6-2:
+  time: 10
   links:
     - onlyLink:
         type: csma

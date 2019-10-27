@@ -1,8 +1,7 @@
 # tests application installation
 
-time: 10
-
 TestCase4:
+  time: 10
   nodes:
     - node1:
         iface: eth0
