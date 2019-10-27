@@ -158,7 +158,7 @@ std::vector<std::shared_ptr<yntdl::Node> > parseNode(YAML::Node node, ParsedTopo
             recognizedTags.push_back(pluralize(TAG_POSITION));
             if(iters > 1 && node[pluralize(TAG_POSITION)][name]){
                 YAML::Node baseNode = node[pluralize(TAG_POSITION)][name];
-                parsePositions(baseNode[name], nodePtr);
+                parsePositions(baseNode, nodePtr);
             } else if (node[pluralize(TAG_POSITION)].Type() == YAML::NodeType::Scalar){
                 parsePositions(node[pluralize(TAG_POSITION)], nodePtr);
             }
