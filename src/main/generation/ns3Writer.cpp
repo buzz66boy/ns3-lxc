@@ -99,7 +99,7 @@ void printTime(){
 }
 
 void Ns3Writer::writeInit(std::ostream& str, yntdl::Topology *top){
-    str << "Simulator::Stop (Seconds (" + to_string(Settings::run_time) + ".));" << endl;
+    str << "Simulator::Stop (Seconds (" + to_string(Settings::run_time) + "));" << endl;
     str << "nodes.Create(" + to_string(top->curNodeNum) + ");" << endl;
     for(auto it : linkTypeMap){
         if(it.second->isUsed()){
