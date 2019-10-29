@@ -10,6 +10,7 @@
 #include "yntdl.h"
 #include "settingsParser.h"
 #include "topologyGenerator.h"
+#include "topologyValidator.h"
 #include "errorCode.h"
 
 #define MAXPATHLEN 1024
@@ -146,8 +147,8 @@ int main(int argc, char *argv[]){
 		yntdl::Topology::reNumNodes(&topology);
 		//call YNTDL's validation
 		yntdl::validateTopology(&topology);
-		//FIXME: validate types vs type maps and set simulation run time
-
+		//validate types vs type maps
+		validateTopologyTypes(&topology);
 		try{
 			generateTopology(&topology);
 		} catch(Ns3lxcException& e){

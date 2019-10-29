@@ -13,6 +13,7 @@ include_directories(
         /usr/include
         src/main/include
         src/main/generation/include
+        src/main/validation/include
         src/main/parse/include
         src/links/include
         src/applications/include
@@ -55,10 +56,12 @@ set(NS-3_LXC
         src/main/generation/include/nodeSpawner.h
         src/main/generation/include/ns3Writer.h
         src/main/generation/include/topologyGenerator.h
+        src/main/validation/include/topologyValidator.h
         src/main/generation/bridgeTapBuilder.cpp
         src/main/generation/nodeSpawner.cpp
         src/main/generation/ns3Writer.cpp
         src/main/generation/topologyGenerator.cpp
+        src/main/validation/topologyValidator.cpp
         src/main/parse/include/settingsParser.h
         src/main/parse/settingsParser.cpp
         src/main/include/logger.h
