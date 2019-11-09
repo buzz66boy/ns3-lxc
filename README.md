@@ -23,6 +23,8 @@ Resources, including example topology files and a readme on how to write topolog
 
 # Setup
 ## Dependencies
+- net-tools
+
 - yaml-cpp - libyaml-cpp-dev
 
 - ns-3.26

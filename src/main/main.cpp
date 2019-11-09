@@ -144,7 +144,6 @@ int main(int argc, char *argv[]){
 		}
 		setOutputDest(topology.name);
 		applyNodeDefaultType(&topology);
-		yntdl::Topology::reNumNodes(&topology);
 		//call YNTDL's validation
 		yntdl::validateTopology(&topology);
 		//validate types vs type maps
