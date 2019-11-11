@@ -19,7 +19,7 @@
 #define SETTINGS_FILE "settings.yaml"
 #define TAG_TIME "time"
 
-#define HELP_STATEMENT "usage: 'sudo bin/ns3lxc pathToTopology [-n] [-c] [-s] [-g] [-h]'\n\
+#define HELP_STATEMENT "usage: 'sudo ./ns3lxc pathToTopology [-n] [-c] [-s] [-g] [-h]'\n\
 -n: write only ns-3 script SUDO NOT REQUIRED\n\
 -c: cleanup mode, teardown bridges, taps, and containers\n\
 -s: spawn mode, do not teardown after simulation completion\n\
@@ -138,7 +138,7 @@ int main(int argc, char *argv[]){
 			throw Ns3lxcException(ErrorCode::RUN_AS_ROOT, "");
 		}
 
-		topology = parseTopologyFile(argMap.at("file"));
+		topology = yntdl::parseTopologyFile(argMap.at("file"));
 		if(topology.additionalTags[TAG_TIME]){
 			Settings::run_time = topology.additionalTags[TAG_TIME].as<double>();
 		}
